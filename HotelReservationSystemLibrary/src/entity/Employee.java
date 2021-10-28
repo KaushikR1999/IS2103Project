@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import util.enumeration.EmployeeAccessRightEnum;
 
 /**
  *
@@ -22,7 +23,10 @@ public class Employee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
-
+    private String username;
+    private String password;
+    private EmployeeAccessRightEnum employeeAccessRightEnum;
+    
     public Long getEmployeeId() {
         return employeeId;
     }
@@ -55,5 +59,48 @@ public class Employee implements Serializable {
     public String toString() {
         return "entity.Employee[ id=" + employeeId + " ]";
     }
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * @return the employeeAccessRightEnum
+     */
+    public EmployeeAccessRightEnum getEmployeeAccessRightEnum() {
+        return employeeAccessRightEnum;
+    }
+
+    /**
+     * @param employeeAccessRightEnum the employeeAccessRightEnum to set
+     */
+    public void setEmployeeAccessRightEnum(EmployeeAccessRightEnum employeeAccessRightEnum) {
+        this.employeeAccessRightEnum = employeeAccessRightEnum;
+    }
     
+
 }
