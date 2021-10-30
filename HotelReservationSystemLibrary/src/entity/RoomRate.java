@@ -23,7 +23,7 @@ import util.enumeration.RoomRateTypeEnum;
 
 /**
  *
- * @author Roy
+ * @author Roy Chua
  */
 @Entity
 public class RoomRate implements Serializable {
@@ -47,7 +47,16 @@ public class RoomRate implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date rateDate;
     
-    
+    @Column(name = "RATE")
+    private double rate;
+
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
 
     public Date getRateDate() {
         return rateDate;

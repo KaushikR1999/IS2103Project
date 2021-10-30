@@ -6,10 +6,15 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -22,6 +27,55 @@ public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
+    
+    @Column(name = "FLOOR", nullable = false)
+    private int floor;
+    
+    @Column(name = "SEQUENCE_NUMBER", nullable = false)
+    private int sNum;
+    
+    @Column(name = "AVAILABLE", nullable = false)
+    private boolean available;
+    
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "ROOM_TYPE_ID", nullable = false)
+    private RoomType roomType; 
+
+    public int getFloor() {
+        return floor;
+    }
+    
+    public int getRoomNumber() {
+        return floor+sNum;
+    }
+
+    public void setFloor(int floor) {
+        this.floor = floor;
+    }
+
+    public int getsNum() {
+        return sNum;
+    }
+
+    public void setsNum(int sNum) {
+        this.sNum = sNum;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
 
     public Long getRoomId() {
         return roomId;
