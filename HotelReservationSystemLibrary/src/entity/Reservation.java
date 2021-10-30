@@ -7,11 +7,20 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.time.LocalTime;
+import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import util.enumeration.StatusEnum;
 import util.enumeration.ReservationTypeEnum;
 
@@ -25,15 +34,45 @@ public class Reservation implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="RESERVATION_ID")
     private Long reservationId;
+    
+    @Column(name = "START_DATE")
+    @Temporal(TemporalType.DATE)
+    @NotNull
     private Date startDate;
+    
+    @Column(name = "END_DATE")
+    @Temporal(TemporalType.DATE)
+    @NotNull
     private Date endDate;
+    
+    @Column(name = "BOOKING_DATE")
+    @Temporal(TemporalType.DATE)
+    @NotNull
     private Date bookingDate;
-    private LocalTime bookingTime;
+    
+    @Column(name = "BOOKING_TIME")
+    @Temporal(TemporalType.TIME)
+    @NotNull
+    private Date bookingTime;
+    
+    @Column(name = "STATUS", columnDefinition = "varchar(20) default 'CONFIRMED'", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull
     private StatusEnum statusEnum;
-    private Long reservationFee;
+    
+    @Column(name = "RESERVATION_FEE")
+    @NotNull
+    private Double reservationFee;
+    
+    @Column(name = "RESERVATION_TYPE", columnDefinition = "varchar(20) default 'ONLINE'", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull
     private ReservationTypeEnum reservationTypeEnum;
     
+    @OneToMany(mappedBy="reservation")
+    private List <Room> rooms;
 
     public Long getReservationId() {
         return reservationId;
@@ -113,14 +152,14 @@ public class Reservation implements Serializable {
     /**
      * @return the bookingTime
      */
-    public LocalTime getBookingTime() {
+    public Date getBookingTime() {
         return bookingTime;
     }
 
     /**
      * @param bookingTime the bookingTime to set
      */
-    public void setBookingTime(LocalTime bookingTime) {
+    public void setBookingTime(Date bookingTime) {
         this.bookingTime = bookingTime;
     }
 
@@ -141,14 +180,14 @@ public class Reservation implements Serializable {
     /**
      * @return the reservationFee
      */
-    public Long getReservationFee() {
+    public Double getReservationFee() {
         return reservationFee;
     }
 
     /**
      * @param reservationFee the reservationFee to set
      */
-    public void setReservationFee(Long reservationFee) {
+    public void setReservationFee(Double reservationFee) {
         this.reservationFee = reservationFee;
     }
 
