@@ -6,10 +6,13 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -21,7 +24,11 @@ public class Guest implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="GUEST_ID")
     private Long guestId;
+    
+    @OneToMany(mappedBy="guest")
+    private List <Reservation> reservations;
 
     public Long getGuestId() {
         return guestId;
@@ -54,6 +61,20 @@ public class Guest implements Serializable {
     @Override
     public String toString() {
         return "entity.Guest[ id=" + guestId + " ]";
+    }
+
+    /**
+     * @return the reservations
+     */
+    public List <Reservation> getReservations() {
+        return reservations;
+    }
+
+    /**
+     * @param reservations the reservations to set
+     */
+    public void setReservations(List <Reservation> reservations) {
+        this.reservations = reservations;
     }
     
 }
