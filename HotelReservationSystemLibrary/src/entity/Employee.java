@@ -44,6 +44,16 @@ public class Employee implements Serializable {
     @Column(nullable = false)
     @NotNull
     private AccessRightsEnum employeeRole;
+
+    public Employee() {
+    }
+
+    public Employee(String username, String password, AccessRightsEnum employeeRole) {
+        this.username = username;
+        this.password = password;
+        this.employeeRole = employeeRole;
+    }
+    
     
     public Long getEmployeeId() {
         return employeeId;
