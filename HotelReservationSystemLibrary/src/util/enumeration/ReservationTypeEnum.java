@@ -10,6 +10,6 @@ package util.enumeration;
  * @author kaushikr
  */
 public enum ReservationTypeEnum {
-    WALKIN,
+    WALK_IN,
     ONLINE
 }

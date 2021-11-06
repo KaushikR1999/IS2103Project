@@ -9,7 +9,9 @@ package util.enumeration;
  *
  * @author kaushikr
  */
-public enum StatusEnum {
-    CONFIRMED,
-    ALLOCATED
+public enum AccessRightsEnum {
+    SYSTEM_ADMIN,
+    OPS_MANAGER,
+    SALES_MANAGER,
+    GUEST_RELATION_OFFICER
 }

@@ -9,9 +9,9 @@ package util.enumeration;
  *
  * @author kaushikr
  */
-public enum EmployeeAccessRightEnum {
-    SYSTEMADMINISTRATOR,
-    OPERATIONMANAGER,
-    SALESMANAGER,
-    GUESTRELATIONOFFICER
+public enum ReservationStatusEnum {
+    CONFIRMED,
+    UPGRADED,
+    ALLOCATED,
+    REJECTED
 }

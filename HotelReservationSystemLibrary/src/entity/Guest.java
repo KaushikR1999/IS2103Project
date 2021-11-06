@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -26,6 +28,16 @@ public class Guest implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="GUEST_ID")
     private Long guestId;
+    
+    @Column(name="USERNAME", nullable = true, length = 32, unique = true)
+    @NotNull
+    @Size(min = 6, max = 32)
+    private String username;
+    
+    @Column(name="PASSWORD", nullable = true, length = 32)
+    @NotNull
+    @Size(min = 8, max = 32)
+    private String password;
     
     @OneToMany(mappedBy="guest")
     private List <Reservation> reservations;
@@ -75,6 +87,34 @@ public class Guest implements Serializable {
      */
     public void setReservations(List <Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
     
 }

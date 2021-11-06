@@ -17,11 +17,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import util.enumeration.StatusEnum;
+import util.enumeration.ReservationStatusEnum;
 import util.enumeration.ReservationTypeEnum;
 
 /**
@@ -37,42 +38,45 @@ public class Reservation implements Serializable {
     @Column(name="RESERVATION_ID")
     private Long reservationId;
     
-    @Column(name = "START_DATE")
+    @Column(name = "START_DATE", nullable = false)
     @Temporal(TemporalType.DATE)
     @NotNull
     private Date startDate;
     
-    @Column(name = "END_DATE")
+    @Column(name = "END_DATE", nullable = false)
     @Temporal(TemporalType.DATE)
     @NotNull
     private Date endDate;
     
-    @Column(name = "BOOKING_DATE")
+    @Column(name = "BOOKING_DATE", nullable = false)
     @Temporal(TemporalType.DATE)
     @NotNull
     private Date bookingDate;
     
-    @Column(name = "BOOKING_TIME")
+    @Column(name = "BOOKING_TIME", nullable = false)
     @Temporal(TemporalType.TIME)
     @NotNull
     private Date bookingTime;
     
-    @Column(name = "STATUS", columnDefinition = "varchar(20) default 'CONFIRMED'", nullable = false)
+    @Column(name = "STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
-    private StatusEnum statusEnum;
+    private ReservationStatusEnum status;
     
-    @Column(name = "RESERVATION_FEE")
+    @Column(name = "RESERVATION_FEE", nullable = false)
     @NotNull
     private Double reservationFee;
     
-    @Column(name = "RESERVATION_TYPE", columnDefinition = "varchar(20) default 'ONLINE'", nullable = false)
+    @Column(name = "RESERVATION_TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
-    private ReservationTypeEnum reservationTypeEnum;
+    private ReservationTypeEnum reservationType;
+    
+    @ManyToMany
+    private List <Room> rooms;
     
     @OneToMany(mappedBy="reservation")
-    private List <Room> rooms;
+    private List <RoomType> roomTypes;
 
     public Long getReservationId() {
         return reservationId;
@@ -164,17 +168,17 @@ public class Reservation implements Serializable {
     }
 
     /**
-     * @return the statusEnum
+     * @return the status
      */
-    public StatusEnum getStatusEnum() {
-        return statusEnum;
+    public ReservationStatusEnum getStatus() {
+        return status;
     }
 
     /**
-     * @param statusEnum the statusEnum to set
+     * @param status the status to set
      */
-    public void setStatusEnum(StatusEnum statusEnum) {
-        this.statusEnum = statusEnum;
+    public void setStatus(ReservationStatusEnum status) {
+        this.status = status;
     }
 
     /**
@@ -192,17 +196,45 @@ public class Reservation implements Serializable {
     }
 
     /**
-     * @return the reservationTypeEnum
+     * @return the reservationType
      */
-    public ReservationTypeEnum getReservationTypeEnum() {
-        return reservationTypeEnum;
+    public ReservationTypeEnum getReservationType() {
+        return reservationType;
     }
 
     /**
-     * @param reservationTypeEnum the reservationTypeEnum to set
+     * @param reservationType the reservationType to set
      */
-    public void setReservationTypeEnum(ReservationTypeEnum reservationTypeEnum) {
-        this.reservationTypeEnum = reservationTypeEnum;
+    public void setReservationType(ReservationTypeEnum reservationType) {
+        this.reservationType = reservationType;
+    }
+
+    /**
+     * @return the rooms
+     */
+    public List <Room> getRooms() {
+        return rooms;
+    }
+
+    /**
+     * @param rooms the rooms to set
+     */
+    public void setRooms(List <Room> rooms) {
+        this.rooms = rooms;
+    }
+
+    /**
+     * @return the roomTypes
+     */
+    public List <RoomType> getRoomTypes() {
+        return roomTypes;
+    }
+
+    /**
+     * @param roomTypes the roomTypes to set
+     */
+    public void setRoomTypes(List <RoomType> roomTypes) {
+        this.roomTypes = roomTypes;
     }
     
 }
