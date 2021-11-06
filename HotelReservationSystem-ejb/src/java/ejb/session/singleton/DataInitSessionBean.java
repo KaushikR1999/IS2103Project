@@ -5,12 +5,14 @@
  */
 package ejb.session.singleton;
 
+import entity.Employee;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import util.enumeration.AccessRightsEnum;
 
 /**
  *
@@ -24,11 +26,24 @@ public class DataInitSessionBean {
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
 
+    public DataInitSessionBean() {
+    }
+
     @PostConstruct
     public void postConstruct() {
-        
+        if(em.find(Employee.class, 1l) == null)
+        {
+            initialiseData();
+        }
     }
+        
+        private void initialiseData() {
+        Employee employee = new Employee("admin","password",AccessRightsEnum.SYSTEM_ADMIN);
+        em.persist(employee);
+        em.flush();
+    }
+        
+}
     
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-}

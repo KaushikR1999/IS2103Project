@@ -34,7 +34,7 @@ public class RoomRate implements Serializable {
     private Long roomRateId;
     
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "ROOM_TYPE_ID")
+    @JoinColumn(nullable = false)
     private RoomType roomType;
     
     @Column(nullable = false)
