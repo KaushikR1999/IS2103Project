@@ -49,6 +49,12 @@ public class RoomRate implements Serializable {
     @Column(nullable = false)
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date endDate;
+    
+    @Column(nullable = false)
+    private String name;
+    
+    @Column (nullable = false)
+    private double ratePerNight;
 
     public RoomRate() {
     }
@@ -68,18 +74,13 @@ public class RoomRate implements Serializable {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
-    
-    
-    
-    @Column(name = "RATE")
-    private double rate;
 
-    public double getRate() {
-        return rate;
+    public double getRatePerNight() {
+        return ratePerNight;
     }
 
-    public void setRate(double rate) {
-        this.rate = rate;
+    public void setRatePerNight(double ratePerNight) {
+        this.ratePerNight = ratePerNight;
     }
 
     public RoomType getRoomType() {

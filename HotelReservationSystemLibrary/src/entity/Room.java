@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import util.enumeration.RoomStatusEnum;
 
 /**
  *
@@ -37,7 +38,7 @@ public class Room implements Serializable {
     private int sNum;
     
     @Column(nullable = false)
-    private boolean availability;
+    private RoomStatusEnum roomStatus;
     
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -75,13 +76,23 @@ public class Room implements Serializable {
         this.sNum = sNum;
     }
 
-    public boolean isAvailable() {
-        return availability;
+    public RoomStatusEnum getRoomStatus() {
+        return roomStatus;
     }
 
-    public void setAvailable(boolean available) {
-        this.availability = available;
+    public void setRoomStatus(RoomStatusEnum roomStatus) {
+        this.roomStatus = roomStatus;
     }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+    
+    
 
     public RoomType getRoomType() {
         return roomType;
