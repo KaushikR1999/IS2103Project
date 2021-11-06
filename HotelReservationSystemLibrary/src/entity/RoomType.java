@@ -28,15 +28,73 @@ public class RoomType implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomTypeId;
     
-    @OneToMany (fetch = FetchType.LAZY, mappedBy = "roomType", cascade = {})
-    private List<RoomRate> roomRates;
-    
     @Column(nullable = false)
     private String typeName;
+    
+    @Column (nullable = false)
+    private Long description;
+    
+    @Column (nullable = false)
+    private double size;
+    
+    @Column (nullable = false)
+    private int bed;
+    
+    @Column (nullable = false)
+    private int capacity;
+    
+    @Column (nullable = false)
+    private List<String> amenities;
+    
+    @OneToMany (fetch = FetchType.LAZY, mappedBy = "roomType", cascade = {})
+    private List<RoomRate> roomRates;
 
     public RoomType() {
         roomRates = new ArrayList<>();
+        amenities = new ArrayList<>();
     }
+
+    public Long getDescription() {
+        return description;
+    }
+
+    public void setDescription(Long description) {
+        this.description = description;
+    }
+
+    public double getSize() {
+        return size;
+    }
+
+    public void setSize(double size) {
+        this.size = size;
+    }
+
+    public int getBed() {
+        return bed;
+    }
+
+    public void setBed(int bed) {
+        this.bed = bed;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public List<String> getAmenities() {
+        return amenities;
+    }
+
+    public void setAmenities(List<String> amenities) {
+        this.amenities = amenities;
+    }
+    
+    
 
     public List<RoomRate> getRoomRates() {
         return roomRates;
