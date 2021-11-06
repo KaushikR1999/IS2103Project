@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,26 +30,38 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
     
-    @Column(name = "FLOOR", nullable = false)
+    @Column(length = 2, nullable = false)
     private int floor;
     
-    @Column(name = "SEQUENCE_NUMBER", nullable = false)
+    @Column(length =  2, nullable = false)
     private int sNum;
     
-    @Column(name = "AVAILABLE", nullable = false)
-    private boolean available;
+    @Column(nullable = false)
+    private boolean availability;
     
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "ROOM_TYPE_ID", nullable = false)
-    private RoomType roomType; 
+    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private RoomType roomType;
+    
+    @ManyToMany(mappedBy = "rooms", cascade = {}, fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
+
+    public Room() {
+        reservations = new ArrayList<>();
+    }
+    
+    public String getRoomNumber() {
+        String s1 = Integer.toString(this.getFloor());
+        String s2 = Integer.toString(this.getsNum());
+        
+        String s = s1 + s2;
+        return s;
+    }
 
     public int getFloor() {
         return floor;
     }
-    
-    public int getRoomNumber() {
-        return floor+sNum;
-    }
+
 
     public void setFloor(int floor) {
         this.floor = floor;
@@ -62,11 +76,11 @@ public class Room implements Serializable {
     }
 
     public boolean isAvailable() {
-        return available;
+        return availability;
     }
 
     public void setAvailable(boolean available) {
-        this.available = available;
+        this.availability = available;
     }
 
     public RoomType getRoomType() {

@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,21 +28,14 @@ public class RoomType implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomTypeId;
     
-    @OneToMany (fetch = FetchType.LAZY, mappedBy = "roomType", orphanRemoval = true)
+    @OneToMany (fetch = FetchType.LAZY, mappedBy = "roomType", cascade = {})
     private List<RoomRate> roomRates;
     
-    @OneToMany (fetch = FetchType.LAZY, mappedBy = "roomType", orphanRemoval = true)
-    private List<Room> rooms;
-    
-    @Column(name = "TYPE_NAME")
+    @Column(nullable = false)
     private String typeName;
 
-    public List<Room> getRooms() {
-        return rooms;
-    }
-
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
+    public RoomType() {
+        roomRates = new ArrayList<>();
     }
 
     public List<RoomRate> getRoomRates() {

@@ -31,21 +31,45 @@ public class RoomRate implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ROOM_RATE_ID")
     private Long roomRateId;
     
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "ROOM_TYPE_ID")
     private RoomType roomType;
     
-    @Column(name = "ROOM_RATE_TYPE", nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull (message = "Room rate type cannot be null")
     private RoomRateTypeEnum roomRateType;
     
-    @Column(name = "RATE_DATE")
+    @Column(nullable = false)
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date rateDate;
+    private Date startDate;
+    
+    @Column(nullable = false)
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date endDate;
+
+    public RoomRate() {
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+    
+    
     
     @Column(name = "RATE")
     private double rate;
@@ -56,14 +80,6 @@ public class RoomRate implements Serializable {
 
     public void setRate(double rate) {
         this.rate = rate;
-    }
-
-    public Date getRateDate() {
-        return rateDate;
-    }
-
-    public void setRateDate(Date rateDate) {
-        this.rateDate = rateDate;
     }
 
     public RoomType getRoomType() {
