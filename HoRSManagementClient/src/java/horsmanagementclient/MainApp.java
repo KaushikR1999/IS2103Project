@@ -30,6 +30,7 @@ public class MainApp {
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     private GuestSessionBeanRemote guestSessionBeanRemote;
     
+    private HotelOperationModule hotelOperationModule;
     private SystemAdministrationModule systemAdministrationModule;
     private FrontOfficeModule frontOfficeModule;
     
