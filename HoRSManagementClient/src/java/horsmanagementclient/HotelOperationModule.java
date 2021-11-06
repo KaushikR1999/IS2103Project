@@ -43,7 +43,7 @@ public class HotelOperationModule {
     
     public void menuHotelOperation() throws InvalidAccessRightException
     {
-        if(currentEmployee.getEmployeeRole()!= AccessRightsEnum.OPS_MANAGER | currentEmployee.getEmployeeRole()!= AccessRightsEnum.SALES_MANAGER )
+        if(currentEmployee.getEmployeeRole()!= AccessRightsEnum.OPS_MANAGER && currentEmployee.getEmployeeRole()!= AccessRightsEnum.SALES_MANAGER )
         {
             throw new InvalidAccessRightException("You don't have OPS_MANAGER or SALES_MANAGER rights to access the hotel operations module.");
         }

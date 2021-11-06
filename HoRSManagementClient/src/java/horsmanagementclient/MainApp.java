@@ -74,9 +74,10 @@ public class MainApp {
                         doLogin();
                         System.out.println("Login successful!\n");
                         
-                        //HotelOperationModule = new HotelOperationModule(//add attribute);
-                        systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
-                        //
+                       systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
+                       hotelOperationModule = new HotelOperationModule(employeeSessionBeanRemote, roomSessionBeanRemote, roomTypeSessionBeanRemote, roomRateSessionBeanRemote, reservationSessionBeanRemote, currentEmployee);
+                       frontOfficeModule = new FrontOfficeModule(employeeSessionBeanRemote, reservationSessionBeanRemote, guestSessionBeanRemote, currentEmployee);
+
                         menuMain();
                     }
                     catch(InvalidLoginCredentialException ex) 
@@ -159,7 +160,7 @@ public class MainApp {
                 {
                     try
                     {
-                        systemAdministrationModule.menuSystemAdministration();
+                        hotelOperationModule.menuHotelOperation();
                     }
                     catch (InvalidAccessRightException ex)
                     {
