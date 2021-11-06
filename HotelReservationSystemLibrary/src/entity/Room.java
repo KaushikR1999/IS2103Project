@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import util.enumeration.RoomStatusEnum;
+import util.enumeration.UsageEnum;
 
 /**
  *
@@ -39,6 +40,9 @@ public class Room implements Serializable {
     
     @Column(nullable = false)
     private RoomStatusEnum roomStatus;
+    
+    @Column(nullable = false)
+    private UsageEnum used;
     
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)

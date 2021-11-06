@@ -22,7 +22,6 @@ public class Main {
 
     @EJB
     private static GuestSessionBeanRemote guestSessionBean;
-    
     @EJB
     private static RoomTypeSessionBeanRemote roomTypeSessionBean;
     @EJB
