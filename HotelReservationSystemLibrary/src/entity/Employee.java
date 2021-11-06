@@ -27,15 +27,14 @@ public class Employee implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="EMPLOYEE_ID")
     private Long employeeId;
     
-    @Column(name = "USERNAME", nullable = false, length = 32, unique = true)
+    @Column(nullable = false, length = 32, unique = true)
     @NotNull
     @Size(min = 6, max = 32)
     private String username;
     
-    @Column(name = "PASSWORD", nullable = false, length = 32)
+    @Column(nullable = false, length = 32)
     @NotNull
     @Size(min = 8, max = 32)
     private String password;

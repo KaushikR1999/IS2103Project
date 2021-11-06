@@ -27,20 +27,19 @@ public class Guest implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="GUEST_ID")
     private Long guestId;
     
-    @Column(name="USERNAME", nullable = true, length = 32, unique = true)
+    @Column(nullable = true, length = 32, unique = true)
     @NotNull
     @Size(min = 6, max = 32)
     private String username;
     
-    @Column(name="PASSWORD", nullable = true, length = 32)
+    @Column(nullable = true, length = 32)
     @NotNull
     @Size(min = 8, max = 32)
     private String password;
     
-    @OneToMany(mappedBy="guest")
+    @OneToMany(mappedBy = "guest")
     private List <Reservation> reservations;
 
     public Guest() {
@@ -53,8 +52,6 @@ public class Guest implements Serializable {
         this.password = password;
     }
     
-    
-
     public Long getGuestId() {
         return guestId;
     }
