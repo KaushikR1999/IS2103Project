@@ -5,7 +5,12 @@
  */
 package ejb.session.stateless;
 
+import entity.Partner;
+import java.util.List;
 import javax.ejb.Local;
+import util.exception.InputDataValidationException;
+import util.exception.PartnerUsernameExistException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -13,5 +18,9 @@ import javax.ejb.Local;
  */
 @Local
 public interface PartnerSessionBeanLocal {
+
+    public List<Partner> retrieveAllPartners();
+
+    public Long createNewPartner(Partner newPartner) throws PartnerUsernameExistException, UnknownPersistenceException, InputDataValidationException;
     
 }

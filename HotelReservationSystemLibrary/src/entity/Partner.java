@@ -42,9 +42,20 @@ public class Partner implements Serializable {
     @NotNull
     @Size(min = 8, max = 32)
     private String password;
+    
+    @Column(nullable = false)
+    @NotNull
+    private String organisation;
 
     public Partner() {
         partnerReservations = new ArrayList<>();
+    }
+
+    public Partner(String username, String password, String organisation) {
+        this();
+        this.username = username;
+        this.password = password;
+        this.organisation = organisation;
     }
 
     public List<Reservation> getPartnerReservations() {
@@ -104,6 +115,20 @@ public class Partner implements Serializable {
     @Override
     public String toString() {
         return "entity.Partner[ id=" + partnerId + " ]";
+    }
+
+    /**
+     * @return the organisation
+     */
+    public String getOrganisation() {
+        return organisation;
+    }
+
+    /**
+     * @param organisation the organisation to set
+     */
+    public void setOrganisation(String organisation) {
+        this.organisation = organisation;
     }
     
 }

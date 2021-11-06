@@ -6,9 +6,13 @@
 package ejb.session.stateless;
 
 import entity.Employee;
+import java.util.List;
 import javax.ejb.Local;
 import util.exception.EmployeeNotFoundException;
+import util.exception.EmployeeUsernameExistException;
+import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -19,5 +23,6 @@ public interface EmployeeSessionBeanLocal {
 
     public Employee retrieveEmployeeByUsername(String username) throws EmployeeNotFoundException;
     public Employee employeeLogin(String username, String password) throws InvalidLoginCredentialException;
-    
+    public List<Employee> retrieveAllEmployees();
+    public Long createNewEmployee(Employee newEmployee) throws EmployeeUsernameExistException, UnknownPersistenceException, InputDataValidationException;
 }
