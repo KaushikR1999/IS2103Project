@@ -30,7 +30,7 @@ public class Partner implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long partnerId;
     
-    @OneToMany(mappedBy = "partner", cascade = {}, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {}, fetch = FetchType.LAZY)
     private List<Reservation> partnerReservations;
     
     @Column(nullable = false, length = 32, unique = true)

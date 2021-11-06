@@ -38,7 +38,7 @@ public class DataInitSessionBean {
     }
         
         private void initialiseData() {
-        Employee employee = new Employee("admin","password",AccessRightsEnum.SYSTEM_ADMIN);
+        Employee employee = new Employee("sysadmin","password",AccessRightsEnum.SYSTEM_ADMIN);
         em.persist(employee);
         em.flush();
     }

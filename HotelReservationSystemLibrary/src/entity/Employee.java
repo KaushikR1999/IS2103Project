@@ -35,7 +35,7 @@ public class Employee implements Serializable {
     private String username;
     
     @Column(nullable = false, length = 32)
-    @NotNull
+    //@NotNull
     @Size(min = 8, max = 32)
     private String password;
     

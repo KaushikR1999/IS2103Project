@@ -5,12 +5,13 @@
  */
 package horsreservationclient;
 
+import javax.ejb.EJB;
+
 /**
  *
  * @author kaushikr
  */
 public class Main {
-
     /**
      * @param args the command line arguments
      */
