@@ -46,14 +46,27 @@ public class RoomType implements Serializable {
     @Column (nullable = false)
     private List<String> amenities;
     
+    @Column(nullable = false)
+    private boolean assignable;
+    
     @OneToMany (fetch = FetchType.LAZY, cascade = {})
     private List<RoomRate> roomRates;
 
     public RoomType() {
         roomRates = new ArrayList<>();
         amenities = new ArrayList<>();
+        assignable = true;
     }
 
+    public RoomType(String typeName, Long description, double size, int bed, int capacity) {
+        this();
+        this.typeName = typeName;
+        this.description = description;
+        this.size = size;
+        this.bed = bed;
+        this.capacity = capacity;
+    }
+    
     public Long getDescription() {
         return description;
     }

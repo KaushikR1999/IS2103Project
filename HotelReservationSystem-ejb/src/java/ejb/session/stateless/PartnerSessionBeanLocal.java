@@ -9,7 +9,7 @@ import entity.Partner;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.InputDataValidationException;
-import util.exception.PartnerUsernameExistException;
+import util.exception.PartnerUsernameOrOrganisationExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -21,6 +21,6 @@ public interface PartnerSessionBeanLocal {
 
     public List<Partner> retrieveAllPartners();
 
-    public Long createNewPartner(Partner newPartner) throws PartnerUsernameExistException, UnknownPersistenceException, InputDataValidationException;
+    public Long createNewPartner(Partner newPartner) throws PartnerUsernameOrOrganisationExistException, UnknownPersistenceException, InputDataValidationException;
     
 }

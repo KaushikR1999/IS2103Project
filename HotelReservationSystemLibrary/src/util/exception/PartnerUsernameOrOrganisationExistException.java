@@ -9,13 +9,13 @@ package util.exception;
  *
  * @author kaushikr
  */
-public class PartnerUsernameExistException extends Exception {
+public class PartnerUsernameOrOrganisationExistException extends Exception {
 
     /**
      * Creates a new instance of <code>PartnerUsernameExistException</code>
      * without detail message.
      */
-    public PartnerUsernameExistException() {
+    public PartnerUsernameOrOrganisationExistException() {
     }
 
     /**
@@ -24,7 +24,7 @@ public class PartnerUsernameExistException extends Exception {
      *
      * @param msg the detail message.
      */
-    public PartnerUsernameExistException(String msg) {
+    public PartnerUsernameOrOrganisationExistException(String msg) {
         super(msg);
     }
 }

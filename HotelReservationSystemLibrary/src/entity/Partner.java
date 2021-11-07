@@ -43,7 +43,7 @@ public class Partner implements Serializable {
     @Size(min = 8, max = 32)
     private String password;
     
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotNull
     private String organisation;
 

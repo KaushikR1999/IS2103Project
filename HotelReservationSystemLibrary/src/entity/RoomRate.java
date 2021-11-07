@@ -55,9 +55,23 @@ public class RoomRate implements Serializable {
     
     @Column (nullable = false)
     private double ratePerNight;
+    
+    @Column(nullable = false)
+    private boolean assignable;
 
     public RoomRate() {
+        assignable = true;
     }
+
+    public RoomRate(RoomRateTypeEnum roomRateType, Date startDate, Date endDate, String name, double ratePerNight) {
+        this();
+        this.roomRateType = roomRateType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.name = name;
+        this.ratePerNight = ratePerNight;
+    }
+    
 
     public Date getStartDate() {
         return startDate;
@@ -130,6 +144,20 @@ public class RoomRate implements Serializable {
     @Override
     public String toString() {
         return "entity.RoomRates[ id=" + roomRateId + " ]";
+    }
+
+    /**
+     * @return the assignable
+     */
+    public boolean isAssignable() {
+        return assignable;
+    }
+
+    /**
+     * @param assignable the assignable to set
+     */
+    public void setAssignable(boolean assignable) {
+        this.assignable = assignable;
     }
     
 }

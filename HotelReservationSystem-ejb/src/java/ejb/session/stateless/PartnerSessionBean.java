@@ -20,7 +20,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
-import util.exception.PartnerUsernameExistException;
+import util.exception.PartnerUsernameOrOrganisationExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -41,7 +41,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         validator = validatorFactory.getValidator();
     }
     
-    public Long createNewPartner(Partner newPartner) throws PartnerUsernameExistException, UnknownPersistenceException, InputDataValidationException
+    public Long createNewPartner(Partner newPartner) throws PartnerUsernameOrOrganisationExistException, UnknownPersistenceException, InputDataValidationException
     {
         Set<ConstraintViolation<Partner>>constraintViolations = validator.validate(newPartner);
         
@@ -60,7 +60,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
                 {
                     if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException"))
                     {
-                        throw new PartnerUsernameExistException();
+                        throw new PartnerUsernameOrOrganisationExistException();
                     }
                     else
                     {
