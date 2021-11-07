@@ -20,7 +20,7 @@ import util.enumeration.AccessRightsEnum;
 import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
-import util.exception.PartnerUsernameExistException;
+import util.exception.PartnerUsernameOrOrganisationExistException;
 import util.exception.UnknownPersistenceException;
 /**
  *
@@ -214,8 +214,6 @@ public class SystemAdministrationModule {
         System.out.print("Enter Organisation> ");
         newPartner.setOrganisation(scanner.nextLine().trim());
         
-        scanner.nextLine();
-        
         Set<ConstraintViolation<Partner>>constraintViolations = validator.validate(newPartner);
         
         if(constraintViolations.isEmpty())
@@ -225,9 +223,9 @@ public class SystemAdministrationModule {
                 Long newPartnerId = partnerSessionBeanRemote.createNewPartner(newPartner);
                 System.out.println("New partner created successfully!: " + newPartnerId + "\n");
             }
-            catch(PartnerUsernameExistException ex)
+            catch(PartnerUsernameOrOrganisationExistException ex)
             {
-                System.out.println("An error has occurred while creating the new partner!: The user name already exist\n");
+                System.out.println("An error has occurred while creating the new partner!: The username or organisation already exists\n");
             }
             catch(UnknownPersistenceException ex)
             {
