@@ -59,7 +59,7 @@ public class Room implements Serializable {
         this();
         this.floor = floor;
         this.seqNum = seqNum;
-        this.roomStatus = roomStatus;
+        this.roomStatus = RoomStatusEnum.AVAILABLE;
         this.roomType = roomType;
     }
     
