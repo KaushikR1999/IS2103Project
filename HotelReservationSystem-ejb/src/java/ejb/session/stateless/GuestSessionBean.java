@@ -5,9 +5,11 @@
  */
 package ejb.session.stateless;
 
+import entity.Guest;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import util.exception.InvalidLoginCredentialException;
 
 /**
  *
@@ -24,5 +26,28 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     // "Insert Code > Add Business Method")
 
     public GuestSessionBean() {
+    }
+    
+    @Override
+    public Guest staffLogin(String username, String password) throws InvalidLoginCredentialException
+    {
+        try
+        {
+            Guest guest = retrieveStaffByUsername(username);
+            
+            if(guest.getPassword().equals(password))
+            {
+                guest.getReservations().size();                
+                return guest;
+            }
+            else
+            {
+                throw new InvalidLoginCredentialException("Email does not exist or invalid password!");
+            }
+        }
+        catch(StaffNotFoundException ex)
+        {
+            throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+        }
     }
 }
