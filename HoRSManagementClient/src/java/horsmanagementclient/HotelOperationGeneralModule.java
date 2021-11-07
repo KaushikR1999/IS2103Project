@@ -11,6 +11,7 @@ import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
 import entity.RoomType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -156,18 +157,19 @@ public class HotelOperationGeneralModule {
         System.out.print("Enter Room Type Name> ");
         newRoomType.setTypeName(scanner.nextLine().trim());
         System.out.print("Enter Description> ");
-        newRoomType.setDescription(scanner.nextLong());
+        newRoomType.setDescription(scanner.nextLine().trim());
         System.out.print("Enter Room Size> ");
         newRoomType.setSize(scanner.nextDouble());
         System.out.print("Enter Number of Beds> ");
         newRoomType.setBed(scanner.nextInt());
         System.out.print("Enter Room Capacity> ");
         newRoomType.setCapacity(scanner.nextInt());
-        System.out.print("Enter number of amenities>");
+        System.out.print("Enter number of amenities> ");
         int noOfAmenities = scanner.nextInt();
+        scanner.nextLine();
         for( int i = 0; i < noOfAmenities; i++) {
             int noCounter = i + 1;
-            System.out.print("Enter name of amenity #" + noCounter + ">" );
+            System.out.print("Enter name of amenity #" + noCounter + "> " );
             newRoomType.getAmenities().add(scanner.nextLine().trim());
         }
         
@@ -213,7 +215,7 @@ public class HotelOperationGeneralModule {
         {
             RoomType roomType = roomTypeSessionBeanRemote.retrieveRoomTypeByRoomTypeName(typeName);
             System.out.printf("%10s%20s%20s%20s%13s%20s\n", "Name", "Description", "Room Size", "Number Of Beds", "Room Capacity", "Amenities");
-            System.out.printf("%10s%20s%20d%20d%20d%20s\n", roomType.getTypeName(), roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities().toString());
+            System.out.printf("%10s%20s%20f%20d%20d%20s\n", roomType.getTypeName(), roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities().toString());
             System.out.println("------------------------");
             System.out.println("1: Update Room Type");
             System.out.println("2: Delete Room Type");
@@ -242,7 +244,6 @@ public class HotelOperationGeneralModule {
         String input;
         Integer integerInput;
         Double doubleInput;
-        Long longInput;
         
         System.out.println("*** HoRS Management Client :: Hotel Operations (General) :: Update Room Type ***\n");
         System.out.print("Enter Room Type Name (blank if no change)> ");
@@ -253,10 +254,10 @@ public class HotelOperationGeneralModule {
         }
         
         System.out.print("Enter Description (blank if no change)> ");
-        longInput = scanner.nextLong();
-        if(longInput.intValue()> 0)
+        input = scanner.nextLine().trim();
+        if(input.length() > 0)
         {
-            roomType.setDescription(longInput);
+            roomType.setDescription(input);
         }
         
         System.out.print("Enter Room Size (negative number if no change)> ");
@@ -279,29 +280,27 @@ public class HotelOperationGeneralModule {
         {
             roomType.setCapacity(integerInput);
         }
-        
-        System.out.print("Enter Updated Amenities List (zero or negative amount if no change)> $");
-        System.out.print("Confirm void/refund this sale transaction? (Enter 'Y' to update amenities, any button if otherwise)> ");
+        scanner.nextLine();
+        System.out.print("Update Amenities? (Enter 'Y' to update amenities, any button if otherwise)> ");
             String updateAmenities = scanner.nextLine().trim();
             
             if(updateAmenities.equals("Y"))
             {
-                    System.out.print("Enter number of amenities>");
+                    System.out.print("Enter number of amenities> ");
                     int noOfAmenities = scanner.nextInt();
+                    scanner.nextLine();
+                    List<String> newAmenities = new ArrayList<>();
                     for( int i = 0; i < noOfAmenities; i++) {
                         int noCounter = i + 1;
-                        System.out.print("Enter name of amenity #" + noCounter + ">" );
-                        roomType.getAmenities().add(scanner.nextLine().trim());
-                        System.out.println("Update Inputs Successfully Obtained\n");
-
-                    } 
+                        System.out.print("Enter name of amenity #" + noCounter + "> " );
+                        newAmenities.add(scanner.nextLine().trim());
+                    }
+                    roomType.setAmenities(newAmenities);
             }
             else
             {
                 System.out.println("Update Inputs Successfully Obtained\n");
             }
-            
-        scanner.nextLine();
         
         Set<ConstraintViolation<RoomType>>constraintViolations = validator.validate(roomType);
         
@@ -365,7 +364,7 @@ public class HotelOperationGeneralModule {
 
         for(RoomType roomType : roomTypes)
         {
-            System.out.printf("%10s%20s%20d%20d%20d%20s\n", roomType.getTypeName(), roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities().toString());
+            System.out.printf("%10s%20s%20f%20d%20d%20s\n", roomType.getTypeName(), roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities().toString());
         }
         
         System.out.print("Press any key to continue...> ");

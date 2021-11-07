@@ -32,7 +32,7 @@ public class RoomType implements Serializable {
     private String typeName;
     
     @Column (nullable = false)
-    private Long description;
+    private String description;
     
     @Column (nullable = false)
     private double size;
@@ -58,7 +58,7 @@ public class RoomType implements Serializable {
         assignable = true;
     }
 
-    public RoomType(String typeName, Long description, double size, int bed, int capacity) {
+    public RoomType(String typeName, String description, double size, int bed, int capacity) {
         this();
         this.typeName = typeName;
         this.description = description;
@@ -77,11 +77,11 @@ public class RoomType implements Serializable {
     }
 
     
-    public Long getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(Long description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

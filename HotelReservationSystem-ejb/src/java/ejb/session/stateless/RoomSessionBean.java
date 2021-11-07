@@ -36,7 +36,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     @Override
     public List<Room> retrieveRoomsByRoomTypeId(Long roomTypeId)
     {
-        Query query = em.createNamedQuery("SELECT r FROM Room r WHERE r.roomType.roomTypeId = :inRoomTypeId");
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType.roomTypeId = :inRoomTypeId");
         query.setParameter("inRoomTypeId", roomTypeId);
         
         return query.getResultList();

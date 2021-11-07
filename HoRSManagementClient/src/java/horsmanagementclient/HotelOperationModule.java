@@ -64,13 +64,13 @@ public class HotelOperationModule {
                 System.out.print("> ");
 
                 response = scanner.nextInt();
+                 hotelOperationSalesModule = new HotelOperationSalesModule(employeeSessionBeanRemote, roomRateSessionBeanRemote, currentEmployee);
+                 hotelOperationGeneralModule = new HotelOperationGeneralModule(employeeSessionBeanRemote, roomSessionBeanRemote, roomTypeSessionBeanRemote, currentEmployee);
 
                 if(response == 1)
                 {
                    try
                     {
-                        hotelOperationSalesModule = new HotelOperationSalesModule(employeeSessionBeanRemote, roomRateSessionBeanRemote, currentEmployee);
-                        hotelOperationGeneralModule = new HotelOperationGeneralModule(employeeSessionBeanRemote, roomSessionBeanRemote, roomTypeSessionBeanRemote, currentEmployee);
                         hotelOperationGeneralModule.menuHotelOperationGeneral();
                     }
                     catch (InvalidAccessRightException ex)
