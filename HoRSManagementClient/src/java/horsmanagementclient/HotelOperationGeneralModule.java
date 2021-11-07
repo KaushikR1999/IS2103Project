@@ -297,10 +297,20 @@ public class HotelOperationGeneralModule {
                     }
                     roomType.setAmenities(newAmenities);
             }
-            else
-            {
-                System.out.println("Update Inputs Successfully Obtained\n");
-            }
+            
+            //if(){
+        System.out.print("Enter Name of Next Highest Room Type > ");
+        input = scanner.nextLine().trim();
+        try {
+            RoomType nextHighestRoomType = roomTypeSessionBeanRemote.retrieveRoomTypeByRoomTypeName(input);
+            roomType.setNextHighestRoomType(nextHighestRoomType);
+            
+        } catch (RoomTypeNotFoundException ex)
+        {
+            System.out.println("An error has occurred while updating room type: " + ex.getMessage() + "\n");
+
+        }
+            //}
         
         Set<ConstraintViolation<RoomType>>constraintViolations = validator.validate(roomType);
         

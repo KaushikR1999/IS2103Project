@@ -24,6 +24,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
+import util.exception.NoRoomTypeAvailableException;
 import util.exception.RoomTypeNameExistException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -155,6 +156,23 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         else
         {
             throw new RoomTypeNotFoundException("Room Type ID " + roomTypeId + " does not exist!");
+        }               
+    }
+    
+    @Override
+    public List<RoomType> retrieveAllAvailableRoomTypes() throws NoRoomTypeAvailableException
+    {
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.assignable = true");
+        query.setParameter("true", true);
+        List<RoomType> availableRoomType = query.getResultList();
+        
+        if(availableRoomType.isEmpty())
+        {
+            throw new NoRoomTypeAvailableException("There are no available Room types!");
+        }
+        else
+        {
+            return availableRoomType;
         }               
     }
     
