@@ -22,7 +22,7 @@ import util.exception.UpdateRoomRateException;
 @Remote
 public interface RoomRateSessionBeanRemote {
     
-    public Long createNewRoomRate(Long roomTypeId, RoomRate newRoomRate) throws RoomTypeNotFoundException, CreateNewRoomRateException, InputDataValidationException;
+    public Long createNewRoomRate(String roomTypeName, RoomRate newRoomRate) throws RoomTypeNotFoundException, CreateNewRoomRateException, InputDataValidationException;
 
     public List<RoomRate> retrieveAllRoomRates();
 

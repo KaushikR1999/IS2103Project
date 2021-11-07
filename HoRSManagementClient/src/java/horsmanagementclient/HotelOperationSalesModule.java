@@ -147,11 +147,11 @@ public class HotelOperationSalesModule {
         try
         {
             RoomRate roomRate = roomRateSessionBeanRemote.retrieveRoomRateByRoomRateId(roomRateId);
-            System.out.printf("%8s%20s%20s%15s%20s%20s%20s\n", "Room Rate ID", "Name", "Room Type", "Rate Type", "Rate Per Night", "Start Date", "End Date");
-            System.out.printf("%8s%20s%20s%15s%20s%20s%20s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType(), roomRate.getRoomRateType(), roomRate.getRatePerNight(), roomRate.getStartDate(), roomRate.getEndDate());         
+            System.out.printf("%8s%13s%20s%20s%20s%20s%20s\n", "Room Rate ID", "Name", "Room Type", "Rate Type", "Rate Per Night", "Start Date", "End Date");
+            System.out.printf("%8s%15s%20s%20s%20s%20s%20s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType().getTypeName(), roomRate.getRoomRateType(), roomRate.getRatePerNight(), formatDate.format(roomRate.getStartDate()), formatDate.format(roomRate.getEndDate()));         
             System.out.println("------------------------");
-            System.out.println("1: Update Staff");
-            System.out.println("2: Delete Staff");
+            System.out.println("1: Update Room Rate");
+            System.out.println("2: Delete Room Rate");
             System.out.println("3: Back\n");
             System.out.print("> ");
             response = scanner.nextInt();
@@ -207,6 +207,7 @@ public class HotelOperationSalesModule {
             System.out.println("Invalid option, please try again!\n");
         }
         
+        scanner.nextLine();
         Date startDate = new Date();
         
         while (true) {
@@ -245,8 +246,8 @@ public class HotelOperationSalesModule {
             }
         }
         
-        System.out.print("Enter Room Type Id > ");
-        Long roomTypeId = scanner.nextLong();
+        System.out.print("Enter Room Type Name > ");
+        String roomTypeName = scanner.nextLine().trim();
         
         Set<ConstraintViolation<RoomRate>>constraintViolations = validator.validate(newRoomRate);
         
@@ -254,7 +255,7 @@ public class HotelOperationSalesModule {
         {
             try
             {
-                Long newRoomRateId = roomRateSessionBeanRemote.createNewRoomRate(roomTypeId, newRoomRate);
+                Long newRoomRateId = roomRateSessionBeanRemote.createNewRoomRate(roomTypeName, newRoomRate);
                 System.out.println("New room rate created successfully!: " + newRoomRateId + "\n");
             }
             catch(CreateNewRoomRateException | RoomTypeNotFoundException ex)
@@ -276,8 +277,6 @@ public class HotelOperationSalesModule {
     {
         Scanner scanner = new Scanner(System.in);        
         String input;
-        Integer integerInput;
-        BigDecimal bigDecimalInput;
         Double doubleInput;
         
         System.out.println("*** HoRS Management Client :: Hotel Operation (Sales) :: View Room Rate Details :: Update Room Rate ***\n");
@@ -314,6 +313,8 @@ public class HotelOperationSalesModule {
         {
             roomRate.setRatePerNight(doubleInput);
         }
+        
+        scanner.nextLine();
         
         Date startDate = new Date();
         
@@ -401,14 +402,14 @@ public class HotelOperationSalesModule {
     {
         Scanner scanner = new Scanner(System.in);
         
-        System.out.println("*** HoRS Management Client :: System Administration :: View All Staffs ***\n");
+        System.out.println("*** HoRS Management Client :: Hotel Operation (Sales) :: View All Room Rates ***\n");
         
         List<RoomRate> roomRates = roomRateSessionBeanRemote.retrieveAllRoomRates();
-        System.out.printf("%8s%20s%20s%15s%20s%20s%20s\n", "Room Rate ID", "Name", "Room Type", "Rate Type", "Rate Per Night", "Start Date", "End Date");
+        System.out.printf("%8s%13s%20s%20s%20s%20s%20s\n", "Room Rate ID", "Name", "Room Type", "Rate Type", "Rate Per Night", "Start Date", "End Date");
 
         for(RoomRate roomRate:roomRates)
         {
-            System.out.printf("%8s%20s%20s%15s%20s%20s%20s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType(), roomRate.getRoomRateType(), roomRate.getRatePerNight(), roomRate.getStartDate(), roomRate.getEndDate());
+            System.out.printf("%8s%15s%20s%20s%20s%20s%20s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType().getTypeName(), roomRate.getRoomRateType(), roomRate.getRatePerNight(), formatDate.format(roomRate.getStartDate()), formatDate.format(roomRate.getEndDate()));
         }
         
         System.out.print("Press any key to continue...> ");
