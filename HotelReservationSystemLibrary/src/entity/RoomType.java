@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -49,6 +50,9 @@ public class RoomType implements Serializable {
     @Column(nullable = false)
     private boolean assignable;
     
+    @OneToOne (fetch = FetchType.LAZY, cascade = {})
+    private RoomType nextHighestRoomType;
+    
     @OneToMany (fetch = FetchType.LAZY, cascade = {})
     private List<RoomRate> roomRates;
 
@@ -67,6 +71,14 @@ public class RoomType implements Serializable {
         this.capacity = capacity;
         this.assignable = assignable;
     }
+
+    public RoomType getNextHighestRoomType() {
+        return nextHighestRoomType;
+    }
+
+    public void setNextHighestRoomType(RoomType nextHighestRoomType) {
+        this.nextHighestRoomType = nextHighestRoomType;
+    } 
 
     public boolean isAssignable() {
         return assignable;

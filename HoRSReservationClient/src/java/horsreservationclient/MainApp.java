@@ -26,7 +26,7 @@ public class MainApp {
     
     
     
-    public void runApp()
+    /*public void runApp()
     {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
@@ -98,5 +98,5 @@ public class MainApp {
         {
             throw new InvalidLoginCredentialException("Missing login credential!");
         }
-    }
+    }*/
 }

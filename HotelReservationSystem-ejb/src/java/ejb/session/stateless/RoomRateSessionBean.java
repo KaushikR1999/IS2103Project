@@ -93,6 +93,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
 
     }
     
+    @Override
     public List<RoomRate> retrieveAllRoomRates()
     {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr ORDER BY rr.roomRateId ASC");
@@ -139,7 +140,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
             throw new RoomRateNotFoundException("Staff ID not provided for staff to be updated");
         }
     }
-    
+    @Override
     public void deleteRoomRate(Long roomRateId) throws RoomTypeNotFoundException, RoomRateNotFoundException, DeleteRoomRateException
     {
         RoomRate roomRateToRemove = retrieveRoomRateByRoomRateId(roomRateId);

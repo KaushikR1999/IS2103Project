@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,7 +45,7 @@ public class Guest implements Serializable {
     @Size(min = 6, max = 32)
     private String email;
     
-    @OneToMany(mappedBy = "guest")
+    @OneToMany(mappedBy = "guest", cascade = {}, fetch = FetchType.LAZY)
     private List <Reservation> reservations;
 
     public Guest() {

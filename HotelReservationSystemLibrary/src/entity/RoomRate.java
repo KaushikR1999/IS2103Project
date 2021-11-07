@@ -33,7 +33,7 @@ public class RoomRate implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateId;
     
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {})
     @JoinColumn(nullable = false)
     private RoomType roomType;
     
@@ -42,11 +42,11 @@ public class RoomRate implements Serializable {
     @NotNull (message = "Room rate type cannot be null")
     private RoomRateTypeEnum roomRateType;
     
-    @Column(nullable = false)
+    @Column
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date startDate;
     
-    @Column(nullable = false)
+    @Column
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date endDate;
     

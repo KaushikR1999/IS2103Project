@@ -28,7 +28,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     public GuestSessionBean() {
     }
     
-    @Override
+    /*@Override
     public Guest staffLogin(String username, String password) throws InvalidLoginCredentialException
     {
         try
@@ -49,5 +49,5 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
         {
             throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
         }
-    }
+    }*/
 }
