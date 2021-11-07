@@ -127,6 +127,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
                     roomTypeToUpdate.setBed(roomType.getBed());
                     roomTypeToUpdate.setCapacity(roomType.getCapacity());
                     roomTypeToUpdate.setAmenities(roomType.getAmenities());
+                    roomTypeToUpdate.setNextHighestRoomType(roomType.getNextHighestRoomType());
                 }
                 else
                 {
@@ -164,6 +165,24 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.assignable = true");
         query.setParameter("true", true);
+        List<RoomType> availableRoomType = query.getResultList();
+        
+        if(availableRoomType.isEmpty())
+        {
+            throw new NoRoomTypeAvailableException("There are no available Room types!");
+        }
+        else
+        {
+            return availableRoomType;
+        }               
+    }
+    
+    @Override
+    public List<RoomType> retrieveAllAvailableRoomTypesExceptCurrent(Long inRoomTypeId) throws NoRoomTypeAvailableException
+    {
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.assignable = true AND rt.roomTypeId <> :inRoomTypeId");
+        query.setParameter("true", true);
+        query.setParameter("inRoomTypeId", inRoomTypeId);
         List<RoomType> availableRoomType = query.getResultList();
         
         if(availableRoomType.isEmpty())

@@ -297,13 +297,15 @@ public class HotelOperationGeneralModule {
                     }
                     roomType.setAmenities(newAmenities);
             }
-            
-            //if(){
+            try {
+                
+        //if(roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypesExceptCurrent(roomType.getRoomTypeId()).isEmpty()){
+       // } else {
         System.out.print("Enter Name of Next Highest Room Type > ");
         input = scanner.nextLine().trim();
-        try {
             RoomType nextHighestRoomType = roomTypeSessionBeanRemote.retrieveRoomTypeByRoomTypeName(input);
             roomType.setNextHighestRoomType(nextHighestRoomType);
+               // }
             
         } catch (RoomTypeNotFoundException ex)
         {

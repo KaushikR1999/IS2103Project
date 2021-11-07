@@ -36,5 +36,7 @@ public interface RoomTypeSessionBeanLocal {
     public RoomType retrieveRoomTypeByRoomTypeName(String typeName) throws RoomTypeNotFoundException;
 
     public List<RoomType> retrieveAllAvailableRoomTypes() throws NoRoomTypeAvailableException;
+
+    public List<RoomType> retrieveAllAvailableRoomTypesExceptCurrent(Long inRoomTypeId) throws NoRoomTypeAvailableException;
     
 }
