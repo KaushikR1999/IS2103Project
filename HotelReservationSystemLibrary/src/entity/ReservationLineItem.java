@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +15,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -35,13 +40,22 @@ public class ReservationLineItem implements Serializable {
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Reservation reservation;
+    
+    @OneToOne(cascade = {}, fetch = FetchType.LAZY)
+    private Room room;
+    
+    @OneToMany(cascade = {}, fetch = FetchType.LAZY)
+    private List <RoomType> bookedRoomTypes;
 
     public ReservationLineItem() {
+        bookedRoomTypes = new ArrayList<>();
     }
 
-    public ReservationLineItem(double reservationFee, Reservation reservation) {
+    public ReservationLineItem(double reservationFee, Reservation reservation, Room room) {
+        this();
         this.reservationFee = reservationFee;
         this.reservation = reservation;
+        this.room = room;
     }
 
     public Long getReservationLineItemId() {
@@ -105,4 +119,31 @@ public class ReservationLineItem implements Serializable {
         this.reservation = reservation;
     }
     
+    /**
+     * @return the rooms
+     */
+    public Room getRoom() {
+        return room;
+    }
+
+    /**
+     * @param rooms the rooms to set
+     */
+    public void setRoom(Room rooms) {
+        this.room = room;
+    }
+
+    /**
+     * @return the bookedRoomTypes
+     */
+    public List<RoomType> getBookedRoomTypes() {
+        return bookedRoomTypes;
+    }
+
+    /**
+     * @param bookedRoomTypes the bookedRoomTypes to set
+     */
+    public void setBookedRoomTypes(List<RoomType> bookedRoomTypes) {
+        this.bookedRoomTypes = bookedRoomTypes;
+    }
 }

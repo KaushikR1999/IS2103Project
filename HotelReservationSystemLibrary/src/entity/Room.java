@@ -6,8 +6,6 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import util.enumeration.RoomStatusEnum;
 
@@ -44,12 +41,11 @@ public class Room implements Serializable {
     @JoinColumn(nullable = false)
     private RoomType roomType;
     
-    @ManyToMany(mappedBy = "rooms", cascade = {}, fetch = FetchType.LAZY)
-    private List<Reservation> reservations;
+    @OneToOne(mappedBy = "room", cascade = {}, fetch = FetchType.LAZY)
+    private ReservationLineItem reservationLineItem;
 
     public Room() {
-        reservations = new ArrayList<>();
-        assignable = true;
+        this.assignable = true;
     }
 
     public Room(int roomNumber, RoomStatusEnum roomStatus, RoomType roomType) {
@@ -57,6 +53,7 @@ public class Room implements Serializable {
         this.roomNumber = roomNumber;
         this.roomStatus = roomStatus;
         this.roomType = roomType;
+        this.assignable = true;
     }
 
     public RoomStatusEnum getRoomStatus() {
@@ -66,16 +63,6 @@ public class Room implements Serializable {
     public void setRoomStatus(RoomStatusEnum roomStatus) {
         this.roomStatus = roomStatus;
     }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-    
-    
 
     public RoomType getRoomType() {
         return roomType;
@@ -144,6 +131,20 @@ public class Room implements Serializable {
      */
     public void setRoomNumber(int roomNumber) {
         this.roomNumber = roomNumber;
+    }
+
+    /**
+     * @return the reservationLineItem
+     */
+    public ReservationLineItem getReservationLineItem() {
+        return reservationLineItem;
+    }
+
+    /**
+     * @param reservationLineItem the reservationLineItem to set
+     */
+    public void setReservationLineItem(ReservationLineItem reservationLineItem) {
+        this.reservationLineItem = reservationLineItem;
     }
     
 }
