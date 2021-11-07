@@ -66,7 +66,7 @@ public class Reservation implements Serializable {
     
     @Column(nullable = false)
     @NotNull
-    private double reservationFee;
+    private double totalReservationFee;
     
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -95,7 +95,7 @@ public class Reservation implements Serializable {
         this.bookingDate = bookingDate;
         this.bookingTime = bookingTime;
         this.status = status;
-        this.reservationFee = reservationFee;
+        this.totalReservationFee = reservationFee;
         this.reservationType = reservationType;
         this.guest = guest;
     }
@@ -206,17 +206,17 @@ public class Reservation implements Serializable {
     }
 
     /**
-     * @return the reservationFee
+     * @return the totalReservationFee
      */
-    public double getReservationFee() {
-        return reservationFee;
+    public double getTotalReservationFee() {
+        return totalReservationFee;
     }
 
     /**
-     * @param reservationFee the reservationFee to set
+     * @param totalReservationFee the totalReservationFee to set
      */
-    public void setReservationFee(double reservationFee) {
-        this.reservationFee = reservationFee;
+    public void setTotalReservationFee(double totalReservationFee) {
+        this.totalReservationFee = totalReservationFee;
     }
 
     /**

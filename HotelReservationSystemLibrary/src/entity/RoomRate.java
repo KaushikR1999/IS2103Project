@@ -60,7 +60,7 @@ public class RoomRate implements Serializable {
     private boolean assignable;
 
     public RoomRate() {
-        assignable = true;
+        this.assignable = true;
     }
 
     public RoomRate(RoomRateTypeEnum roomRateType, Date startDate, Date endDate, String name, double ratePerNight) {
@@ -149,7 +149,7 @@ public class RoomRate implements Serializable {
     /**
      * @return the assignable
      */
-    public boolean isAssignable() {
+    public boolean getAssignable() {
         return assignable;
     }
 
@@ -158,6 +158,20 @@ public class RoomRate implements Serializable {
      */
     public void setAssignable(boolean assignable) {
         this.assignable = assignable;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
     
 }

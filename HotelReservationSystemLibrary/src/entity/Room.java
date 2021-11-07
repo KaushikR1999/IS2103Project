@@ -31,11 +31,8 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
     
-    @Column(length = 2, nullable = false)
-    private int floor;
-    
-    @Column(length =  2, nullable = false)
-    private int seqNum;
+    @Column(length = 4, nullable = false)
+    private int roomNumber;
     
     @Column(nullable = false)
     private RoomStatusEnum roomStatus;
@@ -55,37 +52,11 @@ public class Room implements Serializable {
         assignable = true;
     }
 
-    public Room(int floor, int seqNum, RoomStatusEnum roomStatus, RoomType roomType) {
+    public Room(int roomNumber, RoomStatusEnum roomStatus, RoomType roomType) {
         this();
-        this.floor = floor;
-        this.seqNum = seqNum;
-        this.roomStatus = RoomStatusEnum.AVAILABLE;
+        this.roomNumber = roomNumber;
+        this.roomStatus = roomStatus;
         this.roomType = roomType;
-    }
-    
-    public String getRoomNumber() {
-        String s1 = Integer.toString(this.getFloor());
-        String s2 = Integer.toString(this.getSeqNum());
-        
-        String s = s1 + s2;
-        return s;
-    }
-
-    public int getFloor() {
-        return floor;
-    }
-
-
-    public void setFloor(int floor) {
-        this.floor = floor;
-    }
-
-    public int getSeqNum() {
-        return seqNum;
-    }
-
-    public void setSeqNum(int seqNum) {
-        this.seqNum = seqNum;
     }
 
     public RoomStatusEnum getRoomStatus() {
@@ -159,6 +130,20 @@ public class Room implements Serializable {
      */
     public void setAssignable(boolean assignable) {
         this.assignable = assignable;
+    }
+
+    /**
+     * @return the roomNumber
+     */
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    /**
+     * @param roomNumber the roomNumber to set
+     */
+    public void setRoomNumber(int roomNumber) {
+        this.roomNumber = roomNumber;
     }
     
 }
