@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.ManyToMany;
 import util.enumeration.RoomStatusEnum;
 
 /**
@@ -42,11 +45,12 @@ public class Room implements Serializable {
     @JoinColumn(nullable = false)
     private RoomType roomType;
     
-    @OneToOne(mappedBy = "room", cascade = {}, fetch = FetchType.LAZY)
-    private ReservationLineItem reservationLineItem;
+    @ManyToMany(mappedBy = "room", cascade = {}, fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
 
     public Room() {
         this.assignable = true;
+        this.reservations = new ArrayList<> ();
     }
 
     public Room(int roomNumber, RoomStatusEnum roomStatus, RoomType roomType) {
@@ -135,17 +139,18 @@ public class Room implements Serializable {
     }
 
     /**
-     * @return the reservationLineItem
+     * @return the reservations
      */
-    public ReservationLineItem getReservationLineItem() {
-        return reservationLineItem;
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
     /**
-     * @param reservationLineItem the reservationLineItem to set
+     * @param reservations the reservations to set
      */
-    public void setReservationLineItem(ReservationLineItem reservationLineItem) {
-        this.reservationLineItem = reservationLineItem;
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
+
     
 }

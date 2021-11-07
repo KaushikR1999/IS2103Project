@@ -73,18 +73,22 @@ public class Reservation implements Serializable {
     @NotNull
     private ReservationTypeEnum reservationType;
     
-    @OneToMany(mappedBy = "reservation")
-    private List<ReservationLineItem> reservationLineItems;
+    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
+    private List<Room> rooms;
     
     @ManyToOne(optional = true, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = true)
     private Guest guest;
+    
+    @ManyToOne(optional = true, cascade = {}, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true)
+    private RoomType roomType;
 
     public Reservation() {
-        this.reservationLineItems = new ArrayList<> ();
+        this.rooms = new ArrayList<> ();
     }
 
-    public Reservation(Date startDate, Date endDate, Date bookingDate, Date bookingTime, ReservationStatusEnum status, Double reservationFee, ReservationTypeEnum reservationType, Guest guest) {
+    public Reservation(Date startDate, Date endDate, Date bookingDate, Date bookingTime, ReservationStatusEnum status, Double reservationFee, ReservationTypeEnum reservationType, RoomType roomType) {
         this();
         this.startDate = startDate;
         this.endDate = endDate;
@@ -93,7 +97,7 @@ public class Reservation implements Serializable {
         this.status = status;
         this.totalReservationFee = reservationFee;
         this.reservationType = reservationType;
-        this.guest = guest;
+        this.roomType = roomType;
     }
     
     
@@ -241,6 +245,34 @@ public class Reservation implements Serializable {
      */
     public void setGuest(Guest guest) {
         this.guest = guest;
+    }
+
+    /**
+     * @return the rooms
+     */
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    /**
+     * @param rooms the rooms to set
+     */
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
+
+    /**
+     * @return the roomType
+     */
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    /**
+     * @param roomType the roomType to set
+     */
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
     }
     
 }
