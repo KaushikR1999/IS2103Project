@@ -73,19 +73,15 @@ public class Reservation implements Serializable {
     @NotNull
     private ReservationTypeEnum reservationType;
     
-    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
-    private List <Room> rooms;
-    
-    @OneToMany(cascade = {}, fetch = FetchType.LAZY)
-    private List <RoomType> bookedRoomTypes;
+    @OneToMany(mappedBy = "reservation")
+    private List<ReservationLineItem> reservationLineItems;
     
     @ManyToOne(optional = true, cascade = {}, fetch = FetchType.LAZY)
     @JoinColumn(nullable = true)
     private Guest guest;
 
     public Reservation() {
-        rooms = new ArrayList<>();
-        bookedRoomTypes = new ArrayList<>();
+        this.reservationLineItems = new ArrayList<> ();
     }
 
     public Reservation(Date startDate, Date endDate, Date bookingDate, Date bookingTime, ReservationStatusEnum status, Double reservationFee, ReservationTypeEnum reservationType, Guest guest) {
@@ -231,34 +227,6 @@ public class Reservation implements Serializable {
      */
     public void setReservationType(ReservationTypeEnum reservationType) {
         this.reservationType = reservationType;
-    }
-
-    /**
-     * @return the rooms
-     */
-    public List <Room> getRooms() {
-        return rooms;
-    }
-
-    /**
-     * @param rooms the rooms to set
-     */
-    public void setRooms(List <Room> rooms) {
-        this.rooms = rooms;
-    }
-
-    /**
-     * @return the bookedRoomTypes
-     */
-    public List <RoomType> getBookedRoomTypes() {
-        return bookedRoomTypes;
-    }
-
-    /**
-     * @param bookedRoomTypes the bookedRoomTypes to set
-     */
-    public void setBookedRoomTypes(List <RoomType> bookedRoomTypes) {
-        this.bookedRoomTypes = bookedRoomTypes;
     }
 
     /**
