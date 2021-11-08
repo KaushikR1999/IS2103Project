@@ -227,6 +227,11 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         return query.getResultList();
     }
     
+    public List<RoomType> retrieveAllRoomTypesAvailableForBooking(int numOfRooms)
+    {
+        
+    }
+    
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RoomType>>constraintViolations)
     {
         String msg = "Input data validation error!:";

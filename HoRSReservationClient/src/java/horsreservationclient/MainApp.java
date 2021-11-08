@@ -180,7 +180,7 @@ public class MainApp {
         }
     }
     
-    /*private void doSearchHotelRoom()
+    private void doSearchHotelRoom()
     {
         try
         {
@@ -201,19 +201,11 @@ public class MainApp {
             endDate = inputDateFormat.parse(scanner.nextLine().trim());
             System.out.print("Enter CheckOut Date (dd/mm/yyyy)> ");
             bookingDateTime = inputDateFormat.parse(scanner.nextLine().trim());            
-            System.out.print("Enter Departure City> ");
-            departureCity = scanner.nextLine().trim();
             System.out.print("Enter Number of Rooms> ");
             numberOfRooms = scanner.nextInt();
             
-            List<ItineraryItem> itineraryItems = holidayReservationSessionBeanRemote.searchHolidays(departureDate, returnDate, departureCity, destinationCity, numberOfTravellers);
-            
-            System.out.printf("%8s%22s   %s\n", "Seq. No.", "Date/Time", "Itinerary");
-            
-            for(ItineraryItem itineraryItem:itineraryItems)
-            {
-                System.out.printf("%8s%22s   %s\n", itineraryItem.getSequenceNumber(), outputDateFormat.format(itineraryItem.getDateTime()), itineraryItem.getActivity());
-            }
+            System.out.printf("%8s%20s%20s%15s%20s%20s\n", "Option", "Room Type", "Price", "NumOfRooms", "Room Capacity", "Room Beds");
+            System.out.printf("%8s%20s%20s%15s%20s%20s\n", staffEntity.getStaffId().toString(), staffEntity.getFirstName(), staffEntity.getLastName(), staffEntity.getAccessRightEnum().toString(), staffEntity.getUsername(), staffEntity.getPassword());
             
             System.out.println("------------------------");
             System.out.println("1: Make Reservation");
@@ -247,7 +239,7 @@ public class MainApp {
         {
             System.out.println("Invalid date input!\n");
         }
-    }*/
+    }
         
     private void showInputDataValidationErrorsForGuest(Set<ConstraintViolation<Guest>>constraintViolations)
     {

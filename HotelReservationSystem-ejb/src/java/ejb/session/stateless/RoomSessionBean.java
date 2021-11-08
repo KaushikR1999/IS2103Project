@@ -84,7 +84,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         return query.getResultList();
     }
     
-    public int retrieveRoomsAvailableForBooking(Date inStartDate, Date inEndDate, Long inRoomTypeId){
+    public int retrieveRoomsAvailableForBookingByRoomType(Date inStartDate, Date inEndDate, Long inRoomTypeId){
         
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType.roomTypeId = :inRoomTypeId AND r.assignable = true AND r.roomStatus = RoomStatusAvailable");
         query.setParameter("inRoomTypeId", inRoomTypeId);
