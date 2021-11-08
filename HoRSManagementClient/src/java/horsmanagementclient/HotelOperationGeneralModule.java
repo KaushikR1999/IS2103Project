@@ -591,7 +591,7 @@ public class HotelOperationGeneralModule {
             String input;
 
             System.out.println("*** HoRS Management Client :: Hotel Operation (General) :: View Room Details :: Delete Room ***\n");
-            System.out.printf("Confirm Delete Room %s (Room ID: %d) (Enter 'Y' to Delete)> ", room.getRoomNumber(), room.getRoomId());
+            System.out.printf("Confirm Delete Room %s (Room ID: %s) (Enter 'Y' to Delete)> ", room.getRoomNumber(), room.getRoomId());
             scanner.nextLine();
             input = scanner.nextLine().trim();
 
@@ -619,10 +619,20 @@ public class HotelOperationGeneralModule {
         
         List<Room> rooms = roomSessionBeanRemote.retrieveAllRooms();
         System.out.printf("%8s%13s%20s%20s\n", "Room ID", "Room Number", "Room Type", "Room Status");
+        
+        try {
+            System.out.println(roomSessionBeanRemote.retrieveRoomByRoomId(new Long(1)));
+            System.out.println(roomSessionBeanRemote.retrieveRoomByRoomId(new Long(1)).getRoomType());
+            System.out.println(roomSessionBeanRemote.retrieveRoomByRoomId(new Long(1)).getRoomType().getClass());
+        } catch (RoomNotFoundException ex) {
+            System.out.println(ex);
+        }
 
         for(Room room:rooms)
         {
-            System.out.printf("%8s%15s%20s%20s\n", room.getRoomId().toString(), room.getRoomNumber(), room.getRoomType().getTypeName(), room.getRoomStatus());
+            
+            System.out.println(room.getRoomType().getClass());
+//            System.out.printf("%8s%15s%20s%20s\n", room.getRoomId(), room.getRoomNumber(), room.getRoomType().getTypeName(), room.getRoomStatus());
         }
         
         System.out.print("Press any key to continue...> ");
