@@ -44,7 +44,7 @@ public class Room implements Serializable {
     @JoinColumn(nullable = false)
     private RoomType roomType;
     
-    @ManyToMany(mappedBy = "room", cascade = {}, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "rooms", cascade = {}, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
     public Room() {
