@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.Reservation;
 import entity.Room;
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import java.util.ArrayList;
 import java.util.Date;
@@ -114,6 +115,8 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         
         List<Reservation> roomReservations = r.getReservations();
         
+        boolean available = TRUE;
+        
             for (Reservation res : roomReservations){
             
                 Date resStartDate = res.getStartDate();
@@ -124,12 +127,16 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
                 inStartDate.before(resStartDate) && inEndDate.after(resEndDate) ||
                 inStartDate.after(resStartDate) && inEndDate.before(resEndDate))  )
                 {
-                    finalRoomsAvailable.add(r);
+//                    finalRoomsAvailable.add(r);
                     break;
                 } else {
+                    available = FALSE;
                     continue;
                 }
-            }   
+            }
+            if (available == TRUE) {
+                finalRoomsAvailable.add(r);
+            }
         }
         return finalRoomsAvailable.size();
     }

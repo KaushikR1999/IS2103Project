@@ -42,7 +42,7 @@ public class Room implements Serializable {
     @Column(nullable = false)
     private boolean assignable;
     
-    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private RoomType roomType;
     
