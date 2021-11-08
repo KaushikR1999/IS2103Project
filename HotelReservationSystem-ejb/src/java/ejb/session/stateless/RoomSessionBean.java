@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.Reservation;
 import entity.Room;
+import static java.lang.Boolean.TRUE;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -87,7 +88,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType.roomTypeId = :inRoomTypeId AND r.assignable = true AND r.roomStatus = RoomStatusAvailable");
         query.setParameter("inRoomTypeId", inRoomTypeId);
-        query.setParameter("true", true);
+        query.setParameter("true", TRUE);
         query.setParameter("RoomStatusAvailable", RoomStatusEnum.AVAILABLE);
         List<Room> finalRoomsAvailable = new ArrayList<>();
         
