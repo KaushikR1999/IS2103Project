@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.Size;
 import util.enumeration.RoomStatusEnum;
 
 /**
@@ -32,6 +33,7 @@ public class Room implements Serializable {
     private Long roomId;
     
     @Column(length = 4, nullable = false, unique = true)
+    @Size (min = 4, max = 4)
     private int roomNumber;
     
     @Column(nullable = false)

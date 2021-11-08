@@ -28,6 +28,7 @@ import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
 import util.exception.NoRoomTypeAvailableException;
 import util.exception.RoomNotFoundException;
+import util.exception.RoomNumberExistException;
 import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNameExistException;
 import util.exception.RoomTypeNotFoundException;
@@ -418,7 +419,12 @@ public class HotelOperationGeneralModule {
             
             if(roomStatusInt >= 1 && roomStatusInt <= 2)
             {
-                newRoom.setRoomStatus(RoomStatusEnum.values()[roomStatusInt-1]);
+                if (roomStatusInt == 1) {
+                    newRoom.setRoomStatus(RoomStatusEnum.AVAILABLE);
+                } else {
+                    newRoom.setRoomStatus(RoomStatusEnum.NOT_AVAILABLE);
+                }
+//                newRoom.setRoomStatus(RoomStatusEnum.values()[roomStatusInt-1]);
                 break;
             }
             else
@@ -448,7 +454,10 @@ public class HotelOperationGeneralModule {
                 Integer roomTypeInt = scanner.nextInt();
 
                 if (roomTypeInt >= 1 && roomTypeInt <= roomTypes.size()) {
-                    newRoom.setRoomType(roomTypes.get(roomTypeInt));
+//                    System.out.println(roomTypes.get(roomTypeInt-1));
+//                    System.out.println(roomTypes.get(roomTypeInt-1).getClass());
+                    newRoom.setRoomType(roomTypes.get(roomTypeInt-1));
+//                    System.out.println(newRoom.getRoomType().getClass());
                     break;
                 } else {
                     System.out.println("Invalid option, please try again!\n");
@@ -456,6 +465,7 @@ public class HotelOperationGeneralModule {
             }
             catch (NoRoomTypeAvailableException ex) {
                 System.out.println(ex.getMessage() + "\n");
+                break;
             }
             
         }
@@ -469,7 +479,7 @@ public class HotelOperationGeneralModule {
                 Long newRoomId = roomSessionBeanRemote.createNewRoom(newRoom);
                 System.out.println("New room created successfully!: " + newRoomId + "\n");
             }
-            catch(CreateNewRoomException | RoomNotFoundException ex)
+            catch(CreateNewRoomException | RoomNotFoundException | RoomNumberExistException | UnknownPersistenceException ex)
             {
                 System.out.println("An unknown error has occurred while creating the new room rate!: " + ex.getMessage() + "\n");
             }
@@ -533,7 +543,7 @@ public class HotelOperationGeneralModule {
                     Integer roomTypeInt = scanner.nextInt();
 
                     if (roomTypeInt >= 1 && roomTypeInt <= roomTypes.size()) {
-                        room.setRoomType(roomTypes.get(roomTypeInt));
+                        room.setRoomType(roomTypes.get(roomTypeInt-1));
                         break;
                     } else if (roomTypeInt == 0) {
                         break;    
@@ -582,6 +592,7 @@ public class HotelOperationGeneralModule {
 
             System.out.println("*** HoRS Management Client :: Hotel Operation (General) :: View Room Details :: Delete Room ***\n");
             System.out.printf("Confirm Delete Room %s (Room ID: %d) (Enter 'Y' to Delete)> ", room.getRoomNumber(), room.getRoomId());
+            scanner.nextLine();
             input = scanner.nextLine().trim();
 
             if (input.equals("Y")) {
@@ -611,7 +622,7 @@ public class HotelOperationGeneralModule {
 
         for(Room room:rooms)
         {
-            System.out.printf("%8s%15s%20s%20s\n", room.getRoomId().toString(), room.getRoomNumber(), room.getRoomType().getTypeName(), room.getRoomStatus());
+            System.out.printf("%8s%15s%20s%20s\n", room.getRoomId().toString(), room.getRoomNumber(), room.getRoomType(), room.getRoomStatus());
         }
         
         System.out.print("Press any key to continue...> ");

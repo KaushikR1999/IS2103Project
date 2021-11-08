@@ -12,6 +12,8 @@ import util.exception.CreateNewRoomException;
 import util.exception.DeleteRoomException;
 import util.exception.InputDataValidationException;
 import util.exception.RoomNotFoundException;
+import util.exception.RoomNumberExistException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -21,7 +23,7 @@ import util.exception.RoomNotFoundException;
 public interface RoomSessionBeanRemote {
     public List<Room> retrieveRoomsByRoomTypeId(Long roomTypeId);
     
-    public Long createNewRoom(Room newRoom) throws RoomNotFoundException, CreateNewRoomException, InputDataValidationException;
+    public Long createNewRoom(Room newRoom) throws RoomNotFoundException, CreateNewRoomException, InputDataValidationException, RoomNumberExistException, UnknownPersistenceException ;
     
     public List<Room> retrieveAllRooms();
     

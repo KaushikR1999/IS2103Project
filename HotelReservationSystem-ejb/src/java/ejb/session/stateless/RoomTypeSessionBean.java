@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
+import static java.lang.Boolean.TRUE;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
@@ -164,7 +165,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     public List<RoomType> retrieveAllAvailableRoomTypes() throws NoRoomTypeAvailableException
     {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.assignable = true");
-        query.setParameter("true", true);
+//        query.setParameter("true", TRUE);
         List<RoomType> availableRoomType = query.getResultList();
         
         if(availableRoomType.isEmpty())
@@ -181,7 +182,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     public List<RoomType> retrieveAllAvailableRoomTypesExceptCurrent(Long inRoomTypeId) throws NoRoomTypeAvailableException
     {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.assignable = true AND rt.roomTypeId <> :inRoomTypeId");
-        query.setParameter("true", true);
+        query.setParameter("true", TRUE);
         query.setParameter("inRoomTypeId", inRoomTypeId);
         List<RoomType> availableRoomType = query.getResultList();
         
