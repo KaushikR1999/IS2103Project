@@ -382,7 +382,7 @@ public class HotelOperationSalesModule {
         Scanner scanner = new Scanner(System.in);
         String input;
 
-        System.out.println("*** HoRS Management Client :: Hotel Operation (Sales) :: View Room Rate Details :: Delete Staff ***\n");
+        System.out.println("*** HoRS Management Client :: Hotel Operation (Sales) :: View Room Rate Details :: Delete Room Rate ***\n");
         System.out.printf("Confirm Delete Room Rate %s (Room Rate ID: %d) (Enter 'Y' to Delete)> ", roomRate.getName(), roomRate.getRoomRateId());
         input = scanner.nextLine().trim();
 
@@ -391,10 +391,10 @@ public class HotelOperationSalesModule {
                 roomRateSessionBeanRemote.deleteRoomRate(roomRate.getRoomRateId());
                 System.out.println("Room Rate deleted successfully!\n");
             } catch (RoomTypeNotFoundException | RoomRateNotFoundException | DeleteRoomRateException ex) {
-                System.out.println("An error has occurred while deleting the staff: " + ex.getMessage() + "\n");
+                System.out.println("An error has occurred while deleting the room rate: " + ex.getMessage() + "\n");
             }
         } else {
-            System.out.println("Staff NOT deleted!\n");
+            System.out.println("Room Rate NOT deleted!\n");
         }
     }
     
