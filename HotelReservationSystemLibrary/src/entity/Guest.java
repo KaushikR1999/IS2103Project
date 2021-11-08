@@ -40,10 +40,6 @@ public class Guest implements Serializable {
     @Size(min = 8, max = 32)
     private String password;
     
-    @Column(nullable = false, length = 32, unique = true)
-    @NotNull
-    @Size(min = 6, max = 32)
-    private String email;
     
     @OneToMany(mappedBy = "guest", cascade = {}, fetch = FetchType.LAZY)
     private List <Reservation> reservations;

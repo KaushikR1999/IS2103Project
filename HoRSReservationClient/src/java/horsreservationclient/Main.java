@@ -35,8 +35,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       // MainApp mainApp = new MainApp(guestSessionBean, roomSessionBean, roomTypeSessionBean, roomRateSessionBean, reservationSessionBean);
-       // mainApp.runApp();
+        MainApp mainApp = new MainApp(guestSessionBean, roomSessionBean, roomTypeSessionBean, roomRateSessionBean, reservationSessionBean);
+        mainApp.runApp();
         // TODO code application logic here
     }
     
