@@ -410,7 +410,7 @@ public class HotelOperationGeneralModule {
         
         System.out.println("*** HoRS Management Client :: Hotel Operation (General) :: Create New Room ***\n");
         System.out.print("Enter Room Number> ");
-        newRoom.setRoomNumber(scanner.nextInt());
+        newRoom.setRoomNumber(scanner.nextLine().trim());
         
         while(true)
         {
@@ -622,7 +622,7 @@ public class HotelOperationGeneralModule {
 
         for(Room room:rooms)
         {
-            System.out.printf("%8s%15s%20s%20s\n", room.getRoomId().toString(), room.getRoomNumber(), room.getRoomType(), room.getRoomStatus());
+            System.out.printf("%8s%15s%20s%20s\n", room.getRoomId().toString(), room.getRoomNumber(), room.getRoomType().getTypeName(), room.getRoomStatus());
         }
         
         System.out.print("Press any key to continue...> ");

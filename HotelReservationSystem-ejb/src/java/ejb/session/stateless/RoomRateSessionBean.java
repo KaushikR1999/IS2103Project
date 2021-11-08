@@ -160,9 +160,9 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
         }
     }
     
-    public void calculateRoomRateReservationClient(Date startDate, Date endDate, Long roomTypeId){
+/*    public void calculateRoomRateReservationClient(Date startDate, Date endDate, Long roomTypeId){
     
-    }
+    }*/
     
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RoomRate>>constraintViolations)

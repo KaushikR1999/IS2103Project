@@ -62,7 +62,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
 
                     return newRoom.getRoomId();
                 } else {
-                    throw new CreateNewRoomException("Room Rate information not provided");
+                    throw new CreateNewRoomException("Room Type information not provided");
                 }
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {

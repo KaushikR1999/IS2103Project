@@ -180,7 +180,7 @@ public class MainApp {
         }
     }
     
-    private void doSearchHotelRoom()
+    /*private void doSearchHotelRoom()
     {
         try
         {
@@ -239,7 +239,7 @@ public class MainApp {
         {
             System.out.println("Invalid date input!\n");
         }
-    }
+    }*/
         
     private void showInputDataValidationErrorsForGuest(Set<ConstraintViolation<Guest>>constraintViolations)
     {

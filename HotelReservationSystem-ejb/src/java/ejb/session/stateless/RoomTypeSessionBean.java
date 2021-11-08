@@ -228,10 +228,10 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         return query.getResultList();
     }
     
-    public List<RoomType> retrieveAllRoomTypesAvailableForBooking(int numOfRooms)
+    /*public List<RoomType> retrieveAllRoomTypesAvailableForBooking(int numOfRooms)
     {
         
-    }
+    }*/
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RoomType>>constraintViolations)
     {
