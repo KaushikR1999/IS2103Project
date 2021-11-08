@@ -8,6 +8,10 @@ package ejb.session.stateless;
 import entity.Room;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.CreateNewRoomException;
+import util.exception.DeleteRoomException;
+import util.exception.InputDataValidationException;
+import util.exception.RoomNotFoundException;
 
 /**
  *
@@ -17,5 +21,15 @@ import javax.ejb.Local;
 public interface RoomSessionBeanLocal {
 
     public List<Room> retrieveRoomsByRoomTypeId(Long roomTypeId);
+
+    public Long createNewRoom(Room newRoom) throws RoomNotFoundException, CreateNewRoomException, InputDataValidationException;
+
+    public List<Room> retrieveAllRooms();
+
+    public void deleteRoom(Long roomId) throws RoomNotFoundException, DeleteRoomException;
+
+    public Room retrieveRoomByRoomId(Long roomId) throws RoomNotFoundException;
+
+    public void updateRoom(Room room) throws RoomNotFoundException, InputDataValidationException;
     
 }
