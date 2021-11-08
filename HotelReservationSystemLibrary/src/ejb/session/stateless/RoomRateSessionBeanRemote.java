@@ -6,11 +6,13 @@
 package ejb.session.stateless;
 
 import entity.RoomRate;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exception.CreateNewRoomRateException;
 import util.exception.DeleteRoomRateException;
 import util.exception.InputDataValidationException;
+import util.exception.NoRateAvailableException;
 import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UpdateRoomRateException;
@@ -31,4 +33,7 @@ public interface RoomRateSessionBeanRemote {
     public void updateRoomRate(RoomRate roomRate) throws RoomRateNotFoundException, InputDataValidationException;
 
     public void deleteRoomRate(Long roomRateId) throws RoomTypeNotFoundException, RoomRateNotFoundException, DeleteRoomRateException;
+    
+    public int calculateRoomRateOnlineReservations(Date startDate, Date endDate, Long inRoomTypeId) throws NoRateAvailableException;
+
 }

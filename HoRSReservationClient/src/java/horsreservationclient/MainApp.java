@@ -11,6 +11,7 @@ import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Guest;
+import entity.RoomType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,6 +24,8 @@ import javax.validation.ValidatorFactory;
 import util.exception.GuestUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.NoRateAvailableException;
+import util.exception.NoRoomTypeAvailableException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -95,11 +98,11 @@ public class MainApp {
                 }
                 else if (response == 2)
                 {
-                    //doRegisterAsGuest();
+                    doRegisterAsGuest();
                 }
                 else if (response == 3)
                 {
-                    //doSearchHotelRoom();
+                    doSearchHotelRoom();
                 }
                 else if (response == 4)
                 {
@@ -140,7 +143,7 @@ public class MainApp {
         }
     }
         
-    private void doRegisterAGuest()
+    private void doRegisterAsGuest()
     {
         Scanner scanner = new Scanner(System.in);
         Guest newGuest = new Guest();
@@ -180,7 +183,7 @@ public class MainApp {
         }
     }
     
-    /*private void doSearchHotelRoom()
+    private void doSearchHotelRoom()
     {
         try
         {
@@ -188,7 +191,6 @@ public class MainApp {
             Integer response = 0;
             SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
             SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-            SimpleDateFormat inputTimeFormat = new SimpleDateFormat("HH:MM");
             Date startDate;
             Date endDate;
             Date bookingDateTime;
@@ -205,7 +207,14 @@ public class MainApp {
             numberOfRooms = scanner.nextInt();
             
             System.out.printf("%8s%20s%20s%15s%20s%20s\n", "Option", "Room Type", "Price", "NumOfRooms", "Room Capacity", "Room Beds");
-            System.out.printf("%8s%20s%20s%15s%20s%20s\n", staffEntity.getStaffId().toString(), staffEntity.getFirstName(), staffEntity.getLastName(), staffEntity.getAccessRightEnum().toString(), staffEntity.getUsername(), staffEntity.getPassword());
+            try{
+                
+            for(RoomType rt : roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes())
+            System.out.printf("%8s%20s%20d%15d%20d%20d\n", rt.getRoomTypeId().toString(), rt.getTypeName(), roomRateSessionBeanRemote.calculateRoomRateOnlineReservations(startDate, endDate, rt.getRoomTypeId()), roomSessionBeanRemote.retrieveRoomsAvailableForBookingByRoomType(startDate, endDate, rt.getRoomTypeId()), rt.getCapacity(), rt.getBed());
+            
+            } catch (NoRateAvailableException | NoRoomTypeAvailableException ex){
+                System.out.println("An unknown error has occurred while creating the new staff!: " + ex.getMessage() + "\n");
+            }
             
             System.out.println("------------------------");
             System.out.println("1: Make Reservation");
@@ -217,8 +226,8 @@ public class MainApp {
             {
                 if(currentGuest != null)
                 { 
-                    
-                    try 
+                    System.out.println("Let's hope it works...");
+                   /* try 
                     {
                         Long newTransactionId = holidayReservationSessionBeanRemote.reserveHoliday(currentCustomer.getCustomerId(), paymentMode, creditCardNumber);
                         
@@ -227,7 +236,7 @@ public class MainApp {
                     catch (CheckoutException ex) 
                     {
                         System.out.println("An error has occurred while making the reservation: " + ex.getMessage() + "\n");
-                    }
+                    }*/
                 }
                 else
                 {
@@ -239,7 +248,7 @@ public class MainApp {
         {
             System.out.println("Invalid date input!\n");
         }
-    }*/
+    }
         
     private void showInputDataValidationErrorsForGuest(Set<ConstraintViolation<Guest>>constraintViolations)
     {

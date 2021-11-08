@@ -99,9 +99,10 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         return query.getResultList();
     }
     
+    @Override
     public int retrieveRoomsAvailableForBookingByRoomType(Date inStartDate, Date inEndDate, Long inRoomTypeId){
         
-        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType.roomTypeId = :inRoomTypeId AND r.assignable = true AND r.roomStatus = RoomStatusAvailable");
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType.roomTypeId = :inRoomTypeId AND r.assignable = :true AND r.roomStatus = :RoomStatusAvailable");
         query.setParameter("inRoomTypeId", inRoomTypeId);
         query.setParameter("true", TRUE);
         query.setParameter("RoomStatusAvailable", RoomStatusEnum.AVAILABLE);
@@ -118,14 +119,15 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
                 Date resStartDate = res.getStartDate();
                 Date resEndDate = res.getEndDate();
             
-                if(inStartDate.before(resStartDate) && inEndDate.after(resStartDate) ||
+                if(!(inStartDate.before(resStartDate) && inEndDate.after(resStartDate) ||
                 inStartDate.before(resEndDate) && inEndDate.after(resEndDate) ||
                 inStartDate.before(resStartDate) && inEndDate.after(resEndDate) ||
-                inStartDate.after(resStartDate) && inEndDate.before(resEndDate)  )
+                inStartDate.after(resStartDate) && inEndDate.before(resEndDate))  )
                 {
-                    continue;
-                } else {
                     finalRoomsAvailable.add(r);
+                    break;
+                } else {
+                    continue;
                 }
             }   
         }

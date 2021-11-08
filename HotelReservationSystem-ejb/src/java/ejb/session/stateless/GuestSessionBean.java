@@ -73,7 +73,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     @Override
     public Guest retrieveGuestByUsername(String username) throws GuestNotFoundException
     {
-        Query query = em.createQuery("SELECT s FROM StaffEntity s WHERE s.username = :inUsername");
+        Query query = em.createQuery("SELECT g FROM Guest g WHERE g.username = :inUsername");
         query.setParameter("inUsername", username);
         
         try

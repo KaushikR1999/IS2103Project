@@ -82,6 +82,7 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
         }
     }
     
+    @Override
     public Long createNewEmployee(Employee newEmployee) throws EmployeeUsernameExistException, UnknownPersistenceException, InputDataValidationException
     {
         Set<ConstraintViolation<Employee>>constraintViolations = validator.validate(newEmployee);

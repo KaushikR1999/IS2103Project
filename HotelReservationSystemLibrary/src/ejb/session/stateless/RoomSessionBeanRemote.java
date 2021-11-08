@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Room;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exception.CreateNewRoomException;
@@ -32,4 +33,7 @@ public interface RoomSessionBeanRemote {
     public Room retrieveRoomByRoomId(Long roomId) throws RoomNotFoundException;
     
     public void updateRoom(Room room) throws RoomNotFoundException, InputDataValidationException;
+    
+    public int retrieveRoomsAvailableForBookingByRoomType(Date inStartDate, Date inEndDate, Long inRoomTypeId);
+
 }
