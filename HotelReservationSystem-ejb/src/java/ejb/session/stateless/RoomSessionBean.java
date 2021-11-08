@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -25,6 +26,8 @@ import util.exception.DeleteRoomException;
 import util.exception.InputDataValidationException;
 import util.exception.RoomNotFoundException;
 import util.enumeration.RoomStatusEnum;
+import util.exception.RoomNumberExistException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -45,20 +48,32 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     }
     
     @Override
-    public Long createNewRoom(Room newRoom) throws RoomNotFoundException, CreateNewRoomException, InputDataValidationException
+    public Long createNewRoom(Room newRoom) throws RoomNotFoundException, CreateNewRoomException, InputDataValidationException, RoomNumberExistException, UnknownPersistenceException 
     {
         
         Set<ConstraintViolation<Room>>constraintViolations = validator.validate(newRoom);
         
         if (constraintViolations.isEmpty()) {
-            if (newRoom != null) {
-                em.persist(newRoom);
+            try {
+                if (newRoom != null & newRoom.getRoomType() != null) {
+                    em.persist(newRoom);
 
-                em.flush();
+                    em.flush();
 
-                return newRoom.getRoomId();
-            } else {
-                throw new CreateNewRoomException("Room Rate information not provided");
+                    return newRoom.getRoomId();
+                } else {
+                    throw new CreateNewRoomException("Room Rate information not provided");
+                }
+            } catch (PersistenceException ex) {
+                if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
+                    if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
+                        throw new RoomNumberExistException();
+                    } else {
+                        throw new UnknownPersistenceException(ex.getMessage());
+                    }
+                } else {
+                    throw new UnknownPersistenceException(ex.getMessage());
+                }
             }
         } else {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
