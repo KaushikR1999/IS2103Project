@@ -108,11 +108,11 @@ public class MainApp {
                 }
                 else if (response == 4)
                 {
-                    doViewReservationDetails();
+                    //doViewReservationDetails();
                 }
                 else if (response == 5)
                 {
-                    doViewAllReservations();
+                   // doViewAllReservations();
                 }
                 else if (response == 6)
                 {

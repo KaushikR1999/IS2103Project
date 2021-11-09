@@ -28,6 +28,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -174,10 +175,15 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     
     @Override
     public int calculateRoomRateOnlineReservations(Date startDate, Date endDate, Long inRoomTypeId) throws NoRateAvailableException{
-        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType.roomTypeId = :inRoomTypeId AND rr.assignable = :true");
+        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType.roomTypeId = :inRoomTypeId AND rr.assignable = :true ORDER BY rr.roomRateType ASC");
         query.setParameter("inRoomTypeId", inRoomTypeId);
         query.setParameter("true", TRUE);
         List<RoomRate> roomRates = query.getResultList();
+        
+        for(RoomRate r : roomRates ) {
+            System.out.println(r.getRoomRateType());
+        }
+
         
         if(roomRates.isEmpty()){
             throw new NoRateAvailableException("No rate can be calculated 1!");
@@ -188,7 +194,6 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
         start.setTime(startDate);
         Calendar end = Calendar.getInstance();
         end.setTime(endDate);
-        end.add(Calendar.DATE, -1);
         int price = 0;
         
         
@@ -210,6 +215,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
                } else if (rr.getRoomRateType().equals(RoomRateTypeEnum.NORMAL)){
                    price+=rr.getRatePerNight();
                    break;
+               } else if (rr.getRoomRateType().equals(RoomRateTypeEnum.PUBLISHED))  {
                } else {
                    throw new NoRateAvailableException("No rate can be calculated 2!");
                }
@@ -217,6 +223,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
            }
            
        }
+       System.out.println(price);
        return price;
 
     }

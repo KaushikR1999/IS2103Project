@@ -183,7 +183,7 @@ public class HotelOperationSalesModule {
         
         while(true)
         {
-            System.out.print("Select Room Rate Type (1: Published, 2: Normal, 3: Peak, 4: Promotion)> ");
+            System.out.print("Select Room Rate Type (1: Promotion, 2: Peak, 3: Normal, 4: Published)> ");
             Integer roomRateTypeInt = scanner.nextInt();
             
             if(roomRateTypeInt >= 1 && roomRateTypeInt <= 4)

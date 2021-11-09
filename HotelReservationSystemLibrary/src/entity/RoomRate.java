@@ -38,7 +38,7 @@ public class RoomRate implements Serializable {
     private RoomType roomType;
     
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @NotNull (message = "Room rate type cannot be null")
     private RoomRateTypeEnum roomRateType;
     
