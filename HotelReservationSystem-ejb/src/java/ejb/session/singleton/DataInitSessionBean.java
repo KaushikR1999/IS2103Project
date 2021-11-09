@@ -178,24 +178,19 @@ public class DataInitSessionBean {
 
         Date startDateA = new Date(2021,11,11);
         Date endDateA = new Date(2021, 11, 15);
-        Date startDateB = new Date(2021,10,11);
-        Date endDateB = new Date(2021, 10, 15);
+        
         Date startDateC = new Date(2021,11,11);
         Date endDateC = new Date(2021, 11, 13);
-        Date startDateD = new Date(2021,9,11);
-        Date endDateD = new Date(2021, 9, 15);
+
         Date startDateE = new Date(2021,10,11);
         Date endDateE = new Date(2021, 10, 14);
-        Date startDateF = new Date(2021,8,9);
-        Date endDateF = new Date(2021, 8, 15);
+
         Date startDateG = new Date(2021,7,11);
         Date endDateG = new Date(2021, 7, 12);
-        Date startDateH = new Date(2021,11,13);
-        Date endDateH = new Date(2021, 11, 17);
+
         Date startDateI = new Date(2021,11,20);
         Date endDateI = new Date(2021, 11, 22);
-        Date startDateJ = new Date(2021,11,11);
-        Date endDateJ = new Date(2021, 11, 11);
+
         
         RoomRate rateA = new RoomRate(RoomRateTypeEnum.PUBLISHED, startDateA, endDateA, "Deluxe Room", 100);
         rateA.setRoomType(deluxeRoom);
@@ -203,7 +198,7 @@ public class DataInitSessionBean {
         em.flush();
         deluxeRoom.getRoomRates().add(rateA);
         
-        RoomRate rateB = new RoomRate(RoomRateTypeEnum.NORMAL, startDateB, endDateB, "Deluxe Room", 50);
+        RoomRate rateB = new RoomRate(RoomRateTypeEnum.NORMAL, null, null, "Deluxe Room", 50);
         rateB.setRoomType(deluxeRoom);
         em.persist(rateB);
         em.flush();
@@ -215,7 +210,7 @@ public class DataInitSessionBean {
         em.flush();
         premierRoom.getRoomRates().add(rateC);
         
-        RoomRate rateD = new RoomRate(RoomRateTypeEnum.NORMAL, startDateD, endDateD, "Premier Room", 100);
+        RoomRate rateD = new RoomRate(RoomRateTypeEnum.NORMAL, null, null, "Premier Room", 100);
         rateD.setRoomType(premierRoom);
         em.persist(rateD);
         em.flush();
@@ -227,7 +222,7 @@ public class DataInitSessionBean {
         em.flush();
         familyRoom.getRoomRates().add(rateE);
         
-        RoomRate rateF = new RoomRate(RoomRateTypeEnum.NORMAL, startDateF, endDateF, "Family Room", 150);
+        RoomRate rateF = new RoomRate(RoomRateTypeEnum.NORMAL, null, null, "Family Room", 150);
         rateF.setRoomType(familyRoom);
         em.persist(rateF);
         em.flush();
@@ -239,7 +234,7 @@ public class DataInitSessionBean {
         em.flush();
         juniorSuite.getRoomRates().add(rateG);
         
-        RoomRate rateH = new RoomRate(RoomRateTypeEnum.NORMAL, startDateH, endDateH, "Junior Suite", 200);
+        RoomRate rateH = new RoomRate(RoomRateTypeEnum.NORMAL, null, null, "Junior Suite", 200);
         rateH.setRoomType(juniorSuite);
         em.persist(rateH);
         em.flush();
@@ -251,7 +246,7 @@ public class DataInitSessionBean {
         em.flush();
         grandSuite.getRoomRates().add(rateI);
         
-        RoomRate rateJ = new RoomRate(RoomRateTypeEnum.NORMAL, startDateJ, endDateJ, "Grand Suite", 250);
+        RoomRate rateJ = new RoomRate(RoomRateTypeEnum.NORMAL, null, null, "Grand Suite", 250);
         rateJ.setRoomType(grandSuite);
         em.persist(rateJ);
         em.flush();
