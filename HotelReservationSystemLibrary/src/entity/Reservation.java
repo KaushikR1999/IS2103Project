@@ -51,12 +51,7 @@ public class Reservation implements Serializable {
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     @NotNull
-    private Date bookingDate;
-    
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIME)
-    @NotNull
-    private Date bookingTime;
+    private Date bookingDateTime;
     
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -91,8 +86,7 @@ public class Reservation implements Serializable {
         this();
         this.startDate = startDate;
         this.endDate = endDate;
-        this.bookingDate = bookingDate;
-        this.bookingTime = bookingTime;
+        this.bookingDateTime = bookingDate;
         this.status = status;
         this.totalReservationFee = reservationFee;
         this.reservationType = reservationType;
@@ -163,31 +157,17 @@ public class Reservation implements Serializable {
     }
 
     /**
-     * @return the bookingDate
+     * @return the bookingDateTime
      */
-    public Date getBookingDate() {
-        return bookingDate;
+    public Date getBookingDateTime() {
+        return bookingDateTime;
     }
 
     /**
-     * @param bookingDate the bookingDate to set
+     * @param bookingDateTime the bookingDateTime to set
      */
-    public void setBookingDate(Date bookingDate) {
-        this.bookingDate = bookingDate;
-    }
-
-    /**
-     * @return the bookingTime
-     */
-    public Date getBookingTime() {
-        return bookingTime;
-    }
-
-    /**
-     * @param bookingTime the bookingTime to set
-     */
-    public void setBookingTime(Date bookingTime) {
-        this.bookingTime = bookingTime;
+    public void setBookingDateTime(Date bookingDateTime) {
+        this.bookingDateTime = bookingDateTime;
     }
 
     /**

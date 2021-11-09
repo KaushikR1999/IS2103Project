@@ -72,10 +72,12 @@ public class MainApp {
             System.out.println("1: Login");
             System.out.println("2: Register");
             System.out.println("3: Search Hotel Room");
-            System.out.println("4: Exit\n");
+            System.out.println("4: View My Reservation Details");
+            System.out.println("5: View All My Reservations");
+            System.out.println("6: Exit\n");
             response = 0;
             
-            while(response < 1 || response > 4)
+            while(response < 1 || response > 6)
             {
                 System.out.print("> ");
 
@@ -106,6 +108,14 @@ public class MainApp {
                 }
                 else if (response == 4)
                 {
+                    doViewReservationDetails();
+                }
+                else if (response == 5)
+                {
+                    doViewAllReservations();
+                }
+                else if (response == 6)
+                {
                     break;
                 }
                 else
@@ -114,7 +124,7 @@ public class MainApp {
                 }
             }
             
-            if(response == 4)
+            if(response == 6)
             {
                 break;
             }
@@ -250,6 +260,8 @@ public class MainApp {
             System.out.println("Invalid date input!\n");
         }
     }
+    
+    
         
     private void showInputDataValidationErrorsForGuest(Set<ConstraintViolation<Guest>>constraintViolations)
     {
