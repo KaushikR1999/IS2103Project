@@ -216,7 +216,7 @@ public class MainApp {
             System.out.print("Enter Number of Rooms> ");
             numberOfRooms = scanner.nextInt();
             
-            System.out.printf("%8s%20s%20s%15s%20s%20s\n", "Option", "Room Type", "Price", "NumOfRooms", "Room Capacity", "Room Beds");
+            System.out.printf("%8s%20s%20s%15s%20s%20s\n", "Option", "Room Type", "Price Per Room", "NumOfRooms", "Room Capacity", "Room Beds");
             try{
                 
                 for (RoomType rt : roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes()) {
