@@ -211,7 +211,7 @@ public class HotelOperationSalesModule {
         Date startDate = new Date();
         
         while (true) {
-            System.out.print("Enter Start Date> ");
+            System.out.print("Enter Start Date (yyyy-mm-dd)> ");
             try {
                 startDate = formatDate.parse(scanner.nextLine().trim());
                 if (startDate.after(new Date()) || formatDate.format(startDate).equals(formatDate.format(new Date()))) {
@@ -230,7 +230,7 @@ public class HotelOperationSalesModule {
         Date endDate = new Date();
         
         while (true) {
-            System.out.print("Enter End Date> ");
+            System.out.print("Enter End Date (yyyy-mm-dd)> ");
             try {
                 endDate = formatDate.parse(scanner.nextLine().trim());
                 if (endDate.after(new Date()) || formatDate.format(endDate).equals(formatDate.format(new Date()))) {
@@ -319,7 +319,7 @@ public class HotelOperationSalesModule {
         Date startDate = new Date();
         
         while (true) {
-            System.out.print("Enter Start Date> ");
+            System.out.print("Enter Start Date (yyyy-mm-dd)> ");
             try {
                 startDate = formatDate.parse(scanner.nextLine().trim());
                 if (startDate.after(new Date()) || formatDate.format(startDate).equals(formatDate.format(new Date()))) {
@@ -338,7 +338,7 @@ public class HotelOperationSalesModule {
         Date endDate = new Date();
         
         while (true) {
-            System.out.print("Enter End Date> ");
+            System.out.print("Enter End Date (yyyy-mm-dd)> ");
             try {
                 endDate = formatDate.parse(scanner.nextLine().trim());
                 if (endDate.after(new Date()) || formatDate.format(endDate).equals(formatDate.format(new Date()))) {

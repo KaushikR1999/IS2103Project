@@ -180,6 +180,41 @@ public class HotelOperationGeneralModule {
             newRoomType.getAmenities().add(scanner.nextLine().trim());
         }
         
+//        System.out.print("Enter Name of Next Highest Room Type > ");
+        
+        while(true)
+        {
+            try {
+                List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes();
+                
+                String output = "Select Next Highest Room Type (";
+                int i = 1;
+                for (RoomType roomType: roomTypes) {
+                    output += i + ": " + roomType.getTypeName();
+                    i++;
+                    if (i <= roomTypes.size()) {
+                        output += ", ";
+                    }
+                }
+                output += ")> ";
+                
+                System.out.print(output);
+                Integer roomTypeInt = scanner.nextInt();
+
+                if (roomTypeInt >= 1 && roomTypeInt <= roomTypes.size()) {
+                    newRoomType.setNextHighestRoomType(roomTypes.get(roomTypeInt-1));
+                    break;
+                } else {
+                    System.out.println("Invalid option, please try again!\n");
+                }
+            }
+            catch (NoRoomTypeAvailableException ex) {
+                System.out.println(ex.getMessage() + "\n");
+                break;
+            }
+            
+        }
+        
         Set<ConstraintViolation<RoomType>>constraintViolations = validator.validate(newRoomType);
         
         if(constraintViolations.isEmpty())
@@ -289,36 +324,73 @@ public class HotelOperationGeneralModule {
         }
         scanner.nextLine();
         System.out.print("Update Amenities? (Enter 'Y' to update amenities, any button if otherwise)> ");
-            String updateAmenities = scanner.nextLine().trim();
-            
-            if(updateAmenities.equals("Y"))
-            {
-                    System.out.print("Enter number of amenities> ");
-                    int noOfAmenities = scanner.nextInt();
-                    scanner.nextLine();
-                    List<String> newAmenities = new ArrayList<>();
-                    for( int i = 0; i < noOfAmenities; i++) {
-                        int noCounter = i + 1;
-                        System.out.print("Enter name of amenity #" + noCounter + "> " );
-                        newAmenities.add(scanner.nextLine().trim());
-                    }
-                    roomType.setAmenities(newAmenities);
-            }
-            try {
-                
-        //if(roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypesExceptCurrent(roomType.getRoomTypeId()).isEmpty()){
-       // } else {
-        System.out.print("Enter Name of Next Highest Room Type > ");
-        input = scanner.nextLine().trim();
-            RoomType nextHighestRoomType = roomTypeSessionBeanRemote.retrieveRoomTypeByRoomTypeName(input);
-            roomType.setNextHighestRoomType(nextHighestRoomType);
-               // }
-            
-        } catch (RoomTypeNotFoundException ex)
-        {
-            System.out.println("An error has occurred while updating room type: " + ex.getMessage() + "\n");
+        String updateAmenities = scanner.nextLine().trim();
 
+        if (updateAmenities.equals("Y")) 
+        {
+            System.out.print("Enter number of amenities> ");
+            int noOfAmenities = scanner.nextInt();
+            scanner.nextLine();
+            List<String> newAmenities = new ArrayList<>();
+            for (int i = 0; i < noOfAmenities; i++) {
+                int noCounter = i + 1;
+                System.out.print("Enter name of amenity #" + noCounter + "> ");
+                newAmenities.add(scanner.nextLine().trim());
+            }
+            roomType.setAmenities(newAmenities);
         }
+        
+        while(true)
+        {
+            try {
+                List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypesExceptCurrent(roomType.getRoomTypeId());
+                
+                String output = "Select Next Highest Room Type (0: No Change, ";
+                int i = 1;
+                for (RoomType otherRoomType: roomTypes) {
+                    output += i + ": " + otherRoomType.getTypeName();
+                    i++;
+                    if (i <= roomTypes.size()) {
+                        output += ", ";
+                    }
+                }
+                output += ")> ";
+                
+                System.out.print(output);
+                Integer roomTypeInt = scanner.nextInt();
+
+                if (roomTypeInt >= 1 && roomTypeInt <= roomTypes.size()) {
+                    roomType.setNextHighestRoomType(roomTypes.get(roomTypeInt-1));
+                    break;
+                } else if (roomTypeInt == 0) {
+//                    roomType.setNextHighestRoomType(roomType.getNextHighestRoomType());
+                    break;
+                } else {
+                    System.out.println("Invalid option, please try again!\n");
+                }
+            }
+            catch (NoRoomTypeAvailableException ex) {
+                System.out.println(ex.getMessage() + "\n");
+                break;
+            }
+            
+        }
+        
+//            try {
+//                
+//        //if(roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypesExceptCurrent(roomType.getRoomTypeId()).isEmpty()){
+//       // } else {
+//        System.out.print("Enter Name of Next Highest Room Type > ");
+//        input = scanner.nextLine().trim();
+//            RoomType nextHighestRoomType = roomTypeSessionBeanRemote.retrieveRoomTypeByRoomTypeName(input);
+//            roomType.setNextHighestRoomType(nextHighestRoomType);
+//               // }
+//            
+//        } catch (RoomTypeNotFoundException ex)
+//        {
+//            System.out.println("An error has occurred while updating room type: " + ex.getMessage() + "\n");
+//
+//        }
             //}
         
         Set<ConstraintViolation<RoomType>>constraintViolations = validator.validate(roomType);
@@ -454,10 +526,7 @@ public class HotelOperationGeneralModule {
                 Integer roomTypeInt = scanner.nextInt();
 
                 if (roomTypeInt >= 1 && roomTypeInt <= roomTypes.size()) {
-//                    System.out.println(roomTypes.get(roomTypeInt-1));
-//                    System.out.println(roomTypes.get(roomTypeInt-1).getClass());
                     newRoom.setRoomType(roomTypes.get(roomTypeInt-1));
-//                    System.out.println(newRoom.getRoomType().getClass());
                     break;
                 } else {
                     System.out.println("Invalid option, please try again!\n");
@@ -591,7 +660,7 @@ public class HotelOperationGeneralModule {
             String input;
 
             System.out.println("*** HoRS Management Client :: Hotel Operation (General) :: View Room Details :: Delete Room ***\n");
-            System.out.printf("Confirm Delete Room %s (Room ID: %d) (Enter 'Y' to Delete)> ", room.getRoomNumber(), room.getRoomId());
+            System.out.printf("Confirm Delete Room %s (Room ID: %s) (Enter 'Y' to Delete)> ", room.getRoomNumber(), room.getRoomId());
             scanner.nextLine();
             input = scanner.nextLine().trim();
 
@@ -622,7 +691,7 @@ public class HotelOperationGeneralModule {
 
         for(Room room:rooms)
         {
-            System.out.printf("%8s%15s%20s%20s\n", room.getRoomId().toString(), room.getRoomNumber(), room.getRoomType().getTypeName(), room.getRoomStatus());
+            System.out.printf("%8s%15s%20s%20s\n", room.getRoomId(), room.getRoomNumber(), room.getRoomType().getTypeName(), room.getRoomStatus());
         }
         
         System.out.print("Press any key to continue...> ");

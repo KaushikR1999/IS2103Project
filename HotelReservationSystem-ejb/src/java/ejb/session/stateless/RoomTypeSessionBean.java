@@ -182,7 +182,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     public List<RoomType> retrieveAllAvailableRoomTypesExceptCurrent(Long inRoomTypeId) throws NoRoomTypeAvailableException
     {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.assignable = true AND rt.roomTypeId <> :inRoomTypeId");
-        query.setParameter("true", TRUE);
+//        query.setParameter("true", TRUE);
         query.setParameter("inRoomTypeId", inRoomTypeId);
         List<RoomType> availableRoomType = query.getResultList();
         

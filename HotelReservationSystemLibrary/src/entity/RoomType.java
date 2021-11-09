@@ -50,7 +50,7 @@ public class RoomType implements Serializable {
     @Column(nullable = false)
     private boolean assignable;
     
-    @OneToOne (fetch = FetchType.LAZY, cascade = {})
+    @OneToOne (fetch = FetchType.EAGER, cascade = {})
     private RoomType nextHighestRoomType;
     
     @OneToMany (fetch = FetchType.LAZY, cascade = {})

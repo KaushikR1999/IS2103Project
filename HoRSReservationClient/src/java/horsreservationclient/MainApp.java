@@ -201,8 +201,9 @@ public class MainApp {
             startDate = inputDateFormat.parse(scanner.nextLine().trim());
             System.out.print("Enter CheckOut Date (dd/mm/yyyy)> ");
             endDate = inputDateFormat.parse(scanner.nextLine().trim());
-            System.out.print("Enter CheckOut Date (dd/mm/yyyy)> ");
-            bookingDateTime = inputDateFormat.parse(scanner.nextLine().trim());            
+            System.out.print("Enter Booking Date (dd/mm/yyyy)> ");
+            bookingDateTime = inputDateFormat.parse(scanner.nextLine().trim());
+//            bookingDateTime = ;
             System.out.print("Enter Number of Rooms> ");
             numberOfRooms = scanner.nextInt();
             
