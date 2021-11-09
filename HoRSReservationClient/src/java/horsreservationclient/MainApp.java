@@ -211,20 +211,19 @@ public class MainApp {
             startDate = inputDateFormat.parse(scanner.nextLine().trim());
             System.out.print("Enter CheckOut Date (dd/mm/yyyy)> ");
             endDate = inputDateFormat.parse(scanner.nextLine().trim());
-            System.out.print("Enter Booking Date (dd/mm/yyyy)> ");
-            bookingDateTime = inputDateFormat.parse(scanner.nextLine().trim());
-//            bookingDateTime = ;
+//            System.out.print("Enter Booking Date (dd/mm/yyyy)> ");
+//            bookingDateTime = inputDateFormat.parse(scanner.nextLine().trim());
             System.out.print("Enter Number of Rooms> ");
             numberOfRooms = scanner.nextInt();
             
             System.out.printf("%8s%20s%20s%15s%20s%20s\n", "Option", "Room Type", "Price", "NumOfRooms", "Room Capacity", "Room Beds");
             try{
                 
-            for(RoomType rt : roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes())
-            System.out.printf("%8s%20s%20d%15d%20d%20d\n", rt.getRoomTypeId().toString(), rt.getTypeName(), roomRateSessionBeanRemote.calculateRoomRateOnlineReservations(startDate, endDate, rt.getRoomTypeId()), roomSessionBeanRemote.retrieveRoomsAvailableForBookingByRoomType(startDate, endDate, rt.getRoomTypeId()), rt.getCapacity(), rt.getBed());
-            
+                for (RoomType rt : roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes()) {
+                    System.out.printf("%8s%20s%20d%15d%20d%20d\n", rt.getRoomTypeId().toString(), rt.getTypeName(), roomRateSessionBeanRemote.calculateRoomRateOnlineReservations(startDate, endDate, rt.getRoomTypeId()), roomSessionBeanRemote.retrieveRoomsAvailableForBookingByRoomType(startDate, endDate, rt.getRoomTypeId()), rt.getCapacity(), rt.getBed());
+                }
             } catch (NoRateAvailableException | NoRoomTypeAvailableException ex){
-                System.out.println("An unknown error has occurred while creating the new staff!: " + ex.getMessage() + "\n");
+                System.out.println("An unknown error has occurred while retrieving available hotel rooms!: " + ex.getMessage() + "\n");
             }
             
             System.out.println("------------------------");

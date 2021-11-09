@@ -180,7 +180,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
         List<RoomRate> roomRates = query.getResultList();
         
         if(roomRates.isEmpty()){
-            throw new NoRateAvailableException("No rate can be calculated!");
+            throw new NoRateAvailableException("No rate can be calculated 1!");
         }
         
         //set the calendar dates
@@ -191,29 +191,34 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
         end.add(Calendar.DATE, -1);
         int price = 0;
         
+        
+        
        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
        {
            System.out.println("Counting date is" + date);
            
            for(RoomRate rr : roomRates){
+               
+               System.out.println(rr.getRatePerNight());
 
-               if(rr.getRoomRateType().equals(RoomRateTypeEnum.PROMOTION) && (date.after(rr.getStartDate()) && date.before(rr.getEndDate()))){
+               if(rr.getRoomRateType().equals(RoomRateTypeEnum.PROMOTION) && (date.after(rr.getStartDate()) && date.before(rr.getEndDate()))  ){
                    price+=rr.getRatePerNight();
                    break;
-               } else if (rr.getRoomRateType().equals(RoomRateTypeEnum.PEAK) && (date.after(rr.getStartDate()) && date.before(rr.getEndDate()))){
+               } else if (rr.getRoomRateType().equals(RoomRateTypeEnum.PEAK) && (date.after(rr.getStartDate()) && date.before(rr.getEndDate())) ){
                    price+=rr.getRatePerNight();
                    break;
                } else if (rr.getRoomRateType().equals(RoomRateTypeEnum.NORMAL)){
                    price+=rr.getRatePerNight();
                    break;
                } else {
-                   throw new NoRateAvailableException("No rate can be calculated!");
+                   throw new NoRateAvailableException("No rate can be calculated 2!");
                }
                
            }
            
        }
        return price;
+
     }
     
        /* public void calculateWalkInReservations(Date startDate, Date endDate, Long inRoomTypeId) throws NoRateAvailableException{
