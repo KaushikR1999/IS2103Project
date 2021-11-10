@@ -9,8 +9,11 @@ import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import static java.lang.Boolean.TRUE;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -176,6 +179,35 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         {
             return availableRoomType;
         }               
+    }
+    
+      @Override
+       public List<RoomType> retrieveAllAvailableRoomTypesBasedOnSize(Date startDate, Date endDate, int numOfRooms) throws NoRoomTypeAvailableException
+    {
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.assignable = true");
+//        query.setParameter("true", TRUE);
+        List<RoomType> availableRoomType = query.getResultList();
+        List<RoomType> finalRoomType = new ArrayList<>();
+        
+        if(availableRoomType.isEmpty())
+        {
+            throw new NoRoomTypeAvailableException("There are no available Room types!");
+        }
+        
+        for(RoomType rt : availableRoomType){
+            int finalRoomCount = roomSessionBeanLocal.retrieveRoomsAvailableForBookingByRoomType(startDate, endDate, rt.getRoomTypeId());
+            if(finalRoomCount >= numOfRooms){
+                finalRoomType.add(rt);
+                //availableRoomType.stream().filter(x -> !x.equals(rt)).collect(Collectors.toList());
+            }
+        }
+        
+                if(finalRoomType.isEmpty())
+        {
+            throw new NoRoomTypeAvailableException("There are no room types that have the number of rooms indicated!");
+        }
+            return finalRoomType;
+           
     }
     
     @Override

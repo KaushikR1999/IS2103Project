@@ -235,44 +235,57 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
 
     }
     
-       /* public void calculateWalkInReservations(Date startDate, Date endDate, Long inRoomTypeId) throws NoRateAvailableException{
-        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType.roomTypeId = :inRoomTypeId AND rr.assignable = :true AND rr.roomRateType =: DesiredEnum");
+        public int calculateWalkInReservations(Date startDate, Date endDate, Long inRoomTypeId) throws NoRateAvailableException{
+        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType.roomTypeId = :inRoomTypeId AND rr.assignable = :true ORDER BY rr.roomRateType ASC");
         query.setParameter("inRoomTypeId", inRoomTypeId);
         query.setParameter("true", TRUE);
-        query.setParameter("DesiredEnum", RoomRateTypeEnum.PUBLISHED);
+        List<RoomRate> roomRates = query.getResultList();
         
-        //No Result Exception
-        RoomRate roomRate = (RoomRate) query.getSingleResult();
-       
+        for(RoomRate r : roomRates ) {
+            System.out.println(r.getRoomRateType());
+        }
+
         
+        if(roomRates.isEmpty()){
+            throw new NoRateAvailableException("No rate can be calculated !");
+        }
+        
+        //set the calendar dates
         Calendar start = Calendar.getInstance();
         start.setTime(startDate);
         Calendar end = Calendar.getInstance();
         end.setTime(endDate);
-        end.add(Calendar.DATE, -1);
         int price = 0;
+        
+        
         
        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
        {
            System.out.println("Counting date is" + date);
+           boolean checker = false;
            
            for(RoomRate rr : roomRates){
+               
+               System.out.println(rr.getRatePerNight());
+               
 
-               if(rr.getRoomRateType().equals(RoomRateTypeEnum.PROMOTION) && (date.after(rr.getStartDate()) && date.before(rr.getEndDate()))){
+               if(rr.getRoomRateType().equals(RoomRateTypeEnum.PUBLISHED) && (date.after(rr.getStartDate()) && date.before(rr.getEndDate()))  ){
                    price+=rr.getRatePerNight();
-               } else if (rr.getRoomRateType().equals(RoomRateTypeEnum.PEAK) && (date.isAfter(date.after(rr.getStartDate()) && d.before(rr.getEndDate())))){
-                   price+=rr.getRatePerNight();
-               } else if (rr.getRoomRateType().equals(RoomRateTypeEnum.NORMAL)){
-                   price+=rr.getRatePerNight();
+                   checker = true;
+                   break;
                } else {
-                   throw new NoRateAvailableException("No rate can be calculated!");
                }
                
            }
            
+           if (checker = false){
+                   throw new NoRateAvailableException("No rate can be calculated for one of the nights!");
+           }
+           
        }
-    
-    }*/
+       System.out.println(price);
+       return price;
+    }
     
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RoomRate>>constraintViolations)
