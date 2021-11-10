@@ -11,7 +11,11 @@ import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
 import entity.RoomType;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -48,8 +52,9 @@ public class HotelOperationGeneralModule {
     private RoomSessionBeanRemote roomSessionBeanRemote;
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     
-    
     private Employee currentEmployee;
+    
+    private final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
     
     public HotelOperationGeneralModule()
     {
@@ -88,10 +93,11 @@ public class HotelOperationGeneralModule {
             System.out.println("7: View All Rooms"); 
             System.out.println("-----------------------");
             System.out.println("8: View Room Allocation Exception Report");
-            System.out.println("9: Back\n");
+            System.out.println("9: View Room Allocation Exception Report");
+            System.out.println("10: Back\n");
             response = 0;
             
-            while(response < 1 || response > 9)
+            while(response < 1 || response > 10)
             {
                 System.out.print("> ");
 
@@ -139,6 +145,11 @@ public class HotelOperationGeneralModule {
                     System.out.println("not implemented yet");
                 }
                 else if (response == 9)
+                {
+                    //allocateRoomsToReservations
+                    System.out.println("not implemented yet");
+                }
+                else if (response == 10)
                 {
                     break;
                 }
@@ -696,6 +707,32 @@ public class HotelOperationGeneralModule {
         
         System.out.print("Press any key to continue...> ");
         scanner.nextLine();
+    }
+    
+    public void allocateRoomToReservations() 
+    {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("*** HoRS Management Client :: Hotel Operation (General) :: Allocate Room to Reservations ***\n");
+        
+        Date startDate = new Date();
+        
+        while (true) {
+            System.out.print("Enter Start Date (yyyy-mm-dd)> ");
+            try {
+                startDate = formatDate.parse(scanner.nextLine().trim());
+                if (startDate.after(new Date()) || formatDate.format(startDate).equals(formatDate.format(new Date()))) {
+                    newRoomRate.setStartDate(startDate);
+                    break;
+                } else {
+                    throw new DateTimeException("Chosen date is in the past!");
+                }
+            } catch (ParseException ex) {
+                System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
+            } catch (DateTimeException ex) {
+                System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
+            }
+        }
     }
 
     private void showInputDataValidationErrorsForRoom(Set<ConstraintViolation<Room>>constraintViolations)

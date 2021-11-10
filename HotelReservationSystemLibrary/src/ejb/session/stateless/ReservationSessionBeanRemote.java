@@ -31,4 +31,6 @@ public interface ReservationSessionBeanRemote {
     public Long createNewReservation(Reservation newReservation) throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException;
     
     public List<Reservation> retrieveAllReservations();
+    
+    public void allocateRoomToCurrentDayReservations(Date bookingDateTime);
 }

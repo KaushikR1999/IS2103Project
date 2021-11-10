@@ -160,9 +160,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
     }
     
-    public void allocateRoomToCurrentDayReservations () {
-        
-        Date bookingDateTime = new java.util.Date();
+    public void allocateRoomToCurrentDayReservations (Date bookingDateTime) {
         
         List <Reservation> reservations = new ArrayList <Reservation> ();
         
@@ -175,20 +173,38 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         for (Reservation reservation : reservations) {
             RoomType roomType = reservation.getRoomType();
             
-            while (true) {
-                allocateRoom(roomType, reservation);
-                
+            int NumberOfRooms = reservation.getNumberOfRooms();
+            
+            for (int i = 0; i < NumberOfRooms; i++) {
+                RoomType currentRoomType = reservation.getRoomType();
+                boolean allocated = false;
+                while (allocated != true && currentRoomType != null) {
+                    allocated = allocateRoom (roomType, reservation);
+                    currentRoomType = currentRoomType.getNextHighestRoomType();
+                }
             }
             
+            if (reservation.getRooms().size() != NumberOfRooms) {
+                // raise exception in exception Report
+                List<Room> rooms = reservation.getRooms();
+                for (Room room : rooms) {
+                    room.getReservations().remove(reservation);
+                }
+                reservation.getRooms().clear();
+            } 
         }
     }
     
-    public void allocateRoom (RoomType roomType, Reservation reservation) {
-        List<Room> rooms = roomSessionBeanLocal.retrieveRoomsByRoomTypeId(roomType.getRoomTypeId());
-        if (rooms.size() == 0) {
-            // check 
+    public boolean allocateRoom (RoomType roomType, Reservation reservation) {
+        List<Room> rooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), roomType.getRoomTypeId());
+        if (rooms.isEmpty()) {
+            // check
+            return false;
         } else {
-
+            Room room = rooms.get(0);
+            room.getReservations().add(reservation);
+            reservation.getRooms().add(room);
+            return true;
         }
     }
     
