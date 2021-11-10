@@ -223,7 +223,7 @@ public class MainApp {
             System.out.printf("%8s%20s%20s%15s%20s%20s\n", "Option", "Room Type", "Price Per Room", "NumOfRooms", "Room Capacity", "Room Beds");
             try{
                 
-                for (RoomType rt : roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes()) {
+                for (RoomType rt : roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypesBasedOnSize(startDate, endDate, numberOfRooms)) {
                     System.out.printf("%8s%20s%20d%15d%20d%20d\n", rt.getRoomTypeId().toString(), rt.getTypeName(), roomRateSessionBeanRemote.calculateRoomRateOnlineReservations(startDate, endDate, rt.getRoomTypeId()), roomSessionBeanRemote.retrieveRoomsAvailableForBookingByRoomType(startDate, endDate, rt.getRoomTypeId()), rt.getCapacity(), rt.getBed());
                 }
             } catch (NoRateAvailableException | NoRoomTypeAvailableException ex){

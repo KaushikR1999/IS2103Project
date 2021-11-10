@@ -76,7 +76,7 @@ public class MainApp {
                         
                        systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
                        hotelOperationModule = new HotelOperationModule(employeeSessionBeanRemote, roomSessionBeanRemote, roomTypeSessionBeanRemote, roomRateSessionBeanRemote, reservationSessionBeanRemote, currentEmployee);
-                       frontOfficeModule = new FrontOfficeModule(employeeSessionBeanRemote, reservationSessionBeanRemote, guestSessionBeanRemote, currentEmployee);
+                       frontOfficeModule = new FrontOfficeModule(employeeSessionBeanRemote, reservationSessionBeanRemote, guestSessionBeanRemote, roomTypeSessionBeanRemote, roomRateSessionBeanRemote, roomSessionBeanRemote, currentEmployee);
 
                         menuMain();
                     }
