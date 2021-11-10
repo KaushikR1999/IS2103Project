@@ -150,7 +150,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
                 throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
             }
         } else {
-            throw new RoomRateNotFoundException("Staff ID not provided for staff to be updated");
+            throw new RoomRateNotFoundException("Room Rate ID not provided for room rate to be updated");
         }
     }
     @Override
