@@ -28,8 +28,10 @@ public interface ReservationSessionBeanLocal {
 
     public void updateReservation(Reservation reservation) throws ReservationNotFoundException, InputDataValidationException;
 
-    public Long createNewReservation(Reservation newReservation) throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException;
+    public Reservation createNewReservation(Reservation newReservation) throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException;
 
     public List<Reservation> retrieveAllReservations();
+
+    public String retrieveRoomsAllocatedInString(Long reservationId) throws ReservationNotFoundException;
     
 }

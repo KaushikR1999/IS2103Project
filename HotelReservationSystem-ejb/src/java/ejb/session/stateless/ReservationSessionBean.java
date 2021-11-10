@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -53,7 +54,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     @Override
-    public Long createNewReservation(Reservation newReservation) throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException
+    public Reservation createNewReservation(Reservation newReservation) throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException
     {
         
         Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(newReservation);
@@ -65,7 +66,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 
                 em.flush();
 
-                return newReservation.getReservationId();
+                return newReservation;
             } else {
                 throw new CreateNewReservationException("Reservation information not provided");
             }
@@ -156,6 +157,22 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         {
             throw new ReservationNotFoundException("No reservations exist for " + bookingDateTime);
         }
+    }
+    
+    @Override
+    public String retrieveRoomsAllocatedInString(Long reservationId) throws ReservationNotFoundException {
+        List<Room> reservedRooms = retrieveReservationByReservationId(reservationId).getRooms();
+        String noRoomsAvailableString = "No Rooms Allocated Yet!";
+        List<String> roomsAssignedArray = new ArrayList<>();
+        
+        if(reservedRooms.isEmpty()){
+            return noRoomsAvailableString;
+        } else {
+            for(Room r : reservedRooms){
+                roomsAssignedArray.add(r.getRoomNumber());
+            }
+        }
+        return roomsAssignedArray.toString();
     }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>>constraintViolations)

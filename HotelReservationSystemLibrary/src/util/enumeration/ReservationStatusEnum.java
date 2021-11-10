@@ -13,5 +13,6 @@ public enum ReservationStatusEnum {
     CONFIRMED,
     UPGRADED,
     ALLOCATED,
-    REJECTED
+    REJECTED,
+    PENDING
 }
