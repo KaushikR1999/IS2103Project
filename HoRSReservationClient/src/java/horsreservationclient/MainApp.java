@@ -26,6 +26,7 @@ import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.NoRateAvailableException;
 import util.exception.NoRoomTypeAvailableException;
+import util.exception.SameDayReservationException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -211,6 +212,9 @@ public class MainApp {
             startDate = inputDateFormat.parse(scanner.nextLine().trim());
             System.out.print("Enter CheckOut Date (dd/mm/yyyy)> ");
             endDate = inputDateFormat.parse(scanner.nextLine().trim());
+            if (endDate.equals(startDate)){
+                throw new SameDayReservationException("Start and end date cannot be on the same day!");
+            }
 //            System.out.print("Enter Booking Date (dd/mm/yyyy)> ");
 //            bookingDateTime = inputDateFormat.parse(scanner.nextLine().trim());
             System.out.print("Enter Number of Rooms> ");
@@ -257,7 +261,11 @@ public class MainApp {
         catch(ParseException ex)
         {
             System.out.println("Invalid date input!\n");
-        }
+        } 
+        catch(SameDayReservationException ex)
+        {
+            System.out.println(ex.getMessage());
+        } 
     }
     
     

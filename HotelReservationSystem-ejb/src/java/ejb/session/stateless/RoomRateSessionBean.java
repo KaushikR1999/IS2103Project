@@ -201,25 +201,32 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
        {
            System.out.println("Counting date is" + date);
+           boolean checker = false;
            
            for(RoomRate rr : roomRates){
                
                System.out.println(rr.getRatePerNight());
+               
 
                if(rr.getRoomRateType().equals(RoomRateTypeEnum.PROMOTION) && (date.after(rr.getStartDate()) && date.before(rr.getEndDate()))  ){
                    price+=rr.getRatePerNight();
+                   checker = true;
                    break;
                } else if (rr.getRoomRateType().equals(RoomRateTypeEnum.PEAK) && (date.after(rr.getStartDate()) && date.before(rr.getEndDate())) ){
                    price+=rr.getRatePerNight();
+                   checker = true;
                    break;
                } else if (rr.getRoomRateType().equals(RoomRateTypeEnum.NORMAL)){
                    price+=rr.getRatePerNight();
+                   checker = true;
                    break;
-               } else if (rr.getRoomRateType().equals(RoomRateTypeEnum.PUBLISHED))  {
                } else {
-                   throw new NoRateAvailableException("No rate can be calculated 2!");
                }
                
+           }
+           
+           if (checker = false){
+                   throw new NoRateAvailableException("No rate can be calculated for one of the nights!");
            }
            
        }
