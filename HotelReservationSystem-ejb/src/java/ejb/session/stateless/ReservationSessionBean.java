@@ -8,6 +8,8 @@ package ejb.session.stateless;
 import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
+import entity.RoomType;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -157,6 +159,39 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             throw new ReservationNotFoundException("No reservations exist for " + bookingDateTime);
         }
     }
+    
+    public void allocateRoomToCurrentDayReservations () {
+        
+        Date bookingDateTime = new java.util.Date();
+        
+        List <Reservation> reservations = new ArrayList <Reservation> ();
+        
+        try {
+            reservations = retrieveReservationsByBookingDate(bookingDateTime);
+        } catch (ReservationNotFoundException ex) {
+            System.out.println ("Unable to allocate rooms as " + ex.getMessage());
+        }
+        
+        for (Reservation reservation : reservations) {
+            RoomType roomType = reservation.getRoomType();
+            
+            while (true) {
+                allocateRoom(roomType, reservation);
+                
+            }
+            
+        }
+    }
+    
+    public void allocateRoom (RoomType roomType, Reservation reservation) {
+        List<Room> rooms = roomSessionBeanLocal.retrieveRoomsByRoomTypeId(roomType.getRoomTypeId());
+        if (rooms.size() == 0) {
+            // check 
+        } else {
+
+        }
+    }
+    
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>>constraintViolations)
     {

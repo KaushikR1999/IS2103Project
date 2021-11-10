@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import util.exception.ReservationNotFoundException;
 
@@ -26,15 +27,24 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
     @EJB
     private ReservationSessionBeanLocal reservationSessionBeanLocal;
     
-    public void allocateRoomToCurrentDayReservations () {
+    @Schedule(hour = "2", minute = "0", second = "0", info = "CurrentDayReservationCheckTimer")
+    public void CurrentDayReservationCheckTimer () {
         
-        Date bookingDateTime = new java.util.Date();
+        reservationSessionBeanLocal.allocateRoomToCurrentDayReservations();
         
-        try {
-            List <Reservation> reservations = reservationSessionBeanLocal.retrieveReservationsByBookingDate(bookingDateTime);
-        } catch (ReservationNotFoundException ex) {
-            System.out.println ("Unable to allocate rooms as " + ex.getMessage());
-        }
+//        Date bookingDateTime = new java.util.Date();
+//        
+//        try {
+//            List <Reservation> reservations = reservationSessionBeanLocal.retrieveReservationsByBookingDate(bookingDateTime);
+//            if (reservations.size() != 0) {
+//                reservationSessionBeanLocal.allocateRoomToCurrentDayReservations();
+//            }
+//        } catch (ReservationNotFoundException ex) {
+//            System.out.println ("Unable to allocate rooms as " + ex.getMessage());
+//        }
+
         
     }
 }
+
+//allocateRoomToCurrentDayReservations
