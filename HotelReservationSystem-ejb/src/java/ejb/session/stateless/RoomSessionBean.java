@@ -101,6 +101,15 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     }
     
     @Override
+    public Room retrieveRoomByRoomNumber(int roomNumber)
+    {
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :inRoomNumber");
+        query.setParameter("inRoomNumber", roomNumber);
+        
+        return (Room)query.getSingleResult();
+    }
+    
+    @Override
     public int retrieveRoomsAvailableForBookingByRoomType(Date inStartDate, Date inEndDate, Long inRoomTypeId){
         
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType.roomTypeId = :inRoomTypeId AND r.assignable = :true AND r.roomStatus = :RoomStatusAvailable");

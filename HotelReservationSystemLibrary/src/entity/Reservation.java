@@ -63,6 +63,10 @@ public class Reservation implements Serializable {
     private double totalReservationFee;
     
     @Column(nullable = false)
+    @NotNull
+    private int numberOfRooms;
+    
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
     private ReservationTypeEnum reservationType;
@@ -82,7 +86,7 @@ public class Reservation implements Serializable {
         this.rooms = new ArrayList<> ();
     }
 
-    public Reservation(Date startDate, Date endDate, Date bookingDate, Date bookingTime, ReservationStatusEnum status, Double reservationFee, ReservationTypeEnum reservationType, RoomType roomType) {
+    public Reservation(Date startDate, Date endDate, Date bookingDate, Date bookingTime, ReservationStatusEnum status, Double reservationFee, ReservationTypeEnum reservationType, RoomType roomType, int numberOfRooms) {
         this();
         this.startDate = startDate;
         this.endDate = endDate;
@@ -91,6 +95,7 @@ public class Reservation implements Serializable {
         this.totalReservationFee = reservationFee;
         this.reservationType = reservationType;
         this.roomType = roomType;
+        this.numberOfRooms = numberOfRooms;
     }
     
     
@@ -252,6 +257,20 @@ public class Reservation implements Serializable {
      */
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
+    }
+
+    /**
+     * @return the numberOfRooms
+     */
+    public int getNumberOfRooms() {
+        return numberOfRooms;
+    }
+
+    /**
+     * @param numberOfRooms the numberOfRooms to set
+     */
+    public void setNumberOfRooms(int numberOfRooms) {
+        this.numberOfRooms = numberOfRooms;
     }
     
 }

@@ -36,5 +36,7 @@ public interface RoomSessionBeanLocal {
     public void updateRoom(Room room) throws RoomNotFoundException, InputDataValidationException;
 
     public int retrieveRoomsAvailableForBookingByRoomType(Date inStartDate, Date inEndDate, Long inRoomTypeId);
+
+    public Room retrieveRoomByRoomNumber(int roomNumber);
     
 }
