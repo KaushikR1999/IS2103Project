@@ -41,7 +41,7 @@ public class FrontOfficeModule {
     private GuestSessionBeanRemote guestSessionBeanRemote;
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
-    private RoomSessionBeanRemote roomSessionBeanRemote
+    private RoomSessionBeanRemote roomSessionBeanRemote;
     
     private Employee currentEmployee;
     
