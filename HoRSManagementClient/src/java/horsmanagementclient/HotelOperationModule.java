@@ -65,7 +65,7 @@ public class HotelOperationModule {
 
                 response = scanner.nextInt();
                  hotelOperationSalesModule = new HotelOperationSalesModule(employeeSessionBeanRemote, roomRateSessionBeanRemote, currentEmployee);
-                 hotelOperationGeneralModule = new HotelOperationGeneralModule(employeeSessionBeanRemote, roomSessionBeanRemote, roomTypeSessionBeanRemote, currentEmployee);
+                 hotelOperationGeneralModule = new HotelOperationGeneralModule(employeeSessionBeanRemote, roomSessionBeanRemote, roomTypeSessionBeanRemote, reservationSessionBeanRemote, currentEmployee);
 
                 if(response == 1)
                 {

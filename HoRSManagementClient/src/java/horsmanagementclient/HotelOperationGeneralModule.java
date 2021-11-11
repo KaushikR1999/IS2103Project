@@ -65,13 +65,16 @@ public class HotelOperationGeneralModule {
         validator = validatorFactory.getValidator();
     }
 
-    public HotelOperationGeneralModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, Employee currentEmployee) {
+    public HotelOperationGeneralModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote, Employee currentEmployee) {
         this();
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
+        this.reservationSessionBeanRemote = reservationSessionBeanRemote;
         this.currentEmployee = currentEmployee;
     }
+
+
 
     public void menuHotelOperationGeneral() throws InvalidAccessRightException {
         if (currentEmployee.getEmployeeRole() != AccessRightsEnum.OPS_MANAGER) {
@@ -621,18 +624,18 @@ public class HotelOperationGeneralModule {
         System.out.println("*** HoRS Management Client :: Hotel Operation (General) :: Allocate Room to Reservations ***\n");
 
         Date bookingDate = new Date();
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+
 
         System.out.print("Enter Booking Date (yyyy-mm-dd)> ");
         try {
-            bookingDate = formatDate.parse(scanner.nextLine().trim());
+            bookingDate = inputDateFormat.parse(scanner.nextLine().trim());
+            System.out.println(bookingDate);
+            reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(bookingDate);
         } catch (ParseException ex) {
             System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
         } catch (DateTimeException ex) {
             System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
-        }
-        
-        try {
-            reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(bookingDate);
         } catch (NoRoomAvailableException ex) {
             System.out.println(ex.getMessage());
         }    
