@@ -31,6 +31,7 @@ import util.exception.DeleteRoomException;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
+import util.exception.NoRoomAvailableException;
 import util.exception.NoRoomTypeAvailableException;
 import util.exception.ReservationNotFoundException;
 import util.exception.RoomNotFoundException;
@@ -629,8 +630,12 @@ public class HotelOperationGeneralModule {
         } catch (DateTimeException ex) {
             System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
         }
-
-        reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(bookingDate);
+        
+        try {
+            reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(bookingDate);
+        } catch (NoRoomAvailableException ex) {
+            System.out.println(ex.getMessage());
+        }    
     }
 
     private void showInputDataValidationErrorsForRoom(Set<ConstraintViolation<Room>> constraintViolations) {

@@ -11,6 +11,8 @@ import java.util.List;
 import javax.ejb.Local;
 import util.exception.CreateNewReservationException;
 import util.exception.InputDataValidationException;
+import util.exception.NoRoomAvailableException;
+import util.exception.NoRoomTypeAvailableException;
 import util.exception.ReservationNotFoundException;
 
 /**
@@ -32,7 +34,7 @@ public interface ReservationSessionBeanLocal {
 
     public List<Reservation> retrieveAllReservations();
 
-    public void allocateRoomToCurrentDayReservations(Date bookingDateTime);
+    public void allocateRoomToCurrentDayReservations(Date bookingDateTime) throws NoRoomAvailableException;
     
     public String retrieveRoomsAllocatedInString(Long reservationId) throws ReservationNotFoundException;
     

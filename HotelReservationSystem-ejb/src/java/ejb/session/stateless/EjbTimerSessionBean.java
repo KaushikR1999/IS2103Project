@@ -12,6 +12,8 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
+import util.exception.NoRoomAvailableException;
+import util.exception.NoRoomTypeAvailableException;
 import util.exception.ReservationNotFoundException;
 
 /**
@@ -32,7 +34,11 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
         
         Date bookingDateTime = new java.util.Date();
         
+        try {
             reservationSessionBeanLocal.allocateRoomToCurrentDayReservations(bookingDateTime);
-        
+        } catch (NoRoomAvailableException ex) {
+            System.out.println(ex.getMessage());
+        }  
+
     }
 }
