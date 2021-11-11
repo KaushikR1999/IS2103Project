@@ -28,10 +28,12 @@ public interface ReservationSessionBeanLocal {
 
     public void updateReservation(Reservation reservation) throws ReservationNotFoundException, InputDataValidationException;
 
-    public Long createNewReservation(Reservation newReservation) throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException;
+    public Reservation createNewReservation(Reservation newReservation) throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException;
 
     public List<Reservation> retrieveAllReservations();
 
-    public void allocateRoomToCurrentDayReservations(Date bookingDateTime);
+    public void allocateRoomToCurrentDayReservations(Date bookingDateTime) throws ReservationNotFoundException;
+    
+    public String retrieveRoomsAllocatedInString(Long reservationId) throws ReservationNotFoundException;
     
 }

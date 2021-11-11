@@ -6,6 +6,7 @@
 package ejb.session.singleton;
 
 import entity.Employee;
+import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
@@ -17,6 +18,8 @@ import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.enumeration.AccessRightsEnum;
+import util.enumeration.ReservationStatusEnum;
+import util.enumeration.ReservationTypeEnum;
 import util.enumeration.RoomRateTypeEnum;
 import util.enumeration.RoomStatusEnum;
 
@@ -252,6 +255,29 @@ public class DataInitSessionBean {
         em.flush();
         grandSuite.getRoomRates().add(rateJ);
         
+        Date startDateX = new Date(2021,11, 11);
+        Date endDateX = new Date(2021, 11, 15);
+        Date bookingDateX = new Date(2021, 10, 10);
+        
+        Date startDateY = new Date(2021,11, 12);
+        Date endDateY = new Date(2021, 11, 14);
+        Date bookingDateY = new Date(2021, 10, 15);
+        
+        Date startDateZ = new Date(2021,11, 16);
+        Date endDateZ = new Date(2021, 11, 19);
+        Date bookingDateZ = new Date(2021, 10, 17);
+        
+        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.CONFIRMED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        em.persist(reservationX);
+        em.flush();
+        
+        Reservation reservationY = new Reservation (startDateY, endDateY, bookingDateX, ReservationStatusEnum.CONFIRMED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        em.persist(reservationY);
+        em.flush();
+        
+        Reservation reservationZ = new Reservation (startDateZ, endDateZ, bookingDateZ, ReservationStatusEnum.CONFIRMED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        em.persist(reservationZ);
+        em.flush();
     }
         
 }

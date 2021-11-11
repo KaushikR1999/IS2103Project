@@ -86,11 +86,11 @@ public class Reservation implements Serializable {
         this.rooms = new ArrayList<> ();
     }
 
-    public Reservation(Date startDate, Date endDate, Date bookingDate, Date bookingTime, ReservationStatusEnum status, Double reservationFee, ReservationTypeEnum reservationType, RoomType roomType, int numberOfRooms) {
+    public Reservation(Date startDate, Date endDate, Date bookingDateTime, ReservationStatusEnum status, Double reservationFee, ReservationTypeEnum reservationType, RoomType roomType, int numberOfRooms) {
         this();
         this.startDate = startDate;
         this.endDate = endDate;
-        this.bookingDateTime = bookingDate;
+        this.bookingDateTime = bookingDateTime;
         this.status = status;
         this.totalReservationFee = reservationFee;
         this.reservationType = reservationType;

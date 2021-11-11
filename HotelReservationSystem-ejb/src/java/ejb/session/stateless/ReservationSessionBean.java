@@ -7,7 +7,6 @@ package ejb.session.stateless;
 
 import entity.Reservation;
 import entity.Room;
-import entity.RoomRate;
 import entity.RoomType;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,11 +24,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.CreateNewReservationException;
-import util.exception.DeleteRoomRateException;
 import util.exception.InputDataValidationException;
 import util.exception.ReservationNotFoundException;
-import util.exception.RoomRateNotFoundException;
-import util.exception.RoomTypeNotFoundException;
 
 /**
  *
@@ -55,7 +51,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     @Override
-    public Long createNewReservation(Reservation newReservation) throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException
+    public Reservation createNewReservation(Reservation newReservation) throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException
     {
         
         Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(newReservation);
@@ -67,7 +63,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 
                 em.flush();
 
-                return newReservation.getReservationId();
+                return newReservation;
             } else {
                 throw new CreateNewReservationException("Reservation information not provided");
             }
@@ -160,14 +156,15 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
     }
     
-    public void allocateRoomToCurrentDayReservations (Date bookingDateTime) {
+    @Override
+    public void allocateRoomToCurrentDayReservations (Date bookingDateTime) throws ReservationNotFoundException {
         
-        List <Reservation> reservations = new ArrayList <Reservation> ();
+        List <Reservation> reservations = new ArrayList <> ();
         
         try {
             reservations = retrieveReservationsByBookingDate(bookingDateTime);
         } catch (ReservationNotFoundException ex) {
-            System.out.println ("Unable to allocate rooms as " + ex.getMessage());
+            throw new ReservationNotFoundException ("Unable to allocate rooms as " + ex.getMessage());
         }
         
         for (Reservation reservation : reservations) {
@@ -187,15 +184,18 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             if (reservation.getRooms().size() != NumberOfRooms) {
                 // raise exception in exception Report
                 List<Room> rooms = reservation.getRooms();
-                for (Room room : rooms) {
-                    room.getReservations().remove(reservation);
+                if (!rooms.isEmpty()) {
+                    for (Room room : rooms) {
+                        room.getReservations().remove(reservation);
+                    }
+                    reservation.getRooms().clear();
                 }
-                reservation.getRooms().clear();
             } 
         }
     }
     
     public boolean allocateRoom (RoomType roomType, Reservation reservation) {
+        
         List<Room> rooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), roomType.getRoomTypeId());
         if (rooms.isEmpty()) {
             // check
@@ -207,7 +207,22 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             return true;
         }
     }
-    
+
+    @Override
+    public String retrieveRoomsAllocatedInString(Long reservationId) throws ReservationNotFoundException {
+        List<Room> reservedRooms = retrieveReservationByReservationId(reservationId).getRooms();
+        String noRoomsAvailableString = "No Rooms Allocated Yet!";
+        List<String> roomsAssignedArray = new ArrayList<>();
+        
+        if(reservedRooms.isEmpty()){
+            return noRoomsAvailableString;
+        } else {
+            for(Room r : reservedRooms){
+                roomsAssignedArray.add(r.getRoomNumber());
+            }
+        }
+        return roomsAssignedArray.toString();
+    }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>>constraintViolations)
     {
