@@ -627,7 +627,7 @@ public class HotelOperationGeneralModule {
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
 
 
-        System.out.print("Enter Booking Date (yyyy-mm-dd)> ");
+        System.out.print("Enter Booking Date (dd/mm/yyyy)> ");
         try {
             bookingDate = inputDateFormat.parse(scanner.nextLine().trim());
             System.out.println(bookingDate);

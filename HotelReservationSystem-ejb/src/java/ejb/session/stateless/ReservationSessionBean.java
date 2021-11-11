@@ -26,9 +26,7 @@ import javax.validation.ValidatorFactory;
 import util.exception.CreateNewReservationException;
 import util.exception.InputDataValidationException;
 import util.exception.NoRoomAvailableException;
-import util.exception.NoRoomTypeAvailableException;
 import util.exception.ReservationNotFoundException;
-import util.exception.RoomTypeNotFoundException;
 
 /**
  *
@@ -40,8 +38,6 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
 
-    @EJB
-    private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
     @EJB
     private RoomSessionBeanLocal roomSessionBeanLocal;
 
@@ -163,44 +159,94 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         for (Reservation reservation : reservations) {
             RoomType currentRoomType = reservation.getRoomType();
 
-                int numberOfRooms = reservation.getNumberOfRooms();
+            int numberOfRooms = reservation.getNumberOfRooms();
 
-                List<Room> rooms = new ArrayList<>();
-                
-                List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
-                
-                if (retrievedRooms.size() >= numberOfRooms) {
-                    for (int i = 0; i < numberOfRooms; i++) {
-                        rooms.add(retrievedRooms.get(i));
-                    }
-                } else if (retrievedRooms.size() >= 0) {
-                    for (Room room: retrievedRooms) {
-                        rooms.add(room);
-                    }
-                    int roomsNeeded = numberOfRooms - retrievedRooms.size();
-                    currentRoomType = currentRoomType.getNextHighestRoomType();
-                    if (currentRoomType == null) {
-                        throw new NoRoomAvailableException ("Room type unavailable");
-                    } else {
-                        retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
-                        if (retrievedRooms.size() >= roomsNeeded) {
-                            for (int i = 0; i < roomsNeeded; i++) {
-                                rooms.add(retrievedRooms.get(i));
-                            }
-                        } else {
-                            throw new NoRoomAvailableException ("Room type unavailable");
+            List<Room> rooms = new ArrayList<>();
+
+            List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
+
+            if (retrievedRooms.size() >= numberOfRooms) {
+                for (int i = 0; i < numberOfRooms; i++) {
+                    rooms.add(retrievedRooms.get(i));
+                }
+            } else if (retrievedRooms.size() >= 0) {
+                for (Room room : retrievedRooms) {
+                    rooms.add(room);
+                }
+                int roomsNeeded = numberOfRooms - retrievedRooms.size();
+                currentRoomType = currentRoomType.getNextHighestRoomType();
+                if (currentRoomType == null) {
+                    throw new NoRoomAvailableException("Room type unavailable");
+                } else {
+                    retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
+                    if (retrievedRooms.size() >= roomsNeeded) {
+                        for (int i = 0; i < roomsNeeded; i++) {
+                            rooms.add(retrievedRooms.get(i));
                         }
+                    } else {
+                        throw new NoRoomAvailableException("Room type unavailable");
                     }
                 }
+            }
 
-                if (numberOfRooms == rooms.size()) {
-                    for (Room room : rooms) {
-                        reservation.getRooms().add(room);
-                        room.getReservations().add(reservation);
-                    }
+            if (numberOfRooms == rooms.size()) {
+                for (Room room : rooms) {
+                    reservation.getRooms().add(room);
+                    room.getReservations().add(reservation);
                 }
+            }
 
         }
+    }
+
+    @Override
+    public void allocateRoomToReservation(Long reservationId) throws NoRoomAvailableException {
+
+        try {
+            Reservation reservation = retrieveReservationByReservationId(reservationId);
+
+            RoomType currentRoomType = reservation.getRoomType();
+
+            int numberOfRooms = reservation.getNumberOfRooms();
+
+            List<Room> rooms = new ArrayList<>();
+
+            List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
+
+            if (retrievedRooms.size() >= numberOfRooms) {
+                for (int i = 0; i < numberOfRooms; i++) {
+                    rooms.add(retrievedRooms.get(i));
+                }
+            } else if (retrievedRooms.size() >= 0) {
+                for (Room room : retrievedRooms) {
+                    rooms.add(room);
+                }
+                int roomsNeeded = numberOfRooms - retrievedRooms.size();
+                currentRoomType = currentRoomType.getNextHighestRoomType();
+                if (currentRoomType == null) {
+                    throw new NoRoomAvailableException("Room type unavailable");
+                } else {
+                    retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
+                    if (retrievedRooms.size() >= roomsNeeded) {
+                        for (int i = 0; i < roomsNeeded; i++) {
+                            rooms.add(retrievedRooms.get(i));
+                        }
+                    } else {
+                        throw new NoRoomAvailableException("Room type unavailable");
+                    }
+                }
+            }
+
+            if (numberOfRooms == rooms.size()) {
+                for (Room room : rooms) {
+                    reservation.getRooms().add(room);
+                    room.getReservations().add(reservation);
+                }
+            }
+        } catch (ReservationNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+
     }
 
     @Override
