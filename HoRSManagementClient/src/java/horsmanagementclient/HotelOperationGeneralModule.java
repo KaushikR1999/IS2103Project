@@ -627,10 +627,9 @@ public class HotelOperationGeneralModule {
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
 
 
-        System.out.print("Enter Booking Date (yyyy-mm-dd)> ");
+        System.out.print("Enter Booking Date (dd/mm/yyyy)> ");
         try {
             bookingDate = inputDateFormat.parse(scanner.nextLine().trim());
-            System.out.println(bookingDate);
             reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(bookingDate);
         } catch (ParseException ex) {
             System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");

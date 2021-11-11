@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -20,6 +22,8 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
+import util.exception.InvalidLoginCredentialException;
+import util.exception.PartnerNotFoundException;
 import util.exception.PartnerUsernameOrOrganisationExistException;
 import util.exception.UnknownPersistenceException;
 
@@ -84,6 +88,44 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         Query query = em.createQuery("SELECT p FROM Partner p ORDER BY p.partnerId ASC");
         
         return query.getResultList();
+    }
+    @Override
+    public Partner partnerLogin(String username, String password) throws InvalidLoginCredentialException
+    {
+        try
+        {
+            Partner partner = retrievePartnerByUsername(username);
+            
+            if(partner.getPassword().equals(password))
+            {
+                partner.getPartnerReservations().size();                
+                return partner;
+            }
+            else
+            {
+                throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+            }
+        }
+        catch(PartnerNotFoundException ex)
+        {
+            throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+        }
+    }
+    
+    @Override
+    public Partner retrievePartnerByUsername(String username) throws PartnerNotFoundException
+    {
+        Query query = em.createQuery("SELECT p FROM Partner p WHERE p.username = :inUsername");
+        query.setParameter("inUsername", username);
+        
+        try
+        {
+            return (Partner)query.getSingleResult();
+        }
+        catch(NoResultException | NonUniqueResultException ex)
+        {
+            throw new PartnerNotFoundException("Partner Username " + username + " does not exist!");
+        }
     }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Partner>>constraintViolations)

@@ -17,6 +17,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import static java.time.Instant.now;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -213,7 +214,7 @@ public class MainApp {
             SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
             Date startDate;
             Date endDate;
-            Date bookingDateTime;
+            Date bookingDateTime = new Date();
             Integer numberOfRooms;
 
             System.out.println("*** Hotel Reservation Client :: Search Hotel Room ***\n");
@@ -324,6 +325,12 @@ public class MainApp {
                 {
                     System.out.println("Please login first before making a reservation!\n");
                 }
+                Date compareStartDate = setTimeToMidnight(startDate);
+                Date compareBookingDate = setTimeToMidnight(bookingDateTime);
+                Date currentDayTwoAm = setTimeToTwoAm(bookingDateTime);
+                if(compareStartDate.equals(compareBookingDate) && bookingDateTime.after(currentDayTwoAm)) {
+                    //reservationSessionBeanRemote.
+                }
             }
         }
         catch(ParseException ex)
@@ -335,6 +342,30 @@ public class MainApp {
             System.out.println(ex.getMessage());
         } 
     }
+    
+    public static Date setTimeToMidnight(Date date) {
+    Calendar calendar = Calendar.getInstance();
+
+    calendar.setTime( date );
+    calendar.set(Calendar.HOUR_OF_DAY, 0);
+    calendar.set(Calendar.MINUTE, 0);
+    calendar.set(Calendar.SECOND, 0);
+    calendar.set(Calendar.MILLISECOND, 0);
+
+    return calendar.getTime();
+}
+    
+    public static Date setTimeToTwoAm(Date date) {
+    Calendar calendar = Calendar.getInstance();
+
+    calendar.setTime( date );
+    calendar.set(Calendar.HOUR_OF_DAY, 2);
+    calendar.set(Calendar.MINUTE, 0);
+    calendar.set(Calendar.SECOND, 0);
+    calendar.set(Calendar.MILLISECOND, 0);
+
+    return calendar.getTime();
+}
     
     private void doViewMyReservationDetails() {
         Long reservationId;
