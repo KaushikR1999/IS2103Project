@@ -23,6 +23,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.enumeration.ReservationStatusEnum;
 import util.exception.CreateNewReservationException;
 import util.exception.InputDataValidationException;
 import util.exception.NoRoomAvailableException;
@@ -164,7 +165,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             List<Room> rooms = new ArrayList<>();
 
             List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
-
+            
+            boolean upgraded = false;
+            
             if (retrievedRooms.size() >= numberOfRooms) {
                 for (int i = 0; i < numberOfRooms; i++) {
                     rooms.add(retrievedRooms.get(i));
@@ -193,9 +196,18 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 for (Room room : rooms) {
                     reservation.getRooms().add(room);
                     room.getReservations().add(reservation);
+                    if (room.getRoomType().equals(reservation.getRoomType().getNextHighestRoomType())) {
+                        upgraded = true;
+                    }
                 }
             }
-
+            
+            if (upgraded) {
+                reservation.setStatus(ReservationStatusEnum.UPGRADED);
+            } else {
+                reservation.setStatus(ReservationStatusEnum.ALLOCATED);
+            }
+                        
         }
     }
 
@@ -212,7 +224,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             List<Room> rooms = new ArrayList<>();
 
             List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
-
+            
+            boolean upgraded = false;
+            
             if (retrievedRooms.size() >= numberOfRooms) {
                 for (int i = 0; i < numberOfRooms; i++) {
                     rooms.add(retrievedRooms.get(i));
@@ -241,8 +255,18 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 for (Room room : rooms) {
                     reservation.getRooms().add(room);
                     room.getReservations().add(reservation);
+                    if (room.getRoomType().equals(reservation.getRoomType().getNextHighestRoomType())) {
+                        upgraded = true;
+                    }
                 }
             }
+            
+            if (upgraded) {
+                reservation.setStatus(ReservationStatusEnum.UPGRADED);
+            } else {
+                reservation.setStatus(ReservationStatusEnum.ALLOCATED);
+            }
+            
         } catch (ReservationNotFoundException ex) {
             System.out.println(ex.getMessage());
         }

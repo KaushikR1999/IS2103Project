@@ -58,7 +58,7 @@ public class HotelOperationGeneralModule {
 
     private Employee currentEmployee;
 
-    private final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat formatDate = new SimpleDateFormat("d/M/y");
 
     public HotelOperationGeneralModule() {
         validatorFactory = Validation.buildDefaultValidatorFactory();

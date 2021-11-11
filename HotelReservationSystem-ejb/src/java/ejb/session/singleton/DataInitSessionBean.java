@@ -267,15 +267,15 @@ public class DataInitSessionBean {
         Date endDateZ = new Date(121, 11, 19);
         Date bookingDateZ = new Date(121, 10, 17);
         
-        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.CONFIRMED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
         em.persist(reservationX);
         em.flush();
         
-        Reservation reservationY = new Reservation (startDateY, endDateY, bookingDateX, ReservationStatusEnum.CONFIRMED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        Reservation reservationY = new Reservation (startDateY, endDateY, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
         em.persist(reservationY);
         em.flush();
         
-        Reservation reservationZ = new Reservation (startDateZ, endDateZ, bookingDateZ, ReservationStatusEnum.CONFIRMED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        Reservation reservationZ = new Reservation (startDateZ, endDateZ, bookingDateZ, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
         em.persist(reservationZ);
         em.flush();
     }

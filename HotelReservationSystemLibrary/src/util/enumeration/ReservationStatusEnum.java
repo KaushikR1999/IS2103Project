@@ -10,7 +10,6 @@ package util.enumeration;
  * @author kaushikr
  */
 public enum ReservationStatusEnum {
-    CONFIRMED,
     UPGRADED,
     ALLOCATED,
     REJECTED,
