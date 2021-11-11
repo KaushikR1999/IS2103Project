@@ -149,6 +149,47 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         }
         return finalRoomsAvailable.size();
     }
+    
+    @Override
+    public List<Room> retrieveListOfRoomsAvailableForBookingByRoomType(Date inStartDate, Date inEndDate, Long inRoomTypeId){
+        
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType.roomTypeId = :inRoomTypeId AND r.assignable = :true AND r.roomStatus = :RoomStatusAvailable");
+        query.setParameter("inRoomTypeId", inRoomTypeId);
+        query.setParameter("true", TRUE);
+        query.setParameter("RoomStatusAvailable", RoomStatusEnum.AVAILABLE);
+        List<Room> finalRoomsAvailable = new ArrayList<>();
+        
+        List<Room> roomsAvailable = query.getResultList();
+        
+        for ( Room r : roomsAvailable) {
+        
+        List<Reservation> roomReservations = r.getReservations();
+        
+        boolean available = TRUE;
+        
+            for (Reservation res : roomReservations){
+            
+                Date resStartDate = res.getStartDate();
+                Date resEndDate = res.getEndDate();
+            
+                if(!(inStartDate.before(resStartDate) && inEndDate.after(resStartDate) ||
+                inStartDate.before(resEndDate) && inEndDate.after(resEndDate) ||
+                inStartDate.before(resStartDate) && inEndDate.after(resEndDate) ||
+                inStartDate.after(resStartDate) && inEndDate.before(resEndDate))  )
+                {
+//                    finalRoomsAvailable.add(r);
+                    break;
+                } else {
+                    available = FALSE;
+                    continue;
+                }
+            }
+            if (available == TRUE) {
+                finalRoomsAvailable.add(r);
+            }
+        }
+        return finalRoomsAvailable;
+    }
         
     @Override
     public Room retrieveRoomByRoomId(Long roomId) throws RoomNotFoundException

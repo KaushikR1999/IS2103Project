@@ -37,5 +37,7 @@ public interface RoomSessionBeanRemote {
     public int retrieveRoomsAvailableForBookingByRoomType(Date inStartDate, Date inEndDate, Long inRoomTypeId);
     
     public Room retrieveRoomByRoomNumber(int roomNumber);
+    
+    public List<Room> retrieveListOfRoomsAvailableForBookingByRoomType(Date inStartDate, Date inEndDate, Long inRoomTypeId);
 
 }

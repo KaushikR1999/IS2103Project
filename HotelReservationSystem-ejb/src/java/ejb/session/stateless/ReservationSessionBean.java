@@ -7,7 +7,7 @@ package ejb.session.stateless;
 
 import entity.Reservation;
 import entity.Room;
-import entity.RoomRate;
+import entity.RoomType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,11 +24,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.CreateNewReservationException;
-import util.exception.DeleteRoomRateException;
 import util.exception.InputDataValidationException;
 import util.exception.ReservationNotFoundException;
-import util.exception.RoomRateNotFoundException;
-import util.exception.RoomTypeNotFoundException;
 
 /**
  *
@@ -159,6 +156,58 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
     }
     
+    @Override
+    public void allocateRoomToCurrentDayReservations (Date bookingDateTime) throws ReservationNotFoundException {
+        
+        List <Reservation> reservations = new ArrayList <> ();
+        
+        try {
+            reservations = retrieveReservationsByBookingDate(bookingDateTime);
+        } catch (ReservationNotFoundException ex) {
+            throw new ReservationNotFoundException ("Unable to allocate rooms as " + ex.getMessage());
+        }
+        
+        for (Reservation reservation : reservations) {
+            RoomType roomType = reservation.getRoomType();
+            
+            int NumberOfRooms = reservation.getNumberOfRooms();
+            
+            for (int i = 0; i < NumberOfRooms; i++) {
+                RoomType currentRoomType = reservation.getRoomType();
+                boolean allocated = false;
+                while (allocated != true && currentRoomType != null) {
+                    allocated = allocateRoom (roomType, reservation);
+                    currentRoomType = currentRoomType.getNextHighestRoomType();
+                }
+            }
+            
+            if (reservation.getRooms().size() != NumberOfRooms) {
+                // raise exception in exception Report
+                List<Room> rooms = reservation.getRooms();
+                if (!rooms.isEmpty()) {
+                    for (Room room : rooms) {
+                        room.getReservations().remove(reservation);
+                    }
+                    reservation.getRooms().clear();
+                }
+            } 
+        }
+    }
+    
+    public boolean allocateRoom (RoomType roomType, Reservation reservation) {
+        
+        List<Room> rooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), roomType.getRoomTypeId());
+        if (rooms.isEmpty()) {
+            // check
+            return false;
+        } else {
+            Room room = rooms.get(0);
+            room.getReservations().add(reservation);
+            reservation.getRooms().add(room);
+            return true;
+        }
+    }
+
     @Override
     public String retrieveRoomsAllocatedInString(Long reservationId) throws ReservationNotFoundException {
         List<Room> reservedRooms = retrieveReservationByReservationId(reservationId).getRooms();

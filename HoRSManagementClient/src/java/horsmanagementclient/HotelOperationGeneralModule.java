@@ -6,12 +6,17 @@
 package horsmanagementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.ReservationSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
 import entity.RoomType;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -27,6 +32,7 @@ import util.exception.DeleteRoomTypeException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
 import util.exception.NoRoomTypeAvailableException;
+import util.exception.ReservationNotFoundException;
 import util.exception.RoomNotFoundException;
 import util.exception.RoomNumberExistException;
 import util.exception.RoomRateNotFoundException;
@@ -47,9 +53,11 @@ public class HotelOperationGeneralModule {
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private RoomSessionBeanRemote roomSessionBeanRemote;
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
-    
+    private ReservationSessionBeanRemote reservationSessionBeanRemote;
     
     private Employee currentEmployee;
+    
+    private final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
     
     public HotelOperationGeneralModule()
     {
@@ -88,10 +96,11 @@ public class HotelOperationGeneralModule {
             System.out.println("7: View All Rooms"); 
             System.out.println("-----------------------");
             System.out.println("8: View Room Allocation Exception Report");
-            System.out.println("9: Back\n");
+            System.out.println("9: Allocate Room to Reservations");
+            System.out.println("10: Back\n");
             response = 0;
             
-            while(response < 1 || response > 9)
+            while(response < 1 || response > 10)
             {
                 System.out.print("> ");
 
@@ -140,6 +149,11 @@ public class HotelOperationGeneralModule {
                 }
                 else if (response == 9)
                 {
+                    allocateRoomToReservations();
+//                    System.out.println("not implemented yet");
+                }
+                else if (response == 10)
+                {
                     break;
                 }
                 else
@@ -148,7 +162,7 @@ public class HotelOperationGeneralModule {
                 }
             }
             
-            if(response == 9)
+            if(response == 10)
             {
                 break;
             }
@@ -696,6 +710,33 @@ public class HotelOperationGeneralModule {
         
         System.out.print("Press any key to continue...> ");
         scanner.nextLine();
+    }
+    
+    public void allocateRoomToReservations() 
+    {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("*** HoRS Management Client :: Hotel Operation (General) :: Allocate Room to Reservations ***\n");
+        
+        Date bookingDate = new Date();
+        
+        while (true) {
+            System.out.print("Enter Booking Date (yyyy-mm-dd)> ");
+            try {
+                bookingDate = formatDate.parse(scanner.nextLine().trim());
+                break;
+            } catch (ParseException ex) {
+                System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
+            } catch (DateTimeException ex) {
+                System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
+            }
+        }
+        
+        try {
+            reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(bookingDate);
+        } catch (ReservationNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     private void showInputDataValidationErrorsForRoom(Set<ConstraintViolation<Room>>constraintViolations)
