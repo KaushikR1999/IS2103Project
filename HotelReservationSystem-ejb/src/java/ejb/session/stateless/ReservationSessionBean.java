@@ -165,9 +165,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             List<Room> rooms = new ArrayList<>();
 
             List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
-            
+
             boolean upgraded = false;
-            
+
             if (retrievedRooms.size() >= numberOfRooms) {
                 for (int i = 0; i < numberOfRooms; i++) {
                     rooms.add(retrievedRooms.get(i));
@@ -201,13 +201,13 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                     }
                 }
             }
-            
+
             if (upgraded) {
                 reservation.setStatus(ReservationStatusEnum.UPGRADED);
             } else {
                 reservation.setStatus(ReservationStatusEnum.ALLOCATED);
             }
-                        
+
         }
     }
 
@@ -224,9 +224,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             List<Room> rooms = new ArrayList<>();
 
             List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
-            
+
             boolean upgraded = false;
-            
+
             if (retrievedRooms.size() >= numberOfRooms) {
                 for (int i = 0; i < numberOfRooms; i++) {
                     rooms.add(retrievedRooms.get(i));
@@ -260,13 +260,13 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                     }
                 }
             }
-            
+
             if (upgraded) {
                 reservation.setStatus(ReservationStatusEnum.UPGRADED);
             } else {
                 reservation.setStatus(ReservationStatusEnum.ALLOCATED);
             }
-            
+
         } catch (ReservationNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
@@ -287,6 +287,32 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             }
         }
         return roomsAssignedArray.toString();
+    }
+
+    @Override
+    public List<Reservation> retrieveUpgradedReservations(Date bookingDate) throws ReservationNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.bookingDateTime = :inBookingDate AND r.status = :StatusUpgraded");
+        query.setParameter("inBookingDate", bookingDate);
+        query.setParameter("StatusUpgraded", ReservationStatusEnum.UPGRADED);
+        
+        try {
+            return query.getResultList();
+        } catch (NoResultException ex) {
+            throw new ReservationNotFoundException("No upgraded reservations exist for " + bookingDate);
+        }
+    }
+
+    @Override
+    public List<Reservation> retrieveRejectedReservations(Date bookingDate) throws ReservationNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.bookingDateTime = :inBookingDate AND r.status = :StatusRejected");
+        query.setParameter("inBookingDate", bookingDate);
+        query.setParameter("StatusRejected", ReservationStatusEnum.REJECTED);
+        
+        try {
+            return query.getResultList();
+        } catch (NoResultException ex) {
+            throw new ReservationNotFoundException("No rejected reservations exist for " + bookingDate);
+        }
     }
 
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>> constraintViolations) {
