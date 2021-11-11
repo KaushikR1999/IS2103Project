@@ -25,7 +25,9 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.CreateNewReservationException;
 import util.exception.InputDataValidationException;
+import util.exception.NoRoomTypeAvailableException;
 import util.exception.ReservationNotFoundException;
+import util.exception.RoomTypeNotFoundException;
 
 /**
  *
@@ -36,12 +38,12 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
-    
+
     @EJB
     private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
     @EJB
     private RoomSessionBeanLocal roomSessionBeanLocal;
-    
+
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
 
@@ -49,16 +51,15 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
-    
+
     @Override
-    public Reservation createNewReservation(Reservation newReservation) throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException
-    {
-        
-        Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(newReservation);
-        
+    public Reservation createNewReservation(Reservation newReservation) throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException {
+
+        Set<ConstraintViolation<Reservation>> constraintViolations = validator.validate(newReservation);
+
         if (constraintViolations.isEmpty()) {
             if (newReservation != null) {
-                
+
                 em.persist(newReservation);
 
                 em.flush();
@@ -70,19 +71,18 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         } else {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
-        
 
     }
-    
+
     @Override
     public void updateReservation(Reservation reservation) throws ReservationNotFoundException, InputDataValidationException {
         if (reservation != null && reservation.getReservationId() != null) {
             Set<ConstraintViolation<Reservation>> constraintViolations = validator.validate(reservation);
 
             if (constraintViolations.isEmpty()) {
-                
+
                 Reservation reservationToUpdate = retrieveReservationByReservationId(reservation.getReservationId());
-                
+
                 reservationToUpdate.setBookingDateTime(reservation.getBookingDateTime());
                 reservationToUpdate.setStartDate(reservation.getStartDate());
                 reservationToUpdate.setEndDate(reservation.getEndDate());
@@ -91,11 +91,11 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 reservationToUpdate.setTotalReservationFee(reservation.getTotalReservationFee());
                 reservationToUpdate.setReservationType(reservation.getReservationType());
                 reservationToUpdate.setNumberOfRooms(reservation.getNumberOfRooms());
-                
+
                 for (Room room : reservation.getRooms()) {
                     reservationToUpdate.getRooms().add(room);
                 }
- 
+
             } else {
                 throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
             }
@@ -103,136 +103,149 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             throw new ReservationNotFoundException("Reservation ID not provided for reservation to be updated");
         }
     }
-    
+
     @Override
-    public void deleteReservation(Long reservationId) throws ReservationNotFoundException
-    {
+    public void deleteReservation(Long reservationId) throws ReservationNotFoundException {
         Reservation reservationToRemove = retrieveReservationByReservationId(reservationId);
-        
+
         List<Room> rooms = reservationToRemove.getRooms();
-                
+
         for (Room room : rooms) {
             room.getReservations().remove(reservationToRemove);
         }
-        
+
         em.remove(reservationToRemove);
     }
-    
+
     @Override
-    public List<Reservation> retrieveAllReservations()
-    {
+    public List<Reservation> retrieveAllReservations() {
         Query query = em.createQuery("SELECT r FROM Reservation r ORDER BY r.reservationId ASC");
-        
+
         return query.getResultList();
     }
-    
+
     @Override
     public Reservation retrieveReservationByReservationId(Long reservationId) throws ReservationNotFoundException {
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.reservationId = :inReservationId");
         query.setParameter("inReservationId", reservationId);
-        
-        try
-        {
-            return (Reservation)query.getSingleResult();
-        }
-        catch(NoResultException | NonUniqueResultException ex)
-        {
+
+        try {
+            return (Reservation) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
             throw new ReservationNotFoundException("Reservation Id " + reservationId + " does not exist!");
         }
     }
-    
+
     @Override
-    public List<Reservation> retrieveReservationsByBookingDate (Date bookingDateTime) throws ReservationNotFoundException {
+    public List<Reservation> retrieveReservationsByBookingDate(Date bookingDateTime) throws ReservationNotFoundException {
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.bookingDateTime = :inBookingDateTime");
         query.setParameter("inBookingDateTime", bookingDateTime);
-        
-        try
-        {
+
+        try {
             return query.getResultList();
-        }
-        catch(NoResultException ex)
-        {
+        } catch (NoResultException ex) {
             throw new ReservationNotFoundException("No reservations exist for " + bookingDateTime);
         }
     }
-    
+
     @Override
-    public void allocateRoomToCurrentDayReservations (Date bookingDateTime) throws ReservationNotFoundException {
-        
-        List <Reservation> reservations = new ArrayList <> ();
-        
+    public void allocateRoomToCurrentDayReservations(Date bookingDateTime) throws NoRoomTypeAvailableException {
+
+        List<Reservation> reservations = new ArrayList<>();
+
         try {
             reservations = retrieveReservationsByBookingDate(bookingDateTime);
         } catch (ReservationNotFoundException ex) {
-            throw new ReservationNotFoundException ("Unable to allocate rooms as " + ex.getMessage());
+            System.out.println("Unable to allocate rooms as " + ex.getMessage());
         }
-        
+
         for (Reservation reservation : reservations) {
-            RoomType roomType = reservation.getRoomType();
-            
-            int NumberOfRooms = reservation.getNumberOfRooms();
-            
-            for (int i = 0; i < NumberOfRooms; i++) {
-                RoomType currentRoomType = reservation.getRoomType();
-                boolean allocated = false;
-                while (allocated != true && currentRoomType != null) {
-                    allocated = allocateRoom (roomType, reservation);
-                    currentRoomType = currentRoomType.getNextHighestRoomType();
-                }
-            }
-            
-            if (reservation.getRooms().size() != NumberOfRooms) {
-                // raise exception in exception Report
-                List<Room> rooms = reservation.getRooms();
-                if (!rooms.isEmpty()) {
-                    for (Room room : rooms) {
-                        room.getReservations().remove(reservation);
+            RoomType currentRoomType = reservation.getRoomType();
+
+                int NumberOfRooms = reservation.getNumberOfRooms();
+
+                List<Room> rooms = new ArrayList<>();
+                
+                List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
+                
+                if (retrievedRooms.size() >= NumberOfRooms) {
+                    for (int i = 0; i < NumberOfRooms; i++) {
+                        rooms.add(retrievedRooms.get(i));
                     }
-                    reservation.getRooms().clear();
+                } else if (retrievedRooms.size() >= 0) {
+                    for (Room room: retrievedRooms) {
+                        rooms.add(room);
+                    }
+                    currentRoomType = currentRoomType.getNextHighestRoomType();
+                    if (currentRoomType == null) {
+                        throw new NoRoomTypeAvailableException ("No higher room type available");
+                    } else {
+                        retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
+//                        if ()
+                    }
                 }
-            } 
+
+//                for (int i = 0; i < NumberOfRooms; i++) {
+//                    Room room = allocateRoom(currentRoomType, reservation);
+//                    if (room == null) {
+//                        currentRoomType = currentRoomType.getNextHighestRoomType();
+//                        if (currentRoomType != null) {
+//                            room = allocateRoom(currentRoomType, reservation);
+//                            if (room != null) {
+//                                rooms.add(room);
+//                            }
+//                        } else {
+//                            break;
+//                        }
+//                    } else {
+//                        rooms.add(room);
+//                    }
+//                }
+
+                if (NumberOfRooms == rooms.size()) {
+                    for (Room room : rooms) {
+                        reservation.getRooms().add(room);
+                        room.getReservations().add(reservation);
+                    }
+                }
+
         }
     }
-    
-    public boolean allocateRoom (RoomType roomType, Reservation reservation) {
-        
-        List<Room> rooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), roomType.getRoomTypeId());
-        if (rooms.isEmpty()) {
-            // check
-            return false;
-        } else {
-            Room room = rooms.get(0);
-            room.getReservations().add(reservation);
-            reservation.getRooms().add(room);
-            return true;
-        }
-    }
+
+//    public Room allocateRoom(RoomType roomType, Reservation reservation) {
+//
+//        List<Room> rooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), roomType.getRoomTypeId());
+//        if (rooms.isEmpty()) {
+//            return null;
+//        } else {
+//            Room room = rooms.get(0);
+//            return room;
+//        }
+//    }
 
     @Override
     public String retrieveRoomsAllocatedInString(Long reservationId) throws ReservationNotFoundException {
         List<Room> reservedRooms = retrieveReservationByReservationId(reservationId).getRooms();
         String noRoomsAvailableString = "No Rooms Allocated Yet!";
         List<String> roomsAssignedArray = new ArrayList<>();
-        
-        if(reservedRooms.isEmpty()){
+
+        if (reservedRooms.isEmpty()) {
             return noRoomsAvailableString;
         } else {
-            for(Room r : reservedRooms){
+            for (Room r : reservedRooms) {
                 roomsAssignedArray.add(r.getRoomNumber());
             }
         }
         return roomsAssignedArray.toString();
     }
-    
-    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>>constraintViolations)
-    {
+
+    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>> constraintViolations) {
         String msg = "Input data validation error!:";
-            
-        for(ConstraintViolation constraintViolation:constraintViolations)
-        {
+
+        for (ConstraintViolation constraintViolation : constraintViolations) {
             msg += "\n\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage();
         }
-        
+
         return msg;
     }
 }
