@@ -23,12 +23,11 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.enumeration.ReservationStatusEnum;
 import util.exception.CreateNewReservationException;
 import util.exception.InputDataValidationException;
 import util.exception.NoRoomAvailableException;
-import util.exception.NoRoomTypeAvailableException;
 import util.exception.ReservationNotFoundException;
-import util.exception.RoomTypeNotFoundException;
 
 /**
  *
@@ -40,8 +39,6 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
 
-    @EJB
-    private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
     @EJB
     private RoomSessionBeanLocal roomSessionBeanLocal;
 
@@ -163,44 +160,117 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         for (Reservation reservation : reservations) {
             RoomType currentRoomType = reservation.getRoomType();
 
-                int numberOfRooms = reservation.getNumberOfRooms();
+            int numberOfRooms = reservation.getNumberOfRooms();
 
-                List<Room> rooms = new ArrayList<>();
-                
-                List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
-                
-                if (retrievedRooms.size() >= numberOfRooms) {
-                    for (int i = 0; i < numberOfRooms; i++) {
-                        rooms.add(retrievedRooms.get(i));
-                    }
-                } else if (retrievedRooms.size() >= 0) {
-                    for (Room room: retrievedRooms) {
-                        rooms.add(room);
-                    }
-                    int roomsNeeded = numberOfRooms - retrievedRooms.size();
-                    currentRoomType = currentRoomType.getNextHighestRoomType();
-                    if (currentRoomType == null) {
-                        throw new NoRoomAvailableException ("Room type unavailable");
-                    } else {
-                        retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
-                        if (retrievedRooms.size() >= roomsNeeded) {
-                            for (int i = 0; i < roomsNeeded; i++) {
-                                rooms.add(retrievedRooms.get(i));
-                            }
-                        } else {
-                            throw new NoRoomAvailableException ("Room type unavailable");
+            List<Room> rooms = new ArrayList<>();
+
+            List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
+
+            boolean upgraded = false;
+
+            if (retrievedRooms.size() >= numberOfRooms) {
+                for (int i = 0; i < numberOfRooms; i++) {
+                    rooms.add(retrievedRooms.get(i));
+                }
+            } else if (retrievedRooms.size() >= 0) {
+                for (Room room : retrievedRooms) {
+                    rooms.add(room);
+                }
+                int roomsNeeded = numberOfRooms - retrievedRooms.size();
+                currentRoomType = currentRoomType.getNextHighestRoomType();
+                if (currentRoomType == null) {
+                    throw new NoRoomAvailableException("Room type unavailable");
+                } else {
+                    retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
+                    if (retrievedRooms.size() >= roomsNeeded) {
+                        for (int i = 0; i < roomsNeeded; i++) {
+                            rooms.add(retrievedRooms.get(i));
                         }
+                    } else {
+                        throw new NoRoomAvailableException("Room type unavailable");
                     }
                 }
+            }
 
-                if (numberOfRooms == rooms.size()) {
-                    for (Room room : rooms) {
-                        reservation.getRooms().add(room);
-                        room.getReservations().add(reservation);
+            if (numberOfRooms == rooms.size()) {
+                for (Room room : rooms) {
+                    reservation.getRooms().add(room);
+                    room.getReservations().add(reservation);
+                    if (room.getRoomType().equals(reservation.getRoomType().getNextHighestRoomType())) {
+                        upgraded = true;
                     }
                 }
+            }
+
+            if (upgraded) {
+                reservation.setStatus(ReservationStatusEnum.UPGRADED);
+            } else {
+                reservation.setStatus(ReservationStatusEnum.ALLOCATED);
+            }
 
         }
+    }
+
+    @Override
+    public void allocateRoomToReservation(Long reservationId) throws NoRoomAvailableException {
+
+        try {
+            Reservation reservation = retrieveReservationByReservationId(reservationId);
+
+            RoomType currentRoomType = reservation.getRoomType();
+
+            int numberOfRooms = reservation.getNumberOfRooms();
+
+            List<Room> rooms = new ArrayList<>();
+
+            List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
+
+            boolean upgraded = false;
+
+            if (retrievedRooms.size() >= numberOfRooms) {
+                for (int i = 0; i < numberOfRooms; i++) {
+                    rooms.add(retrievedRooms.get(i));
+                }
+            } else if (retrievedRooms.size() >= 0) {
+                for (Room room : retrievedRooms) {
+                    rooms.add(room);
+                }
+                int roomsNeeded = numberOfRooms - retrievedRooms.size();
+                currentRoomType = currentRoomType.getNextHighestRoomType();
+                if (currentRoomType == null) {
+                    throw new NoRoomAvailableException("Room type unavailable");
+                } else {
+                    retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
+                    if (retrievedRooms.size() >= roomsNeeded) {
+                        for (int i = 0; i < roomsNeeded; i++) {
+                            rooms.add(retrievedRooms.get(i));
+                        }
+                    } else {
+                        throw new NoRoomAvailableException("Room type unavailable");
+                    }
+                }
+            }
+
+            if (numberOfRooms == rooms.size()) {
+                for (Room room : rooms) {
+                    reservation.getRooms().add(room);
+                    room.getReservations().add(reservation);
+                    if (room.getRoomType().equals(reservation.getRoomType().getNextHighestRoomType())) {
+                        upgraded = true;
+                    }
+                }
+            }
+
+            if (upgraded) {
+                reservation.setStatus(ReservationStatusEnum.UPGRADED);
+            } else {
+                reservation.setStatus(ReservationStatusEnum.ALLOCATED);
+            }
+
+        } catch (ReservationNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+
     }
 
     @Override
@@ -217,6 +287,32 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             }
         }
         return roomsAssignedArray.toString();
+    }
+
+    @Override
+    public List<Reservation> retrieveUpgradedReservations(Date bookingDate) throws ReservationNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.bookingDateTime = :inBookingDate AND r.status = :StatusUpgraded");
+        query.setParameter("inBookingDate", bookingDate);
+        query.setParameter("StatusUpgraded", ReservationStatusEnum.UPGRADED);
+        
+        try {
+            return query.getResultList();
+        } catch (NoResultException ex) {
+            throw new ReservationNotFoundException("No upgraded reservations exist for " + bookingDate);
+        }
+    }
+
+    @Override
+    public List<Reservation> retrieveRejectedReservations(Date bookingDate) throws ReservationNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.bookingDateTime = :inBookingDate AND r.status = :StatusRejected");
+        query.setParameter("inBookingDate", bookingDate);
+        query.setParameter("StatusRejected", ReservationStatusEnum.REJECTED);
+        
+        try {
+            return query.getResultList();
+        } catch (NoResultException ex) {
+            throw new ReservationNotFoundException("No rejected reservations exist for " + bookingDate);
+        }
     }
 
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>> constraintViolations) {

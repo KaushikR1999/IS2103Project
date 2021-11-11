@@ -37,5 +37,10 @@ public interface ReservationSessionBeanRemote {
     public void allocateRoomToCurrentDayReservations(Date bookingDateTime) throws NoRoomAvailableException;
     
     public String retrieveRoomsAllocatedInString(Long reservationId) throws ReservationNotFoundException;
+    
+    public void allocateRoomToReservation(Long reservationId) throws NoRoomAvailableException;
 
+    public List<Reservation> retrieveUpgradedReservations(Date bookingDate) throws ReservationNotFoundException;
+
+    public List<Reservation> retrieveRejectedReservations(Date bookingDate) throws ReservationNotFoundException;
 }

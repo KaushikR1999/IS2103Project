@@ -179,20 +179,20 @@ public class DataInitSessionBean {
         
 //        private final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
 
-        Date startDateA = new Date(2021,11,11);
-        Date endDateA = new Date(2021, 11, 15);
+        Date startDateA = new Date(121,11,11);
+        Date endDateA = new Date(121, 11, 15);
         
-        Date startDateC = new Date(2021,11,11);
-        Date endDateC = new Date(2021, 11, 13);
+        Date startDateC = new Date(121,11,11);
+        Date endDateC = new Date(121, 11, 13);
 
-        Date startDateE = new Date(2021,10,11);
-        Date endDateE = new Date(2021, 10, 14);
+        Date startDateE = new Date(121,10,11);
+        Date endDateE = new Date(121, 10, 14);
 
-        Date startDateG = new Date(2021,7,11);
-        Date endDateG = new Date(2021, 7, 12);
+        Date startDateG = new Date(121,7,11);
+        Date endDateG = new Date(121, 7, 12);
 
-        Date startDateI = new Date(2021,11,20);
-        Date endDateI = new Date(2021, 11, 22);
+        Date startDateI = new Date(121,11,20);
+        Date endDateI = new Date(121, 11, 22);
 
         
         RoomRate rateA = new RoomRate(RoomRateTypeEnum.PUBLISHED, startDateA, endDateA, "Deluxe Room", 100);
@@ -255,27 +255,27 @@ public class DataInitSessionBean {
         em.flush();
         grandSuite.getRoomRates().add(rateJ);
         
-        Date startDateX = new Date(2021,11, 11);
-        Date endDateX = new Date(2021, 11, 15);
-        Date bookingDateX = new Date(2021, 10, 10);
+        Date startDateX = new Date(121,11, 11);
+        Date endDateX = new Date(121, 11, 15);
+        Date bookingDateX = new Date(121, 10, 10);
         
-        Date startDateY = new Date(2021,11, 12);
-        Date endDateY = new Date(2021, 11, 14);
-        Date bookingDateY = new Date(2021, 10, 15);
+        Date startDateY = new Date(121,11, 12);
+        Date endDateY = new Date(121, 11, 14);
+        Date bookingDateY = new Date(121, 10, 15);
         
-        Date startDateZ = new Date(2021,11, 16);
-        Date endDateZ = new Date(2021, 11, 19);
-        Date bookingDateZ = new Date(2021, 10, 17);
+        Date startDateZ = new Date(121,11, 16);
+        Date endDateZ = new Date(121, 11, 19);
+        Date bookingDateZ = new Date(121, 10, 17);
         
-        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.CONFIRMED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
         em.persist(reservationX);
         em.flush();
         
-        Reservation reservationY = new Reservation (startDateY, endDateY, bookingDateX, ReservationStatusEnum.CONFIRMED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        Reservation reservationY = new Reservation (startDateY, endDateY, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
         em.persist(reservationY);
         em.flush();
         
-        Reservation reservationZ = new Reservation (startDateZ, endDateZ, bookingDateZ, ReservationStatusEnum.CONFIRMED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        Reservation reservationZ = new Reservation (startDateZ, endDateZ, bookingDateZ, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
         em.persist(reservationZ);
         em.flush();
     }

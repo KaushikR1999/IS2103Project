@@ -46,9 +46,7 @@ public class HotelOperationSalesModule {
     
     private Employee currentEmployee;
     
-    private final SimpleDateFormat formatDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    private final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
-    private final SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm");
+    private final SimpleDateFormat formatDate = new SimpleDateFormat("d/M/y");
     
     public HotelOperationSalesModule()
     {
@@ -211,7 +209,7 @@ public class HotelOperationSalesModule {
         Date startDate = new Date();
         
         while (true) {
-            System.out.print("Enter Start Date (yyyy-mm-dd)> ");
+            System.out.print("Enter Start Date (dd/mm/yyyy)> ");
             try {
                 startDate = formatDate.parse(scanner.nextLine().trim());
                 if (startDate.after(new Date()) || formatDate.format(startDate).equals(formatDate.format(new Date()))) {
@@ -230,7 +228,7 @@ public class HotelOperationSalesModule {
         Date endDate = new Date();
         
         while (true) {
-            System.out.print("Enter End Date (yyyy-mm-dd)> ");
+            System.out.print("Enter End Date (dd/mm/yyyy)> ");
             try {
                 endDate = formatDate.parse(scanner.nextLine().trim());
                 if (endDate.after(new Date()) || formatDate.format(endDate).equals(formatDate.format(new Date()))) {
@@ -319,7 +317,7 @@ public class HotelOperationSalesModule {
         Date startDate = new Date();
         
         while (true) {
-            System.out.print("Enter Start Date (yyyy-mm-dd)> ");
+            System.out.print("Enter Start Date (dd/mm/yyyy)> ");
             try {
                 startDate = formatDate.parse(scanner.nextLine().trim());
                 if (startDate.after(new Date()) || formatDate.format(startDate).equals(formatDate.format(new Date()))) {
@@ -338,7 +336,7 @@ public class HotelOperationSalesModule {
         Date endDate = new Date();
         
         while (true) {
-            System.out.print("Enter End Date (yyyy-mm-dd)> ");
+            System.out.print("Enter End Date (dd/mm/yyyy)> ");
             try {
                 endDate = formatDate.parse(scanner.nextLine().trim());
                 if (endDate.after(new Date()) || formatDate.format(endDate).equals(formatDate.format(new Date()))) {

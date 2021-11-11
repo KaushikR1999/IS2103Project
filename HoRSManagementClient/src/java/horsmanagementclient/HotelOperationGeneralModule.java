@@ -10,6 +10,7 @@ import ejb.session.stateless.ReservationSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
+import entity.Reservation;
 import entity.Room;
 import entity.RoomType;
 import java.text.ParseException;
@@ -58,7 +59,7 @@ public class HotelOperationGeneralModule {
 
     private Employee currentEmployee;
 
-    private final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat formatDate = new SimpleDateFormat("d/M/y");
 
     public HotelOperationGeneralModule() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
@@ -73,8 +74,6 @@ public class HotelOperationGeneralModule {
         this.reservationSessionBeanRemote = reservationSessionBeanRemote;
         this.currentEmployee = currentEmployee;
     }
-
-
 
     public void menuHotelOperationGeneral() throws InvalidAccessRightException {
         if (currentEmployee.getEmployeeRole() != AccessRightsEnum.OPS_MANAGER) {
@@ -128,7 +127,7 @@ public class HotelOperationGeneralModule {
                     doViewAllRooms();
                     System.out.println("not implemented yet");
                 } else if (response == 8) {
-                    //doViewAllRoomAllocationReport();
+                    doViewRoomAllocationExceptionReport();
                     System.out.println("not implemented yet");
                 } else if (response == 9) {
                     allocateRoomToReservations();
@@ -618,6 +617,39 @@ public class HotelOperationGeneralModule {
         scanner.nextLine();
     }
 
+    public void doViewRoomAllocationExceptionReport() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("*** HoRS Management Client :: Hotel Operation (General) :: View Room Allocation Exception Report ***\n");
+
+        Date bookingDate = new Date();
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+
+        System.out.print("Enter Booking Date (dd/mm/yyyy)> ");
+        try {
+            bookingDate = inputDateFormat.parse(scanner.nextLine().trim());
+//            System.out.println(bookingDate);
+        } catch (ParseException ex) {
+            System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
+        } catch (DateTimeException ex) {
+            System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
+        }
+        
+        try {
+            List<Reservation> upgradedReservations = reservationSessionBeanRemote.retrieveUpgradedReservations(bookingDate);
+        } catch (ReservationNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        try {
+            List<Reservation> rejectedReservations = reservationSessionBeanRemote.retrieveRejectedReservations(bookingDate);
+        } catch (ReservationNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        
+    }
+
     public void allocateRoomToReservations() {
         Scanner scanner = new Scanner(System.in);
 
@@ -625,7 +657,6 @@ public class HotelOperationGeneralModule {
 
         Date bookingDate = new Date();
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
-
 
         System.out.print("Enter Booking Date (dd/mm/yyyy)> ");
         try {
@@ -637,7 +668,7 @@ public class HotelOperationGeneralModule {
             System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
         } catch (NoRoomAvailableException ex) {
             System.out.println(ex.getMessage());
-        }    
+        }
     }
 
     private void showInputDataValidationErrorsForRoom(Set<ConstraintViolation<Room>> constraintViolations) {
