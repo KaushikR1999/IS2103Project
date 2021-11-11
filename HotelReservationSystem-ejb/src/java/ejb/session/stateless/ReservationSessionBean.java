@@ -62,6 +62,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 em.persist(newReservation);
 
                 em.flush();
+                newReservation.getRooms();
+                newReservation.getRoomType();
 
                 return newReservation;
             } else {
@@ -159,7 +161,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     @Override
     public void allocateRoomToCurrentDayReservations (Date bookingDateTime) throws ReservationNotFoundException {
         
-        List <Reservation> reservations = new ArrayList <> ();
+        List <Reservation> reservations = new ArrayList <>();
         
         try {
             reservations = retrieveReservationsByBookingDate(bookingDateTime);
@@ -211,6 +213,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     @Override
     public String retrieveRoomsAllocatedInString(Long reservationId) throws ReservationNotFoundException {
         List<Room> reservedRooms = retrieveReservationByReservationId(reservationId).getRooms();
+        System.out.println("Reached Here!");
         String noRoomsAvailableString = "No Rooms Allocated Yet!";
         List<String> roomsAssignedArray = new ArrayList<>();
         

@@ -26,6 +26,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.enumeration.ReservationStatusEnum;
+import util.enumeration.ReservationTypeEnum;
 import util.exception.CreateNewReservationException;
 import util.exception.GuestUsernameExistException;
 import util.exception.InputDataValidationException;
@@ -228,7 +229,7 @@ public class MainApp {
             System.out.print("Enter Number of Rooms> ");
             numberOfRooms = scanner.nextInt();
             
-            System.out.printf("%8s%20s%20s%15s%20s%20s\n", "Option", "Room Type", "Price Per Room", "NumOfRooms", "Room Capacity", "Room Beds");
+            System.out.printf("%8s%20s%20s%15s%20s%20s\n", "Room Type ID", "Room Type", "Price Per Room", "NumOfRooms", "Room Capacity", "Room Beds");
             try{
                 
                 for (RoomType rt : roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypesBasedOnSize(startDate, endDate, numberOfRooms)) {
@@ -270,12 +271,12 @@ public class MainApp {
 
                         if (roomTypeInt >= 1 && roomTypeInt <= roomTypes.size()) {
                             newReservation.setRoomType(roomTypes.get(roomTypeInt-1));
+                            newReservation.setTotalReservationFee(roomRateSessionBeanRemote.calculateRoomRateOnlineReservations(startDate, endDate, roomTypes.get(roomTypeInt-1).getRoomTypeId()));
                             break;
                         } else {
                             System.out.println("Invalid option, please try again!\n");
                         }
-                    }
-                    catch (NoRoomTypeAvailableException ex) {
+                         } catch (NoRateAvailableException | NoRoomTypeAvailableException ex) {
                         System.out.println(ex.getMessage() + "\n");
                         break;
                     }
@@ -285,7 +286,9 @@ public class MainApp {
                     newReservation.setEndDate(endDate);
                     newReservation.setNumberOfRooms(numberOfRooms);
                     newReservation.setStatus(ReservationStatusEnum.PENDING);
+                    newReservation.setReservationType(ReservationTypeEnum.ONLINE);
                     newReservation.setBookingDateTime(new Date());
+                    newReservation.setGuest(currentGuest);
 
                     Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(newReservation);
 
@@ -296,14 +299,16 @@ public class MainApp {
                             newReservation = reservationSessionBeanRemote.createNewReservation(newReservation);
 
                             System.out.println("Reservation is a success!: " + newReservation.getReservationId()+ "\n");
+                            currentGuest.getReservations().add(newReservation);
                         }
+                        
                         catch(CreateNewReservationException ex)
                         {
-                            System.out.println("An error has occurred while creating the new product!: The product SKU code already exist\n");
+                            System.out.println("An error has occurred while creating the new reservation!: " + ex.getMessage() + "\n");
                         }
                         catch(ReservationNotFoundException ex)
                         {
-                            System.out.println("An unknown error has occurred while creating the new product!: " + ex.getMessage() + "\n");
+                            System.out.println("An unknown error has occurred while creating the new reservation!: " + ex.getMessage() + "\n");
                         }
                         catch(InputDataValidationException ex)
                         {
@@ -348,7 +353,7 @@ public class MainApp {
             
                 r = reservationSessionBeanRemote.retrieveReservationByReservationId(reservationId);  
                 System.out.printf("%19s%18s%17s%20s%20s%20s%20s%31s\n", "Reservation ID", "Booking Date Time", "Start Date", "End Date", "Room Type", "Price", "Booking Status", "Rooms Allocared");
-                System.out.printf("%19s%18s%17s%15s%31s\n", r.getReservationId(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(r.getBookingDateTime()), new SimpleDateFormat("yyyy-MM-dd").format(r.getStartDate()), new SimpleDateFormat("yyyy-MM-dd").format(r.getEndDate()), r.getRoomType(), r.getTotalReservationFee(), r.getStatus(), reservationSessionBeanRemote.retrieveRoomsAllocatedInString(r.getReservationId()));
+                System.out.printf("%19s%18s%17s%20s%20s%20s%20s%31s\n", r.getReservationId(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(r.getBookingDateTime()), new SimpleDateFormat("yyyy-MM-dd").format(r.getStartDate()), new SimpleDateFormat("yyyy-MM-dd").format(r.getEndDate()), r.getRoomType().getTypeName(), r.getTotalReservationFee(), r.getStatus(), reservationSessionBeanRemote.retrieveRoomsAllocatedInString(r.getReservationId()));
             
                 } catch (ReservationNotFoundException ex ) {
                 
@@ -362,7 +367,7 @@ public class MainApp {
         
         } else {
             
-            System.out.println("Please login first before making a reservation!\n");
+            System.out.println("Please login first before viewing a reservation!\n");
         }
     }
     
@@ -379,7 +384,7 @@ public class MainApp {
             System.out.printf("%19s%18s%17s%20s%20s%20s%20s%31s\n", "Reservation ID", "Booking Date Time", "Start Date", "End Date", "Room Type", "Price", "Booking Status", "Rooms Allocared");
         try{
             for(Reservation r : reservations){
-                System.out.printf("%19s%18s%17s%15s%31s\n", r.getReservationId(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(r.getBookingDateTime()), new SimpleDateFormat("yyyy-MM-dd").format(r.getStartDate()), new SimpleDateFormat("yyyy-MM-dd").format(r.getEndDate()), r.getRoomType(), r.getTotalReservationFee(), r.getStatus(), reservationSessionBeanRemote.retrieveRoomsAllocatedInString(r.getReservationId()));
+                System.out.printf("%19s%18s%17s%20s%20s%20s%20s%31s\n", r.getReservationId(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(r.getBookingDateTime()), new SimpleDateFormat("yyyy-MM-dd").format(r.getStartDate()), new SimpleDateFormat("yyyy-MM-dd").format(r.getEndDate()), r.getRoomType().getTypeName(), r.getTotalReservationFee(), r.getStatus(), reservationSessionBeanRemote.retrieveRoomsAllocatedInString(r.getReservationId()));
                 }
             
             } catch (ReservationNotFoundException ex ) {
@@ -393,7 +398,7 @@ public class MainApp {
             scanner.nextLine();
         
         } else {
-            System.out.println("Please login first before making a reservation!\n");
+            System.out.println("Please login first before viewing your reservations!\n");
         }
     }
         

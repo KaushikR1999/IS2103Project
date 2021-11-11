@@ -35,5 +35,8 @@ public interface RoomRateSessionBeanRemote {
     public void deleteRoomRate(Long roomRateId) throws RoomTypeNotFoundException, RoomRateNotFoundException, DeleteRoomRateException;
     
     public int calculateRoomRateOnlineReservations(Date startDate, Date endDate, Long inRoomTypeId) throws NoRateAvailableException;
+    
+    public int calculateWalkInReservations(Date startDate, Date endDate, Long inRoomTypeId) throws NoRateAvailableException;
+
 
 }
