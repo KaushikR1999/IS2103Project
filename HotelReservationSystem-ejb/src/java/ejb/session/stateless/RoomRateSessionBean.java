@@ -235,7 +235,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
 
     }
     
-        public int calculateWalkInReservations(Date startDate, Date endDate, Long inRoomTypeId) throws NoRateAvailableException{
+    public int calculateWalkInReservations(Date startDate, Date endDate, Long inRoomTypeId) throws NoRateAvailableException{
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomType.roomTypeId = :inRoomTypeId AND rr.assignable = :true ORDER BY rr.roomRateType ASC");
         query.setParameter("inRoomTypeId", inRoomTypeId);
         query.setParameter("true", TRUE);
@@ -269,7 +269,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
                System.out.println(rr.getRatePerNight());
                
 
-               if(rr.getRoomRateType().equals(RoomRateTypeEnum.PUBLISHED) && (date.after(rr.getStartDate()) && date.before(rr.getEndDate()))  ){
+               if(rr.getRoomRateType().equals(RoomRateTypeEnum.PUBLISHED)){
                    price+=rr.getRatePerNight();
                    checker = true;
                    break;
