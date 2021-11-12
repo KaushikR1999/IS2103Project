@@ -7,8 +7,10 @@ package horsmanagementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
+import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import entity.RoomRate;
+import entity.RoomType;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +29,7 @@ import util.exception.CreateNewRoomRateException;
 import util.exception.DeleteRoomRateException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
+import util.exception.NoRoomTypeAvailableException;
 import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -37,116 +40,98 @@ import util.exception.UpdateRoomRateException;
  * @author yuenz
  */
 public class HotelOperationSalesModule {
-    
+
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
-    
+
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
-    
+    private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
+
     private Employee currentEmployee;
-    
+
     private final SimpleDateFormat formatDate = new SimpleDateFormat("d/M/y");
-    
-    public HotelOperationSalesModule()
-    {
+
+    public HotelOperationSalesModule() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
 
-    public HotelOperationSalesModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, Employee currentEmployee) {
+    public HotelOperationSalesModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, Employee currentEmployee, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote) {
         this();
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
+        this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.currentEmployee = currentEmployee;
     }
-    
-    public void menuHotelOperationSales() throws InvalidAccessRightException
-    {
-        if(currentEmployee.getEmployeeRole()!= AccessRightsEnum.SALES_MANAGER)
-        {
+
+    public void menuHotelOperationSales() throws InvalidAccessRightException {
+        if (currentEmployee.getEmployeeRole() != AccessRightsEnum.SALES_MANAGER) {
             throw new InvalidAccessRightException("You don't have SALES_MANAGER rights to access the sales manager module.");
         }
-        
+
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
-        
-        while(true)
-        {
+
+        while (true) {
             System.out.println("*** HoRS Management Client :: Hotel Operation (Sales) ***\n");
             System.out.println("1: Create New Room Rate");
             System.out.println("2: View Room Rate Details");
             System.out.println("3: View All Room Rates");
             System.out.println("4: Back\n");
             response = 0;
-            
-            while(response < 1 || response > 4)
-            {
+
+            while (response < 1 || response > 4) {
                 System.out.print("> ");
 
                 response = scanner.nextInt();
 
-                if(response == 1)
-                {
+                if (response == 1) {
                     doCreateNewRoomRate();
 //                    System.out.println("not implemented yet");
 
-                }
-                else if(response == 2)
-                {
+                } else if (response == 2) {
                     doViewRoomRateDetails();
 //                    System.out.println("not implemented yet");
-                }
-                else if(response == 3)
-                {
+                } else if (response == 3) {
                     doViewAllRoomRates();
 //                    doUpdateRoomRate();
 //                    System.out.println("not implemented yet");
-                }
-//                else if(response == 4)
-//                {
-////                    doDeleteRoomRate();
-////                    System.out.println("not implemented yet");
-//                }
-//                else if(response == 5)
-//                {
-//                    
-////                    System.out.println("not implemented yet");
-//                }
-                else if (response == 4)
-                {
+                } //                else if(response == 4)
+                //                {
+                ////                    doDeleteRoomRate();
+                ////                    System.out.println("not implemented yet");
+                //                }
+                //                else if(response == 5)
+                //                {
+                //                    
+                ////                    System.out.println("not implemented yet");
+                //                }
+                else if (response == 4) {
                     break;
-                }
-                else
-                {
-                    System.out.println("Invalid option, please try again!\n");                
+                } else {
+                    System.out.println("Invalid option, please try again!\n");
                 }
             }
-            
-            if(response == 4)
-            {
+
+            if (response == 4) {
                 break;
             }
         }
     }
-    
-    
-    
-    
-    private void doViewRoomRateDetails()
-    {
+
+    private void doViewRoomRateDetails() {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
-        
+
         System.out.println("*** HoRS Management Client :: Hotel Operation (Sales) :: View Room Rate Details ***\n");
         System.out.print("Enter Room Rate ID> ");
         Long roomRateId = scanner.nextLong();
-        
-        try
-        {
+
+        try {
             RoomRate roomRate = roomRateSessionBeanRemote.retrieveRoomRateByRoomRateId(roomRateId);
             System.out.printf("%8s%13s%20s%20s%20s%20s%20s\n", "Room Rate ID", "Name", "Room Type", "Rate Type", "Rate Per Night", "Start Date", "End Date");
-            System.out.printf("%8s%15s%20s%20s%20s%20s%20s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType().getTypeName(), roomRate.getRoomRateType(), roomRate.getRatePerNight(), formatDate.format(roomRate.getStartDate()), formatDate.format(roomRate.getEndDate()));         
+            System.out.printf("%8s%15s%20s%20s%20s%20s%20s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType().getTypeName(), roomRate.getRoomRateType(), roomRate.getRatePerNight(), formatDate.format(roomRate.getStartDate()), formatDate.format(roomRate.getEndDate()));
             System.out.println("------------------------");
             System.out.println("1: Update Room Rate");
             System.out.println("2: Delete Room Rate");
@@ -154,228 +139,228 @@ public class HotelOperationSalesModule {
             System.out.print("> ");
             response = scanner.nextInt();
 
-            if(response == 1)
-            {
+            if (response == 1) {
                 doUpdateRoomRate(roomRate);
-            }
-            else if(response == 2)
-            {
+            } else if (response == 2) {
                 doDeleteRoomRate(roomRate);
             }
-        }
-        catch(RoomRateNotFoundException ex)
-        {
+        } catch (RoomRateNotFoundException ex) {
             System.out.println("An error has occurred while retrieving room rate: " + ex.getMessage() + "\n");
         }
     }
-    
-    private void doCreateNewRoomRate()
-    {
+
+    private void doCreateNewRoomRate() {
         Scanner scanner = new Scanner(System.in);
         RoomRate newRoomRate = new RoomRate();
         Double doubleInput;
-        
+
         System.out.println("*** HoRS Management Client :: Hotel Operation (Sales) :: Create New Room Rate ***\n");
         System.out.print("Enter Name> ");
         newRoomRate.setName(scanner.nextLine().trim());
-        
-        while(true)
-        {
+
+        while (true) {
             System.out.print("Select Room Rate Type (1: Promotion, 2: Peak, 3: Normal, 4: Published)> ");
             Integer roomRateTypeInt = scanner.nextInt();
-            
-            if(roomRateTypeInt >= 1 && roomRateTypeInt <= 4)
-            {
-                newRoomRate.setRoomRateType(RoomRateTypeEnum.values()[roomRateTypeInt-1]);
+
+            if (roomRateTypeInt >= 1 && roomRateTypeInt <= 4) {
+                newRoomRate.setRoomRateType(RoomRateTypeEnum.values()[roomRateTypeInt - 1]);
                 break;
-            }
-            else
-            {
+            } else {
                 System.out.println("Invalid option, please try again!\n");
             }
         }
-        
+
         System.out.print("Enter Rate Per Night > ");
         doubleInput = scanner.nextDouble();
-        if(doubleInput >= 0)
-        {
+        if (doubleInput >= 0) {
             newRoomRate.setRatePerNight(doubleInput);
-        } 
-        else {
+        } else {
             System.out.println("Invalid option, please try again!\n");
         }
-        
+
         scanner.nextLine();
-        Date startDate = new Date();
-        
-        while (true) {
-            System.out.print("Enter Start Date (dd/mm/yyyy)> ");
-            try {
-                startDate = formatDate.parse(scanner.nextLine().trim());
-                if (startDate.after(new Date()) || formatDate.format(startDate).equals(formatDate.format(new Date()))) {
-                    newRoomRate.setStartDate(startDate);
-                    break;
-                } else {
-                    throw new DateTimeException("Chosen date is in the past!");
+
+        if (!(newRoomRate.getRoomRateType().equals(RoomRateTypeEnum.PUBLISHED) || newRoomRate.getRoomRateType().equals(RoomRateTypeEnum.NORMAL))) {
+            Date startDate = new Date();
+
+            while (true) {
+                System.out.print("Enter Start Date (dd/mm/yyyy)> ");
+                try {
+                    startDate = formatDate.parse(scanner.nextLine().trim());
+                    if (startDate.after(new Date()) || formatDate.format(startDate).equals(formatDate.format(new Date()))) {
+                        newRoomRate.setStartDate(startDate);
+                        break;
+                    } else {
+                        throw new DateTimeException("Chosen date is in the past!");
+                    }
+                } catch (ParseException ex) {
+                    System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
+                } catch (DateTimeException ex) {
+                    System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
                 }
-            } catch (ParseException ex) {
-                System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
-            } catch (DateTimeException ex) {
-                System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
+            }
+
+            Date endDate = new Date();
+
+            while (true) {
+                System.out.print("Enter End Date (dd/mm/yyyy)> ");
+                try {
+                    endDate = formatDate.parse(scanner.nextLine().trim());
+                    if (endDate.after(new Date()) || formatDate.format(endDate).equals(formatDate.format(new Date()))) {
+                        newRoomRate.setEndDate(endDate);
+                        break;
+                    } else {
+                        throw new DateTimeException("Chosen date is in the past!");
+                    }
+                } catch (ParseException ex) {
+                    System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
+                } catch (DateTimeException ex) {
+                    System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
+                }
             }
         }
-        
-        Date endDate = new Date();
+
+//        System.out.print("Enter Room Type Name > ");
+//        String roomTypeName = scanner.nextLine().trim();
         
         while (true) {
-            System.out.print("Enter End Date (dd/mm/yyyy)> ");
             try {
-                endDate = formatDate.parse(scanner.nextLine().trim());
-                if (endDate.after(new Date()) || formatDate.format(endDate).equals(formatDate.format(new Date()))) {
-                    newRoomRate.setEndDate(endDate);
+                List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes();
+
+                String output = "Select Next Highest Room Type (";
+                int i = 1;
+                for (RoomType otherRoomType : roomTypes) {
+                    output += i + ": " + otherRoomType.getTypeName();
+                    i++;
+                    if (i <= roomTypes.size()) {
+                        output += ", ";
+                    }
+                }
+                output += ")> ";
+
+                System.out.print(output);
+                Integer roomTypeInt = scanner.nextInt();
+
+                if (roomTypeInt >= 1 && roomTypeInt <= roomTypes.size()) {
+//                    roomType.setNextHighestRoomType(roomTypes.get(roomTypeInt - 1));
+                    newRoomRate.setRoomType(roomTypes.get(roomTypeInt-1));
                     break;
                 } else {
-                    throw new DateTimeException("Chosen date is in the past!");
+                    System.out.println("Invalid option, please try again!\n");
                 }
-            } catch (ParseException ex) {
-                System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
-            } catch (DateTimeException ex) {
-                System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
+            } catch (NoRoomTypeAvailableException ex) {
+                System.out.println(ex.getMessage() + "\n");
+                break;
             }
+
         }
-        
-        System.out.print("Enter Room Type Name > ");
-        String roomTypeName = scanner.nextLine().trim();
-        
-        Set<ConstraintViolation<RoomRate>>constraintViolations = validator.validate(newRoomRate);
-        
-        if(constraintViolations.isEmpty())
-        {
-            try
-            {
-                Long newRoomRateId = roomRateSessionBeanRemote.createNewRoomRate(roomTypeName, newRoomRate);
+
+        Set<ConstraintViolation<RoomRate>> constraintViolations = validator.validate(newRoomRate);
+
+        if (constraintViolations.isEmpty()) {
+            try {
+                Long newRoomRateId = roomRateSessionBeanRemote.createNewRoomRate(newRoomRate);
                 System.out.println("New room rate created successfully!: " + newRoomRateId + "\n");
-            }
-            catch(CreateNewRoomRateException | RoomTypeNotFoundException ex)
-            {
+            } catch (CreateNewRoomRateException | RoomTypeNotFoundException ex) {
                 System.out.println("An unknown error has occurred while creating the new room rate!: " + ex.getMessage() + "\n");
-            }
-            catch(InputDataValidationException ex)
-            {
+            } catch (InputDataValidationException ex) {
                 System.out.println(ex.getMessage() + "\n");
             }
-        }
-        else
-        {
+        } else {
             showInputDataValidationErrorsForRoomRate(constraintViolations);
         }
     }
-    
-    private void doUpdateRoomRate(RoomRate roomRate)
-    {
-        Scanner scanner = new Scanner(System.in);        
+
+    private void doUpdateRoomRate(RoomRate roomRate) {
+        Scanner scanner = new Scanner(System.in);
         String input;
         Double doubleInput;
-        
+
         System.out.println("*** HoRS Management Client :: Hotel Operation (Sales) :: View Room Rate Details :: Update Room Rate ***\n");
         System.out.print("Enter Name (blank if no change)> ");
         input = scanner.nextLine().trim();
-        if(input.length() > 0)
-        {
+        if (input.length() > 0) {
             roomRate.setName(input);
         }
-        
-        while(true)
-        {
+
+        while (true) {
             System.out.print("Select Room Rate Type (0: No Change, 1: Published, 2: Normal, 3: Peak, 4: Promotion)> ");
             Integer roomRateTypeInt = scanner.nextInt();
-            
-            if(roomRateTypeInt >= 1 && roomRateTypeInt <= 4)
-            {
-                roomRate.setRoomRateType(RoomRateTypeEnum.values()[roomRateTypeInt-1]);
+
+            if (roomRateTypeInt >= 1 && roomRateTypeInt <= 4) {
+                roomRate.setRoomRateType(RoomRateTypeEnum.values()[roomRateTypeInt - 1]);
                 break;
-            }
-            else if (roomRateTypeInt == 0)
-            {
+            } else if (roomRateTypeInt == 0) {
                 break;
-            }
-            else
-            {
+            } else {
                 System.out.println("Invalid option, please try again!\n");
             }
         }
-        
+
         System.out.print("Enter Rate Per Night (negative number if no change)> ");
         doubleInput = scanner.nextDouble();
-        if(doubleInput >= 0)
-        {
+        if (doubleInput >= 0) {
             roomRate.setRatePerNight(doubleInput);
         }
-        
+
         scanner.nextLine();
-        
-        Date startDate = new Date();
-        
-        while (true) {
-            System.out.print("Enter Start Date (dd/mm/yyyy)> ");
-            try {
-                startDate = formatDate.parse(scanner.nextLine().trim());
-                if (startDate.after(new Date()) || formatDate.format(startDate).equals(formatDate.format(new Date()))) {
-                    roomRate.setStartDate(startDate);
-                    break;
-                } else {
-                    throw new DateTimeException("Chosen date is in the past!");
+
+        if (!(roomRate.getRoomRateType().equals(RoomRateTypeEnum.PUBLISHED) || roomRate.getRoomRateType().equals(RoomRateTypeEnum.NORMAL))) {
+            Date startDate = new Date();
+
+            while (true) {
+                System.out.print("Enter Start Date (dd/mm/yyyy)> ");
+                try {
+                    startDate = formatDate.parse(scanner.nextLine().trim());
+                    if (startDate.after(new Date()) || formatDate.format(startDate).equals(formatDate.format(new Date()))) {
+                        roomRate.setStartDate(startDate);
+                        break;
+                    } else {
+                        throw new DateTimeException("Chosen date is in the past!");
+                    }
+                } catch (ParseException ex) {
+                    System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
+                } catch (DateTimeException ex) {
+                    System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
                 }
-            } catch (ParseException ex) {
-                System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
-            } catch (DateTimeException ex) {
-                System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
+            }
+
+            Date endDate = new Date();
+
+            while (true) {
+                System.out.print("Enter End Date (dd/mm/yyyy)> ");
+                try {
+                    endDate = formatDate.parse(scanner.nextLine().trim());
+                    if (endDate.after(new Date()) || formatDate.format(endDate).equals(formatDate.format(new Date()))) {
+                        roomRate.setEndDate(endDate);
+                        break;
+                    } else {
+                        throw new DateTimeException("Chosen date is in the past!");
+                    }
+                } catch (ParseException ex) {
+                    System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
+                } catch (DateTimeException ex) {
+                    System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
+                }
             }
         }
         
-        Date endDate = new Date();
-        
-        while (true) {
-            System.out.print("Enter End Date (dd/mm/yyyy)> ");
+        Set<ConstraintViolation<RoomRate>> constraintViolations = validator.validate(roomRate);
+
+        if (constraintViolations.isEmpty()) {
             try {
-                endDate = formatDate.parse(scanner.nextLine().trim());
-                if (endDate.after(new Date()) || formatDate.format(endDate).equals(formatDate.format(new Date()))) {
-                    roomRate.setEndDate(endDate);
-                    break;
-                } else {
-                    throw new DateTimeException("Chosen date is in the past!");
-                }
-            } catch (ParseException ex) {
-                System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
-            } catch (DateTimeException ex) {
-                System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
-            }
-        }
-        
-        Set<ConstraintViolation<RoomRate>>constraintViolations = validator.validate(roomRate);
-        
-        if(constraintViolations.isEmpty())
-        {
-            try
-            {
                 roomRateSessionBeanRemote.updateRoomRate(roomRate);
                 System.out.println("Room Rate updated successfully!\n");
-            }
-            catch (RoomRateNotFoundException ex) 
-            {
+            } catch (RoomRateNotFoundException ex) {
                 System.out.println("An error has occurred while updating product: " + ex.getMessage() + "\n");
-            }
-            catch(InputDataValidationException ex)
-            {
+            } catch (InputDataValidationException ex) {
                 System.out.println(ex.getMessage() + "\n");
             }
-        }
-        else
-        {
+        } else {
             showInputDataValidationErrorsForRoomRate(constraintViolations);
         }
     }
-    
+
     private void doDeleteRoomRate(RoomRate roomRate) {
         Scanner scanner = new Scanner(System.in);
         String input;
@@ -395,31 +380,31 @@ public class HotelOperationSalesModule {
             System.out.println("Room Rate NOT deleted!\n");
         }
     }
-    
-    private void doViewAllRoomRates()
-    {
+
+    private void doViewAllRoomRates() {
         Scanner scanner = new Scanner(System.in);
-        
+
         System.out.println("*** HoRS Management Client :: Hotel Operation (Sales) :: View All Room Rates ***\n");
-        
+
         List<RoomRate> roomRates = roomRateSessionBeanRemote.retrieveAllRoomRates();
         System.out.printf("%8s%13s%20s%20s%20s%20s%20s\n", "Room Rate ID", "Name", "Room Type", "Rate Type", "Rate Per Night", "Start Date", "End Date");
 
-        for(RoomRate roomRate:roomRates)
-        {
-            System.out.printf("%8s%15s%20s%20s%20s%20s%20s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType().getTypeName(), roomRate.getRoomRateType(), roomRate.getRatePerNight(), formatDate.format(roomRate.getStartDate()), formatDate.format(roomRate.getEndDate()));
+        for (RoomRate roomRate : roomRates) {
+            if (roomRate.getRoomRateType().equals(RoomRateTypeEnum.PUBLISHED) || roomRate.getRoomRateType().equals(RoomRateTypeEnum.NORMAL)) {
+                System.out.printf("%8s%15s%20s%20s%20s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType().getTypeName(), roomRate.getRoomRateType(), roomRate.getRatePerNight());
+            } else {
+                System.out.printf("%8s%15s%20s%20s%20s%20s%20s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType().getTypeName(), roomRate.getRoomRateType(), roomRate.getRatePerNight(), formatDate.format(roomRate.getStartDate()), formatDate.format(roomRate.getEndDate()));
+            }
         }
-        
+
         System.out.print("Press any key to continue...> ");
         scanner.nextLine();
     }
-    
-    private void showInputDataValidationErrorsForRoomRate(Set<ConstraintViolation<RoomRate>>constraintViolations)
-    {
+
+    private void showInputDataValidationErrorsForRoomRate(Set<ConstraintViolation<RoomRate>> constraintViolations) {
         System.out.println("\nInput data validation error!:");
-            
-        for(ConstraintViolation constraintViolation:constraintViolations)
-        {
+
+        for (ConstraintViolation constraintViolation : constraintViolations) {
             System.out.println("\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage());
         }
 

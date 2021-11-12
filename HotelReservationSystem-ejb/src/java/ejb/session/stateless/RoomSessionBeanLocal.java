@@ -9,6 +9,7 @@ import entity.Room;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
+import javax.persistence.NoResultException;
 import util.exception.CreateNewRoomException;
 import util.exception.DeleteRoomException;
 import util.exception.InputDataValidationException;
@@ -37,7 +38,7 @@ public interface RoomSessionBeanLocal {
 
     public int retrieveRoomsAvailableForBookingByRoomType(Date inStartDate, Date inEndDate, Long inRoomTypeId);
 
-    public Room retrieveRoomByRoomNumber(int roomNumber);
+    public Room retrieveRoomByRoomNumber(String roomNumber) throws NoResultException;
 
     public List<Room> retrieveListOfRoomsAvailableForBookingByRoomType(Date inStartDate, Date inEndDate, Long inRoomTypeId);
     

@@ -129,6 +129,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         query.setParameter("inReservationId", reservationId);
 
         try {
+            Reservation reservationAns = (Reservation) query.getSingleResult();
+            reservationAns.getRooms().size();
             return (Reservation) query.getSingleResult();
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new ReservationNotFoundException("Reservation Id " + reservationId + " does not exist!");
@@ -282,6 +284,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 reservation.setStatus(ReservationStatusEnum.UPGRADED);
             } else {
                 reservation.setStatus(ReservationStatusEnum.ALLOCATED);
+                em.merge(reservation);
             }
 
         } catch (ReservationNotFoundException ex) {
@@ -313,7 +316,11 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         query.setParameter("StatusUpgraded", ReservationStatusEnum.UPGRADED);
 
         try {
-            return query.getResultList();
+            List<Reservation> upgradedReservations = query.getResultList();
+            for (Reservation reservation: upgradedReservations) {
+                reservation.getRooms().size();
+            }
+            return upgradedReservations;
         } catch (NoResultException ex) {
             throw new ReservationNotFoundException("No upgraded reservations exist for " + startDate);
         }
@@ -326,7 +333,11 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         query.setParameter("StatusRejected", ReservationStatusEnum.REJECTED);
 
         try {
-            return query.getResultList();
+            List<Reservation> rejectedReservations = query.getResultList();
+            for (Reservation reservation: rejectedReservations) {
+                reservation.getRooms().size();
+            }
+            return rejectedReservations;
         } catch (NoResultException ex) {
             throw new ReservationNotFoundException("No rejected reservations exist for " + startDate);
         }

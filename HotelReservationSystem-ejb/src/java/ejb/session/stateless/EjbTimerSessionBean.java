@@ -5,16 +5,10 @@
  */
 package ejb.session.stateless;
 
-import entity.Reservation;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
-import util.exception.NoRoomAvailableException;
-import util.exception.NoRoomTypeAvailableException;
-import util.exception.ReservationNotFoundException;
 
 /**
  *
@@ -24,9 +18,6 @@ import util.exception.ReservationNotFoundException;
 public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerSessionBeanLocal {
     
     @EJB
-    private RoomSessionBeanLocal roomSessionBeanLocal;
-    
-    @EJB
     private ReservationSessionBeanLocal reservationSessionBeanLocal;
     
     @Schedule(hour = "2", minute = "0", second = "0", info = "CurrentDayReservationCheckTimer")
@@ -34,11 +25,6 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
         
         Date startDate = new java.util.Date();
         
-        //try {
-            reservationSessionBeanLocal.allocateRoomToCurrentDayReservations(startDate);
-       /* } catch (NoRoomAvailableException ex) {
-            System.out.println(ex.getMessage());
-        }  */
-
+        reservationSessionBeanLocal.allocateRoomToCurrentDayReservations(startDate);
     }
 }

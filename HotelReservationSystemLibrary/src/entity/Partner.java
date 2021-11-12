@@ -35,7 +35,7 @@ public class Partner implements Serializable {
     
     @Column(nullable = false, length = 32, unique = true)
     @NotNull
-    @Size(min = 6, max = 32)
+    @Size(min = 1, max = 32)
     private String username;
     
     @Column(nullable = false, length = 32)
