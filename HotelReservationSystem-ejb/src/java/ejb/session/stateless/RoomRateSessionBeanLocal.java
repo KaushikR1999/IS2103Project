@@ -24,7 +24,7 @@ import util.exception.UpdateRoomRateException;
 @Local
 public interface RoomRateSessionBeanLocal {
 
-    public Long createNewRoomRate(String roomTypeName, RoomRate newRoomRate) throws RoomTypeNotFoundException, CreateNewRoomRateException, InputDataValidationException;
+    public Long createNewRoomRate(RoomRate newRoomRate) throws RoomTypeNotFoundException, CreateNewRoomRateException, InputDataValidationException;
 
     public List<RoomRate> retrieveAllRoomRates();
 

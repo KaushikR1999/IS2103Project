@@ -67,6 +67,9 @@ public class Reservation implements Serializable {
     private int numberOfRooms;
     
     @Column(nullable = false)
+    private boolean checkIn;
+    
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
     private ReservationTypeEnum reservationType;
@@ -84,6 +87,7 @@ public class Reservation implements Serializable {
 
     public Reservation() {
         this.rooms = new ArrayList<> ();
+        this.checkIn = false;
     }
 
     public Reservation(Date startDate, Date endDate, Date bookingDateTime, ReservationStatusEnum status, Double reservationFee, ReservationTypeEnum reservationType, RoomType roomType, int numberOfRooms) {
@@ -271,6 +275,20 @@ public class Reservation implements Serializable {
      */
     public void setNumberOfRooms(int numberOfRooms) {
         this.numberOfRooms = numberOfRooms;
+    }
+
+    /**
+     * @return the checkIn
+     */
+    public boolean isCheckIn() {
+        return checkIn;
+    }
+
+    /**
+     * @param checkIn the checkIn to set
+     */
+    public void setCheckIn(boolean checkIn) {
+        this.checkIn = checkIn;
     }
     
 }

@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -130,7 +131,7 @@ public class HotelOperationGeneralModule {
 
                 } else if (response == 9) {
                     allocateRoomToReservations();
-                    
+
                 } else if (response == 10) {
                     break;
                 } else {
@@ -173,7 +174,7 @@ public class HotelOperationGeneralModule {
             try {
                 List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes();
 
-                String output = "Select Next Highest Room Type (";
+                String output = "Select Next Highest Room Type (0: No Higher Room Type, ";
                 int i = 1;
                 for (RoomType roomType : roomTypes) {
                     output += i + ": " + roomType.getTypeName();
@@ -189,6 +190,8 @@ public class HotelOperationGeneralModule {
 
                 if (roomTypeInt >= 1 && roomTypeInt <= roomTypes.size()) {
                     newRoomType.setNextHighestRoomType(roomTypes.get(roomTypeInt - 1));
+                    break;
+                } else if (roomTypeInt == 0) {
                     break;
                 } else {
                     System.out.println("Invalid option, please try again!\n");
@@ -224,28 +227,52 @@ public class HotelOperationGeneralModule {
         Integer response = 0;
 
         System.out.println("*** HoRS Management Client :: Hotel Operations (General) :: View Room Type Details ***\n");
-        System.out.print("Enter Room Type Name> ");
-        String typeName = scanner.nextLine().trim();
 
-        try {
-            RoomType roomType = roomTypeSessionBeanRemote.retrieveRoomTypeByRoomTypeName(typeName);
-            System.out.printf("%10s%20s%20s%20s%13s%20s\n", "Name", "Description", "Room Size", "Number Of Beds", "Room Capacity", "Amenities");
-            System.out.printf("%10s%20s%20f%20d%20d%20s\n", roomType.getTypeName(), roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities().toString());
-            System.out.println("------------------------");
-            System.out.println("1: Update Room Type");
-            System.out.println("2: Delete Room Type");
-            System.out.println("3: Back\n");
-            System.out.print("> ");
-            response = scanner.nextInt();
+        while (true) {
+            try {
+                List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes();
 
-            if (response == 1) {
-                doUpdateRoomType(roomType);
-            } else if (response == 2) {
-                doDeleteRoomType(roomType);
+                String output = "Select Next Highest Room Type (";
+                int i = 1;
+                for (RoomType roomType : roomTypes) {
+                    output += i + ": " + roomType.getTypeName();
+                    i++;
+                    if (i <= roomTypes.size()) {
+                        output += ", ";
+                    }
+                }
+                output += ")> ";
+
+                System.out.print(output);
+                Integer roomTypeInt = scanner.nextInt();
+
+                if (roomTypeInt >= 1 && roomTypeInt <= roomTypes.size()) {
+                    RoomType roomType = roomTypes.get(roomTypeInt - 1);
+                    System.out.printf("%10s%20s%20s%20s%13s%20s\n", "Name", "Description", "Room Size", "Number Of Beds", "Room Capacity", "Amenities");
+                    System.out.printf("%10s%20s%20f%20d%20d%20s\n", roomType.getTypeName(), roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities().toString());
+                    System.out.println("------------------------");
+                    System.out.println("1: Update Room Type");
+                    System.out.println("2: Delete Room Type");
+                    System.out.println("3: Back\n");
+                    System.out.print("> ");
+                    response = scanner.nextInt();
+
+                    if (response == 1) {
+                        doUpdateRoomType(roomType);
+                    } else if (response == 2) {
+                        doDeleteRoomType(roomType);
+                    }
+                } else {
+                    System.out.println("Invalid option, please try again!\n");
+                }
+            } catch (NoRoomTypeAvailableException ex) {
+                System.out.println(ex.getMessage() + "\n");
+                break;
             }
-        } catch (RoomTypeNotFoundException ex) {
-            System.out.println("An error has occurred while retrieving product: " + ex.getMessage() + "\n");
+
         }
+
+
     }
 
     private void doUpdateRoomType(RoomType roomType) {
@@ -323,7 +350,6 @@ public class HotelOperationGeneralModule {
                     roomType.setNextHighestRoomType(roomTypes.get(roomTypeInt - 1));
                     break;
                 } else if (roomTypeInt == 0) {
-//                    roomType.setNextHighestRoomType(roomType.getNextHighestRoomType());
                     break;
                 } else {
                     System.out.println("Invalid option, please try again!\n");
@@ -393,10 +419,10 @@ public class HotelOperationGeneralModule {
         System.out.println("*** HoRS Management Client :: Hotel Operations (General) :: View All Room Types ***\n");
 
         List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllRoomTypes();
-        System.out.printf("%10s%20s%20s%20s%13s%20s\n", "Name", "Description", "Room Size", "Number Of Beds", "Room Capacity", "Amenities");
+        System.out.printf("%10s%20s%20s%20s%13s%20s%20s\n", "Name", "Description", "Room Size", "Number Of Beds", "Room Capacity", "Amenities", "Next Highest Room Type");
 
         for (RoomType roomType : roomTypes) {
-            System.out.printf("%10s%20s%20f%20d%20d%20s\n", roomType.getTypeName(), roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities().toString());
+            System.out.printf("%10s%20s%20f%20d%20d%20s%20s\n", roomType.getTypeName(), roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities().toString(), roomType.getNextHighestRoomType().getTypeName());
         }
 
         System.out.print("Press any key to continue...> ");
@@ -489,11 +515,11 @@ public class HotelOperationGeneralModule {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter Room ID> ");
-        Long roomId = scanner.nextLong();
+        System.out.print("Enter Room Number> ");
+        String roomNumber = scanner.nextLine().trim();
 
         try {
-            Room room = roomSessionBeanRemote.retrieveRoomByRoomId(roomId);
+            Room room = roomSessionBeanRemote.retrieveRoomByRoomNumber(roomNumber);
 
             String input;
             Double doubleInput;
@@ -516,7 +542,7 @@ public class HotelOperationGeneralModule {
 
             while (true) {
                 try {
-                    List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes();
+                    List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypesExceptCurrent(room.getRoomType().getRoomTypeId());
 
                     String output = "Select Room Type (0: No Change, ";
                     int i = 1;
@@ -561,7 +587,7 @@ public class HotelOperationGeneralModule {
                 showInputDataValidationErrorsForRoom(constraintViolations);
             }
 
-        } catch (RoomNotFoundException ex) {
+        } catch (NoResultException ex) {
             System.out.println("An unknown error has occurred while updating the room!: " + ex.getMessage() + "\n");
         }
 
@@ -571,11 +597,11 @@ public class HotelOperationGeneralModule {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter Room ID> ");
-        Long roomId = scanner.nextLong();
+        System.out.print("Enter Room Number> ");
+        String roomNumber = scanner.nextLine().trim();
 
         try {
-            Room room = roomSessionBeanRemote.retrieveRoomByRoomId(roomId);
+            Room room = roomSessionBeanRemote.retrieveRoomByRoomNumber(roomNumber);
 
             String input;
 
@@ -595,7 +621,7 @@ public class HotelOperationGeneralModule {
                 System.out.println("Room NOT deleted!\n");
             }
 
-        } catch (RoomNotFoundException ex) {
+        } catch (NoResultException ex) {
             System.out.println("An unknown error has occurred while deleting the room!: " + ex.getMessage() + "\n");
         }
     }
@@ -621,47 +647,60 @@ public class HotelOperationGeneralModule {
 
         System.out.println("*** HoRS Management Client :: Hotel Operation (General) :: View Room Allocation Exception Report ***\n");
 
-        Date bookingDate = new Date();
+        Date startDate = new Date();
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
 
-        System.out.print("Enter Start Date (dd/mm/yyyy)> ");
-        try {
-            bookingDate = inputDateFormat.parse(scanner.nextLine().trim());
+        while (true) {
+            System.out.print("Enter Start Date (dd/mm/yyyy)> ");
+            try {
+                startDate = inputDateFormat.parse(scanner.nextLine().trim());
+                break;
 //            System.out.println(bookingDate);
-        } catch (ParseException ex) {
-            System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
-        } catch (DateTimeException ex) {
-            System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
-        }
-        
-        try {
-            List<Reservation> upgradedReservations = reservationSessionBeanRemote.retrieveUpgradedReservations(bookingDate);
-            
-//            System.out.printf("%20s%20s%20s%20s%20s%20s\n", "Exception Type", "Reservation ID", "Number of Rooms Upgraded", "Total Number of Rooms", "Room Type requested", "Room Type upgraded to");
-            
-            for (Reservation reservation: upgradedReservations) {
-                reservation.getRooms().size();
-                System.out.println("Type Exception 1: Reservation ID= " + reservation.getReservationId() + ": " + reservationSessionBeanRemote.getNumberOfUpgradedRooms(reservation) + "/" + reservation.getNumberOfRooms() + " upgraded from " + reservation.getRoomType().getTypeName() + " to " + reservation.getRoomType().getNextHighestRoomType().getTypeName());
+            } catch (ParseException ex) {
+                System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
+            } catch (DateTimeException ex) {
+                System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
             }
-            
+        }
+
+        System.out.println();
+        System.out.println("Room Allocation Exception Report : " + startDate);
+        System.out.println();
+
+        try {
+            List<Reservation> upgradedReservations = reservationSessionBeanRemote.retrieveUpgradedReservations(startDate);
+
+//            System.out.printf("%20s%20s%20s%20s%20s%20s\n", "Exception Type", "Reservation ID", "Number of Rooms Upgraded", "Total Number of Rooms", "Room Type requested", "Room Type upgraded to");
+            for (Reservation reservation : upgradedReservations) {
+                System.out.println(">>> Type 1 Exception: Reservation ID= " + reservation.getReservationId() + ": " + reservationSessionBeanRemote.getNumberOfUpgradedRooms(reservation) + "/" + reservation.getNumberOfRooms() + " rooms upgraded from " + reservation.getRoomType().getTypeName() + " to " + reservation.getRoomType().getNextHighestRoomType().getTypeName());
+            }
+
+            if (upgradedReservations.size() > 0) {
+                System.out.println();
+
+                System.out.println("************************************************************************************************************");
+
+                System.out.println();
+            }
+
         } catch (ReservationNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
-        
+
         try {
-            List<Reservation> rejectedReservations = reservationSessionBeanRemote.retrieveRejectedReservations(bookingDate);
-            
+            List<Reservation> rejectedReservations = reservationSessionBeanRemote.retrieveRejectedReservations(startDate);
+
 //            System.out.printf("%20s%20s%20s%20s\n", "Exception", "Reservation ID", "Issue", "Number of Rooms");
 //            System.out.println(rejectedReservations.size());
-            for (Reservation reservation: rejectedReservations) {
-                System.out.println("Type 2 Exception: Reservation ID= " + reservation.getReservationId() + ": Not enough rooms of " + reservation.getRoomType().getTypeName());
+            for (Reservation reservation : rejectedReservations) {
+                System.out.println(">>> Type 2 Exception: Reservation ID= " + reservation.getReservationId() + ": Not enough rooms of " + reservation.getRoomType().getTypeName());
             }
-            
+
         } catch (ReservationNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
-        
-        
+
+        System.out.println();
     }
 
     public void allocateRoomToReservations() {

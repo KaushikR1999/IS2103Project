@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -100,13 +101,20 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         return query.getResultList();
     }
     
+
     @Override
-    public Room retrieveRoomByRoomNumber(int roomNumber)
+    public Room retrieveRoomByRoomNumber(String roomNumber) throws NoResultException
     {
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :inRoomNumber");
         query.setParameter("inRoomNumber", roomNumber);
         
-        return (Room)query.getSingleResult();
+        try {
+            Room room = (Room)query.getSingleResult();
+            room.getReservations().size();
+            return room;
+        } catch (NoResultException ex) {
+            throw new NoResultException("Room Number " + roomNumber + " does not exist!");
+        }
     }
     
     @Override

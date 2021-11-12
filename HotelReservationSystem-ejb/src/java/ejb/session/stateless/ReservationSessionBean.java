@@ -138,6 +138,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         query.setParameter("inReservationId", reservationId);
 
         try {
+            Reservation reservationAns = (Reservation) query.getSingleResult();
+            reservationAns.getRooms().size();
             return (Reservation) query.getSingleResult();
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new ReservationNotFoundException("Reservation Id " + reservationId + " does not exist!");
@@ -297,6 +299,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 reservation.setStatus(ReservationStatusEnum.UPGRADED);
             } else {
                 reservation.setStatus(ReservationStatusEnum.ALLOCATED);
+                em.merge(reservation);
             }
 
         } catch (ReservationNotFoundException ex) {
@@ -346,12 +349,20 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         query.setParameter("StatusRejected", ReservationStatusEnum.REJECTED);
 
         try {
+<<<<<<< HEAD
             List<Reservation> reservationAns = query.getResultList();
             for (Reservation reservation : reservationAns)
             {
                 reservation.getRooms().size();
             }
             return reservationAns;
+=======
+            List<Reservation> rejectedReservations = query.getResultList();
+            for (Reservation reservation: rejectedReservations) {
+                reservation.getRooms().size();
+            }
+            return rejectedReservations;
+>>>>>>> origin/master
         } catch (NoResultException ex) {
             throw new ReservationNotFoundException("No rejected reservations exist for " + startDate);
         }

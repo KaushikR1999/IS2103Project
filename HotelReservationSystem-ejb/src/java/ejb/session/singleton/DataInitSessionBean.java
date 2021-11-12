@@ -240,43 +240,43 @@ public class DataInitSessionBean {
         em.flush();
         grandSuite.getRoomRates().add(rateJ);
         
-        Date startDateX = new Date(121,11, 11);
-        Date endDateX = new Date(121, 11, 15);
-        Date bookingDateX = new Date(121, 10, 10);
-        
-        Date startDateY = new Date(121,11, 12);
-        Date endDateY = new Date(121, 11, 14);
-        Date bookingDateY = new Date(121, 10, 15);
-        
-        Date startDateZ = new Date(121,11, 16);
-        Date endDateZ = new Date(121, 11, 19);
-        Date bookingDateZ = new Date(121, 10, 17);
-        
-        Reservation reservationA = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
-        em.persist(reservationA);
-        em.flush();
-        
-        Reservation reservationB = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
-        em.persist(reservationB);
-        em.flush();
-        
-        Reservation reservationC = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
-        em.persist(reservationC);
-        em.flush();
-        
-//        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
-        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.REJECTED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
-        em.persist(reservationX);
-        em.flush();
-        
+//        Date startDateX = new Date(121,11, 11);
+//        Date endDateX = new Date(121, 11, 15);
+//        Date bookingDateX = new Date(121, 10, 10);
+//        
+//        Date startDateY = new Date(121, 11, 12);
+//        Date endDateY = new Date(121, 11, 14);
+//        Date bookingDateY = new Date(121, 10, 10);
+//        
+//        Date startDateZ = new Date(121,11, 10);
+//        Date endDateZ = new Date(121, 11, 12);
+//        Date bookingDateZ = new Date(121, 10, 10);
+//        
+//        Reservation reservationA = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+//        em.persist(reservationA);
+//        em.flush();
+//        
+//        Reservation reservationB = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+//        em.persist(reservationB);
+//        em.flush();
+//        
+//        Reservation reservationC = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+//        em.persist(reservationC);
+//        em.flush();
+//        
+////        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+//        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.REJECTED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+//        em.persist(reservationX);
+//        em.flush();
+//        
+////        Reservation reservationY = new Reservation (startDateY, endDateY, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
 //        Reservation reservationY = new Reservation (startDateY, endDateY, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
-        Reservation reservationY = new Reservation (startDateY, endDateY, bookingDateX, ReservationStatusEnum.REJECTED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
-        em.persist(reservationY);
-        em.flush();
-        
-        Reservation reservationZ = new Reservation (startDateZ, endDateZ, bookingDateZ, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
-        em.persist(reservationZ);
-        em.flush();
+//        em.persist(reservationY);
+//        em.flush();
+//        
+//        Reservation reservationZ = new Reservation (startDateZ, endDateZ, bookingDateZ, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+//        em.persist(reservationZ);
+//        em.flush();
     }
         
 }

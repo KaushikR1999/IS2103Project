@@ -79,14 +79,14 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
      * @throws InputDataValidationException
      */
     @Override
-    public Long createNewRoomRate(String roomTypeName, RoomRate newRoomRate) throws RoomTypeNotFoundException, CreateNewRoomRateException, InputDataValidationException
+    public Long createNewRoomRate(RoomRate newRoomRate) throws RoomTypeNotFoundException, CreateNewRoomRateException, InputDataValidationException
     {
         
         Set<ConstraintViolation<RoomRate>>constraintViolations = validator.validate(newRoomRate);
         
         if (constraintViolations.isEmpty()) {
             if (newRoomRate != null) {
-                RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByRoomTypeName(roomTypeName);
+                RoomType roomType = newRoomRate.getRoomType();
                 newRoomRate.setRoomType(roomType);
                 roomType.getRoomRates().add(newRoomRate);
 
