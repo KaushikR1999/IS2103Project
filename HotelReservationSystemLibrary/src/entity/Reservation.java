@@ -273,16 +273,4 @@ public class Reservation implements Serializable {
         this.numberOfRooms = numberOfRooms;
     }
     
-    public int getNumberOfUpgradedRooms () {
-        int upgradedRooms = 0;
-        
-        for (Room room: rooms) {
-            if (!room.getRoomType().equals(roomType)) {
-                upgradedRooms++;
-            }
-        }
-        
-        return upgradedRooms;
-    }
-    
 }

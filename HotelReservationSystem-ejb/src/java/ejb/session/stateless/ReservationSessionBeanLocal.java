@@ -43,5 +43,7 @@ public interface ReservationSessionBeanLocal {
     public List<Reservation> retrieveUpgradedReservations(Date bookingDate) throws ReservationNotFoundException;
 
     public List<Reservation> retrieveRejectedReservations(Date bookingDate) throws ReservationNotFoundException;
+
+    public int getNumberOfUpgradedRooms(Reservation reservation);
     
 }

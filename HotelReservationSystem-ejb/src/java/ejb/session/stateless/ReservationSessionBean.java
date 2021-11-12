@@ -146,7 +146,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             throw new ReservationNotFoundException("No reservations exist for " + bookingDateTime);
         }
     }
-    
+
     public List<Reservation> retrievePendingReservationsByStartDate(Date startDate) throws ReservationNotFoundException {
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.startDate = :inStartDate AND r.status = :inStatus");
         query.setParameter("inStartDate", startDate);
@@ -227,7 +227,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
 
     @Override
-    public void allocateRoomToReservation(Long reservationId){
+    public void allocateRoomToReservation(Long reservationId) {
 
         try {
             Reservation reservation = retrieveReservationByReservationId(reservationId);
@@ -239,9 +239,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             List<Room> rooms = new ArrayList<>();
 
             List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
-            
+
             System.out.println(retrievedRooms.size());
-            
+
             boolean upgraded = false;
 
             if (retrievedRooms.size() >= numberOfRooms) {
@@ -311,7 +311,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.startDate = :inStartDate AND r.status = :StatusUpgraded");
         query.setParameter("inStartDate", startDate);
         query.setParameter("StatusUpgraded", ReservationStatusEnum.UPGRADED);
-        
+
         try {
             return query.getResultList();
         } catch (NoResultException ex) {
@@ -324,12 +324,29 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.startDate = :inStartDate AND r.status = :StatusRejected");
         query.setParameter("inStartDate", startDate);
         query.setParameter("StatusRejected", ReservationStatusEnum.REJECTED);
-        
+
         try {
             return query.getResultList();
         } catch (NoResultException ex) {
             throw new ReservationNotFoundException("No rejected reservations exist for " + startDate);
         }
+    }
+
+    @Override
+    public int getNumberOfUpgradedRooms(Reservation reservation) {
+        int upgradedRooms = 0;
+        
+        List<Room> rooms = reservation.getRooms();
+        
+        RoomType roomType = reservation.getRoomType();
+
+        for (Room room : rooms) {
+            if (!room.getRoomType().equals(roomType)) {
+                upgradedRooms++;
+            }
+        }
+
+        return upgradedRooms;
     }
 
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>> constraintViolations) {

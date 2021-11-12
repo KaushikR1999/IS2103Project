@@ -175,7 +175,8 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
                 if( (inStartDate.before(resStartDate) && inEndDate.after(resStartDate) ||
                 inStartDate.before(resEndDate) && inEndDate.after(resEndDate) ||
                 inStartDate.before(resStartDate) && inEndDate.after(resEndDate) ||
-                inStartDate.after(resStartDate) && inEndDate.before(resEndDate)) )
+                inStartDate.after(resStartDate) && inEndDate.before(resEndDate)) ||
+                inStartDate.equals(resStartDate) || inEndDate.equals(resEndDate) )
                 {
 //                    finalRoomsAvailable.add(r);
 //                    break;
