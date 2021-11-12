@@ -34,11 +34,11 @@ public interface ReservationSessionBeanRemote {
     
     public List<Reservation> retrieveAllReservations();
     
-    public void allocateRoomToCurrentDayReservations(Date bookingDateTime) throws NoRoomAvailableException;
+    public void allocateRoomToCurrentDayReservations(Date bookingDateTime);
     
     public String retrieveRoomsAllocatedInString(Long reservationId) throws ReservationNotFoundException;
     
-    public void allocateRoomToReservation(Long reservationId) throws NoRoomAvailableException;
+    public void allocateRoomToReservation(Long reservationId);
 
     public List<Reservation> retrieveUpgradedReservations(Date bookingDate) throws ReservationNotFoundException;
 

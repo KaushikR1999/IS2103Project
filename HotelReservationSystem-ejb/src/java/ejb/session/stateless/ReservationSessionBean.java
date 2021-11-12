@@ -27,6 +27,7 @@ import util.enumeration.ReservationStatusEnum;
 import util.exception.CreateNewReservationException;
 import util.exception.InputDataValidationException;
 import util.exception.NoRoomAvailableException;
+import util.exception.NoRoomTypeAvailableException;
 import util.exception.ReservationNotFoundException;
 
 /**
@@ -147,7 +148,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
 
     @Override
-    public void allocateRoomToCurrentDayReservations(Date bookingDateTime) throws NoRoomAvailableException {
+    public void allocateRoomToCurrentDayReservations(Date bookingDateTime) {
 
         List<Reservation> reservations = new ArrayList<>();
 
@@ -179,7 +180,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 int roomsNeeded = numberOfRooms - retrievedRooms.size();
                 currentRoomType = currentRoomType.getNextHighestRoomType();
                 if (currentRoomType == null) {
-                    throw new NoRoomAvailableException("Room type unavailable");
+                    reservation.setStatus(ReservationStatusEnum.REJECTED);
+                    break;
                 } else {
                     retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
                     if (retrievedRooms.size() >= roomsNeeded) {
@@ -187,7 +189,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                             rooms.add(retrievedRooms.get(i));
                         }
                     } else {
-                        throw new NoRoomAvailableException("Room type unavailable");
+                        reservation.setStatus(ReservationStatusEnum.REJECTED);
+                        break;
                     }
                 }
             }
@@ -212,7 +215,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
 
     @Override
-    public void allocateRoomToReservation(Long reservationId) throws NoRoomAvailableException {
+    public void allocateRoomToReservation(Long reservationId){
 
         try {
             Reservation reservation = retrieveReservationByReservationId(reservationId);
@@ -238,7 +241,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 int roomsNeeded = numberOfRooms - retrievedRooms.size();
                 currentRoomType = currentRoomType.getNextHighestRoomType();
                 if (currentRoomType == null) {
-                    throw new NoRoomAvailableException("Room type unavailable");
+                    reservation.setStatus(ReservationStatusEnum.REJECTED);
                 } else {
                     retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
                     if (retrievedRooms.size() >= roomsNeeded) {
@@ -246,7 +249,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                             rooms.add(retrievedRooms.get(i));
                         }
                     } else {
-                        throw new NoRoomAvailableException("Room type unavailable");
+                        reservation.setStatus(ReservationStatusEnum.REJECTED);
                     }
                 }
             }

@@ -34,11 +34,11 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
         
         Date bookingDateTime = new java.util.Date();
         
-        try {
+        //try {
             reservationSessionBeanLocal.allocateRoomToCurrentDayReservations(bookingDateTime);
-        } catch (NoRoomAvailableException ex) {
+       /* } catch (NoRoomAvailableException ex) {
             System.out.println(ex.getMessage());
-        }  
+        }  */
 
     }
 }

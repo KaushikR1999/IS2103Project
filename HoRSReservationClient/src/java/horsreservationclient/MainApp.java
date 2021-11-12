@@ -33,6 +33,7 @@ import util.exception.GuestUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.NoRateAvailableException;
+import util.exception.NoRoomAvailableException;
 import util.exception.NoRoomTypeAvailableException;
 import util.exception.ReservationNotFoundException;
 import util.exception.RoomTypeNotFoundException;
@@ -320,19 +321,20 @@ public class MainApp {
                     {
                         showInputDataValidationErrorsForReservation(constraintViolations);
                     }
+                    
+                    Date compareStartDate = setTimeToMidnight(startDate);
+                    Date compareBookingDate = setTimeToMidnight(bookingDateTime);
+                    Date currentDayTwoAm = setTimeToTwoAm(bookingDateTime);
+                    if(compareStartDate.equals(compareBookingDate) && bookingDateTime.after(currentDayTwoAm)) {
+                        reservationSessionBeanRemote.allocateRoomToReservation(newReservation.getReservationId());
+                    }
                 }
                 else
                 {
                     System.out.println("Please login first before making a reservation!\n");
                 }
-                Date compareStartDate = setTimeToMidnight(startDate);
-                Date compareBookingDate = setTimeToMidnight(bookingDateTime);
-                Date currentDayTwoAm = setTimeToTwoAm(bookingDateTime);
-                if(compareStartDate.equals(compareBookingDate) && bookingDateTime.after(currentDayTwoAm)) {
-                    //reservationSessionBeanRemote.
-                }
             }
-        }
+        } 
         catch(ParseException ex)
         {
             System.out.println("Invalid date input!\n");

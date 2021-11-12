@@ -106,32 +106,31 @@ public class HotelOperationGeneralModule {
 
                 if (response == 1) {
                     doCreateNewRoomType();
-                    System.out.println("not implemented yet");
 
                 } else if (response == 2) {
                     doViewRoomTypeDetails();
-                    System.out.println("not implemented yet");
+
                 } else if (response == 3) {
                     doViewAllRoomTypes();
-                    System.out.println("not implemented yet");
+
                 } else if (response == 4) {
                     doCreateNewRoom();
-                    System.out.println("not implemented yet");
+
                 } else if (response == 5) {
                     doUpdateRoom();
-                    System.out.println("not implemented yet");
+
                 } else if (response == 6) {
                     doDeleteRoom();
-                    System.out.println("not implemented yet");
+
                 } else if (response == 7) {
                     doViewAllRooms();
-                    System.out.println("not implemented yet");
+
                 } else if (response == 8) {
                     doViewRoomAllocationExceptionReport();
-                    System.out.println("not implemented yet");
+
                 } else if (response == 9) {
                     allocateRoomToReservations();
-//                    System.out.println("not implemented yet");
+                    
                 } else if (response == 10) {
                     break;
                 } else {
@@ -666,8 +665,6 @@ public class HotelOperationGeneralModule {
             System.out.println("An error has occurred while parsing date: " + ex.getMessage() + "\n");
         } catch (DateTimeException ex) {
             System.out.println("An error has occurred in selecting the date: " + ex.getMessage() + "\n");
-        } catch (NoRoomAvailableException ex) {
-            System.out.println(ex.getMessage());
         }
     }
 
