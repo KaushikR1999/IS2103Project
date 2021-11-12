@@ -146,14 +146,26 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             throw new ReservationNotFoundException("No reservations exist for " + bookingDateTime);
         }
     }
+    
+    public List<Reservation> retrievePendingReservationsByStartDate(Date startDate) throws ReservationNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.startDate = :inStartDate AND r.status = :inStatus");
+        query.setParameter("inStartDate", startDate);
+        query.setParameter("inStatus", ReservationStatusEnum.PENDING);
+
+        try {
+            return query.getResultList();
+        } catch (NoResultException ex) {
+            throw new ReservationNotFoundException("No pending reservations exist for " + startDate);
+        }
+    }
 
     @Override
-    public void allocateRoomToCurrentDayReservations(Date bookingDateTime) {
+    public void allocateRoomToCurrentDayReservations(Date startDate) {
 
         List<Reservation> reservations = new ArrayList<>();
 
         try {
-            reservations = retrieveReservationsByBookingDate(bookingDateTime);
+            reservations = retrievePendingReservationsByStartDate(startDate);
         } catch (ReservationNotFoundException ex) {
             System.out.println("Unable to allocate rooms as " + ex.getMessage());
         }
@@ -227,7 +239,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             List<Room> rooms = new ArrayList<>();
 
             List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
-
+            
+            System.out.println(retrievedRooms.size());
+            
             boolean upgraded = false;
 
             if (retrievedRooms.size() >= numberOfRooms) {
@@ -293,28 +307,28 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
 
     @Override
-    public List<Reservation> retrieveUpgradedReservations(Date bookingDate) throws ReservationNotFoundException {
-        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.bookingDateTime = :inBookingDate AND r.status = :StatusUpgraded");
-        query.setParameter("inBookingDate", bookingDate);
+    public List<Reservation> retrieveUpgradedReservations(Date startDate) throws ReservationNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.startDate = :inStartDate AND r.status = :StatusUpgraded");
+        query.setParameter("inStartDate", startDate);
         query.setParameter("StatusUpgraded", ReservationStatusEnum.UPGRADED);
         
         try {
             return query.getResultList();
         } catch (NoResultException ex) {
-            throw new ReservationNotFoundException("No upgraded reservations exist for " + bookingDate);
+            throw new ReservationNotFoundException("No upgraded reservations exist for " + startDate);
         }
     }
 
     @Override
-    public List<Reservation> retrieveRejectedReservations(Date bookingDate) throws ReservationNotFoundException {
-        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.bookingDateTime = :inBookingDate AND r.status = :StatusRejected");
-        query.setParameter("inBookingDate", bookingDate);
+    public List<Reservation> retrieveRejectedReservations(Date startDate) throws ReservationNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.startDate = :inStartDate AND r.status = :StatusRejected");
+        query.setParameter("inStartDate", startDate);
         query.setParameter("StatusRejected", ReservationStatusEnum.REJECTED);
         
         try {
             return query.getResultList();
         } catch (NoResultException ex) {
-            throw new ReservationNotFoundException("No rejected reservations exist for " + bookingDate);
+            throw new ReservationNotFoundException("No rejected reservations exist for " + startDate);
         }
     }
 
