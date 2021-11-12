@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
@@ -271,6 +272,16 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         Query query = em.createQuery("SELECT rt FROM RoomType rt ORDER BY rt.typeName ASC");
         
         return query.getResultList();
+    }
+    
+    @Override
+    public RoomType retrieveRoomTypeByReservation(Reservation reservation) throws RoomTypeNotFoundException
+    {
+        RoomType ansRoomType = reservation.getRoomType();
+        if(reservation.getRoomType().equals(null)){
+           throw new RoomTypeNotFoundException("Rooom Type not found!");
+        }
+        return ansRoomType;
     }
     
     /*public List<RoomType> retrieveAllRoomTypesAvailableForBooking(int numOfRooms)

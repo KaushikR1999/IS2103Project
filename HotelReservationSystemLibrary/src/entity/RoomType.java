@@ -14,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -53,7 +54,7 @@ public class RoomType implements Serializable {
     @OneToOne (fetch = FetchType.EAGER, cascade = {})
     private RoomType nextHighestRoomType;
     
-    @OneToMany (fetch = FetchType.LAZY, cascade = {})
+    @OneToMany (mappedBy = "roomType", fetch = FetchType.LAZY, cascade = {})
     private List<RoomRate> roomRates;
 
     public RoomType() {

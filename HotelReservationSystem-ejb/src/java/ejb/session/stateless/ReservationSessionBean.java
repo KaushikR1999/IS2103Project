@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Partner;
 import entity.Reservation;
 import entity.Room;
 import entity.RoomType;
@@ -63,7 +64,6 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 
                 em.flush();
                 newReservation.getRooms();
-                newReservation.getNumberOfUpgradedRooms();
 
                 return newReservation;
             } else {
@@ -73,6 +73,13 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
 
+    }
+    
+    @Override
+    public void addPartnerToReservation(Reservation reservation, Partner partner) {
+        partner.getPartnerReservations().add(reservation);
+        em.merge(partner);
+        em.flush();
     }
 
     @Override
@@ -321,7 +328,12 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         query.setParameter("StatusUpgraded", ReservationStatusEnum.UPGRADED);
 
         try {
-            return query.getResultList();
+            List<Reservation> reservationAns = query.getResultList();
+            for (Reservation reservation : reservationAns)
+            {
+                reservation.getRooms().size();
+            }
+            return reservationAns;
         } catch (NoResultException ex) {
             throw new ReservationNotFoundException("No upgraded reservations exist for " + startDate);
         }
@@ -334,7 +346,12 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         query.setParameter("StatusRejected", ReservationStatusEnum.REJECTED);
 
         try {
-            return query.getResultList();
+            List<Reservation> reservationAns = query.getResultList();
+            for (Reservation reservation : reservationAns)
+            {
+                reservation.getRooms().size();
+            }
+            return reservationAns;
         } catch (NoResultException ex) {
             throw new ReservationNotFoundException("No rejected reservations exist for " + startDate);
         }
@@ -349,6 +366,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         RoomType roomType = reservation.getRoomType();
 
         for (Room room : rooms) {
+            room.getRoomType().getBed();
             if (!room.getRoomType().equals(roomType)) {
                 upgradedRooms++;
             }

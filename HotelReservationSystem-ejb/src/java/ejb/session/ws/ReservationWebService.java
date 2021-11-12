@@ -7,8 +7,10 @@ package ejb.session.ws;
 
 import ejb.session.stateless.ReservationSessionBeanLocal;
 import entity.Guest;
+import entity.Partner;
 import entity.Reservation;
 import entity.Room;
+import entity.RoomRate;
 import javax.ejb.EJB;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
@@ -49,11 +51,24 @@ public class ReservationWebService {
         
         for(Room r : reservation.getRooms()){
             em.detach(r);
-            r.getReservations().remove(reservation);
-
-        }
+            r.getReservations().clear();
+            //em.detach(r.getRoomType());
+            //r.getRoomType().getRoomRates().clear();
+            }
+        reservation.getRooms().clear();
         
-        reservation.getGuest().getReservations().remove(reservation);
+       // em.detach(reservation.getRoomType());
+       // for(RoomRate rr : reservation.getRoomType().getRoomRates()) {
+       //     em.detach(rr);
+        //    rr.setRoomType(null);
+        //}
+        //reservation.getRoomType().getRoomRates().clear();
+        //reservation.setRoomType(null);
+
+        if(reservation.getGuest() != null) {
+        reservation.setGuest(null);
+        em.detach(reservation.getGuest());
+        }
         return reservation;
     }
     
@@ -68,18 +83,45 @@ public class ReservationWebService {
             throws ReservationNotFoundException
     {     
         Reservation reservation = reservationSessionBeanLocal.retrieveReservationByReservationId(reservationId);
-        em.detach(reservation);
+         em.detach(reservation);
         
         for(Room r : reservation.getRooms()){
             em.detach(r);
-            r.getReservations().remove(reservation);
+            r.getReservations().clear();
+            //em.detach(r.getRoomType());
+            //r.getRoomType().getRoomRates().clear();
+            }
+            reservation.getRooms().clear();
+            
+        //if(reservation.getRoomType().equals(null)) {
+        //} else {
+        // em.detach(reservation.getRoomType());
+       // for(RoomRate rr : reservation.getRoomType().getRoomRates()) {
+       //     em.detach(rr);
+       //     rr.setRoomType(null);
+       // }
+       // reservation.getRoomType().getRoomRates().clear();
+       // reservation.setRoomType(null);   
+        //}
 
-        }
         if(reservation.getGuest() != null) {
+        reservation.setGuest(null);
         em.detach(reservation.getGuest());
-        reservation.getGuest().getReservations().remove(reservation);
         }
         return reservation;
+    }
+    
+    @WebMethod(operationName = "retrieveRoomsAllocatedInString")
+    public String retrieveRoomsAllocatedInString(@WebParam(name = "reservationId") Long reservationId)
+            throws ReservationNotFoundException
+    {     
+        return reservationSessionBeanLocal.retrieveRoomsAllocatedInString(reservationId);
+    }
+    
+    @WebMethod(operationName = "addPartnerToReservation")
+    public void addPartnerToReservation(@WebParam(name = "reservation") Reservation reservation, @WebParam(name = "partner") Partner partner)
+    {     
+        reservationSessionBeanLocal.addPartnerToReservation(reservation, partner);
     }
 
     public void persist(Object object) {

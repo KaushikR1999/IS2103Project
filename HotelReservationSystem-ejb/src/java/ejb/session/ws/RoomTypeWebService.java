@@ -6,6 +6,7 @@
 package ejb.session.ws;
 
 import ejb.session.stateless.RoomTypeSessionBeanLocal;
+import entity.Reservation;
 import entity.RoomRate;
 import entity.RoomType;
 import java.util.Date;
@@ -18,6 +19,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.exception.NoRoomTypeAvailableException;
+import util.exception.RoomTypeNotFoundException;
 
 /**
  *
@@ -61,6 +63,21 @@ public class RoomTypeWebService {
         }
         
         return roomTypes;
+    }
+    
+    @WebMethod(operationName = "retrieveRoomTypeByReservation")
+    public RoomType retrieveRoomTypeByReservation(@WebParam(name = "reservation") Reservation reservation) throws RoomTypeNotFoundException
+    {     
+        
+       RoomType ansRoomType = roomTypeSessionBeanLocal.retrieveRoomTypeByReservation(reservation);
+       em.detach(ansRoomType);
+       
+        for(RoomRate rr : ansRoomType.getRoomRates()) {
+            em.detach(rr);
+            rr.setRoomType(null);
+        }
+        ansRoomType.getRoomRates().clear();
+        return ansRoomType;
     }
 
     public void persist(Object object) {

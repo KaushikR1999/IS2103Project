@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Reservation;
 import entity.RoomType;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +33,8 @@ public interface RoomTypeSessionBeanRemote {
     public List<RoomType> retrieveAllAvailableRoomTypes() throws NoRoomTypeAvailableException;
     public List<RoomType> retrieveAllAvailableRoomTypesExceptCurrent(Long inRoomTypeId) throws NoRoomTypeAvailableException;
     public List<RoomType> retrieveAllAvailableRoomTypesBasedOnSize(Date startDate, Date endDate, int numOfRooms) throws NoRoomTypeAvailableException;
+    public RoomType retrieveRoomTypeByReservation(Reservation reservation) throws RoomTypeNotFoundException;
+
 
 
 

@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Partner;
 import entity.Reservation;
 import java.util.Date;
 import java.util.List;
@@ -45,5 +46,7 @@ public interface ReservationSessionBeanLocal {
     public List<Reservation> retrieveRejectedReservations(Date bookingDate) throws ReservationNotFoundException;
 
     public int getNumberOfUpgradedRooms(Reservation reservation);
+
+    public void addPartnerToReservation(Reservation reservation, Partner partner);
     
 }

@@ -7,11 +7,15 @@ package ejb.session.ws;
 
 import ejb.session.stateless.PartnerSessionBeanLocal;
 import entity.Partner;
+import entity.Reservation;
+import entity.RoomRate;
 import javax.ejb.EJB;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import util.exception.InvalidLoginCredentialException;
 
 /**
@@ -22,6 +26,13 @@ import util.exception.InvalidLoginCredentialException;
 @Stateless()
 public class PartnerWebService {
 
+    @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
+    private EntityManager em;
+
+    public void persist(Object object) {
+        em.persist(object);
+    }
+
     @EJB
     private PartnerSessionBeanLocal partnerSessionBeanLocal;
     /**
@@ -31,6 +42,16 @@ public class PartnerWebService {
     public Partner partnerLogin(@WebParam(name = "username") String username,
             @WebParam(name = "password") String password)
             throws InvalidLoginCredentialException {
-        return partnerSessionBeanLocal.partnerLogin(username, password);
+        
+        Partner ansPartner = partnerSessionBeanLocal.partnerLogin(username, password);
+        
+        /*for(Reservation r : ansPartner.getPartnerReservations()){
+        em.detach(r.getRoomType());
+        for(RoomRate rr : r.getRoomType().getRoomRates()) {
+            em.detach(rr);
+            rr.setRoomType(null);
+    }
+        }*/
+        return ansPartner;
     }
 }
