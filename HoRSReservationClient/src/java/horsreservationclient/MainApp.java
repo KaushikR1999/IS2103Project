@@ -300,7 +300,7 @@ public class MainApp {
                         {
                             newReservation = reservationSessionBeanRemote.createNewReservation(newReservation);
 
-                            System.out.println("Reservation is a success!: " + newReservation.getReservationId()+ "\n");
+                            System.out.println("Reservation is a success! Do remember your Reservation ID: " + newReservation.getReservationId()+ "\n");
                             currentGuest.getReservations().add(newReservation);
                         }
                         

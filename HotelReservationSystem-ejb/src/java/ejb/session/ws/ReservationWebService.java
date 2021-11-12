@@ -6,7 +6,9 @@
 package ejb.session.ws;
 
 import ejb.session.stateless.ReservationSessionBeanLocal;
+import entity.Guest;
 import entity.Reservation;
+import entity.Room;
 import javax.ejb.EJB;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
@@ -41,7 +43,41 @@ public class ReservationWebService {
     public Reservation createNewReservation(@WebParam(name = "newReservation") Reservation newReservation)
             throws ReservationNotFoundException, CreateNewReservationException, InputDataValidationException
     {     
-        return reservationSessionBeanLocal.createNewReservation(newReservation);
+        
+        Reservation reservation = reservationSessionBeanLocal.createNewReservation(newReservation);
+        em.detach(reservation);
+        
+        for(Room r : reservation.getRooms()){
+            em.detach(r);
+            r.getReservations().remove(reservation);
+
+        }
+        
+        reservation.getGuest().getReservations().remove(reservation);
+        return reservation;
+    }
+    
+    @WebMethod(operationName = "allocateRoomToReservation")
+    public void allocateRoomToReservation(@WebParam(name = "reservationId") Long reservationId)
+    {     
+        reservationSessionBeanLocal.allocateRoomToReservation(reservationId);
+    }
+    
+    @WebMethod(operationName = "retrieveReservationByReservationId")
+    public Reservation retrieveReservationByReservationId(@WebParam(name = "reservationId") Long reservationId)
+            throws ReservationNotFoundException
+    {     
+        Reservation reservation = reservationSessionBeanLocal.retrieveReservationByReservationId(reservationId);
+        em.detach(reservation);
+        
+        for(Room r : reservation.getRooms()){
+            em.detach(r);
+            r.getReservations().remove(reservation);
+
+        }
+        em.detach(reservation.getGuest());
+        reservation.getGuest().getReservations().remove(reservation);
+        return reservation;
     }
 
     public void persist(Object object) {

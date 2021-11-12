@@ -6,6 +6,7 @@
 package ejb.session.ws;
 
 import ejb.session.stateless.RoomTypeSessionBeanLocal;
+import entity.RoomRate;
 import entity.RoomType;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,8 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import util.exception.NoRoomTypeAvailableException;
 
 /**
@@ -23,6 +26,11 @@ import util.exception.NoRoomTypeAvailableException;
 @WebService(serviceName = "RoomTypeWebService")
 @Stateless()
 public class RoomTypeWebService {
+
+    @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
+    private EntityManager em;
+    
+    
 
     @EJB
     private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
@@ -38,6 +46,24 @@ public class RoomTypeWebService {
                                                     @WebParam(name = "numberOfRooms") int numberOfRooms) 
                                 throws NoRoomTypeAvailableException
     {    
-        return roomTypeSessionBeanLocal.retrieveAllAvailableRoomTypesBasedOnSize(startDate, endDate, numberOfRooms);
+        
+         List<RoomType> roomTypes = roomTypeSessionBeanLocal.retrieveAllAvailableRoomTypesBasedOnSize(startDate, endDate, numberOfRooms);
+        
+        for(RoomType rt : roomTypes)
+        {
+            em.detach(rt);
+            
+            for(RoomRate rr : rt.getRoomRates())
+            {
+                em.detach(rr);
+                rr.setRoomType(null);
+            }
+        }
+        
+        return roomTypes;
+    }
+
+    public void persist(Object object) {
+        em.persist(object);
     }
 }

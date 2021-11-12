@@ -36,5 +36,6 @@ public class RoomWebService {
     {
         
         return roomSessionBeanLocal.retrieveRoomsAvailableForBookingByRoomType(inStartDate, inEndDate, inRoomTypeId);
+        
     }
 }
