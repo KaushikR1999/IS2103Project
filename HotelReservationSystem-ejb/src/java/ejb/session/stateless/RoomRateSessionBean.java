@@ -168,8 +168,21 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
             em.remove(roomRateToRemove);
         } 
         else {
-            roomRateToRemove.setAssignable(false);
-            throw new DeleteRoomRateException("Room Rate ID " + roomRateId + " is associated with existing room(s) and cannot be deleted! It will be disabled.");
+            
+            boolean used = false;
+            
+            for (Room room : rooms) {
+                if (!room.getReservations().isEmpty()) {
+                    used = true;
+                    break;
+                }
+            }
+            if (!used) {
+                em.remove(roomRateToRemove);
+            } else {
+                roomRateToRemove.setAssignable(false);
+                throw new DeleteRoomRateException("Room Rate ID " + roomRateId + " is associated with existing room(s) and cannot be deleted! It will be disabled.");
+            }            
         }
     }
     

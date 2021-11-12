@@ -624,7 +624,7 @@ public class HotelOperationGeneralModule {
         Date bookingDate = new Date();
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
 
-        System.out.print("Enter Booking Date (dd/mm/yyyy)> ");
+        System.out.print("Enter Start Date (dd/mm/yyyy)> ");
         try {
             bookingDate = inputDateFormat.parse(scanner.nextLine().trim());
 //            System.out.println(bookingDate);
@@ -636,12 +636,26 @@ public class HotelOperationGeneralModule {
         
         try {
             List<Reservation> upgradedReservations = reservationSessionBeanRemote.retrieveUpgradedReservations(bookingDate);
+            
+//            System.out.printf("%20s%20s%20s%20s%20s%20s\n", "Exception Type", "Reservation ID", "Number of Rooms Upgraded", "Total Number of Rooms", "Room Type requested", "Room Type upgraded to");
+            
+            for (Reservation reservation: upgradedReservations) {
+                System.out.println("Type Exception 1: Reservation ID= " + reservation.getReservationId() + ": " + reservation.getNumberOfUpgradedRooms() + "/" + reservation.getNumberOfRooms() + " upgraded from " + reservation.getRoomType().getTypeName() + " to " + reservation.getRoomType().getNextHighestRoomType().getTypeName());
+            }
+            
         } catch (ReservationNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
         
         try {
             List<Reservation> rejectedReservations = reservationSessionBeanRemote.retrieveRejectedReservations(bookingDate);
+            
+//            System.out.printf("%20s%20s%20s%20s\n", "Exception", "Reservation ID", "Issue", "Number of Rooms");
+//            System.out.println(rejectedReservations.size());
+            for (Reservation reservation: rejectedReservations) {
+                System.out.println("Type 2 Exception: Reservation ID= " + reservation.getReservationId() + ": Not enough rooms of " + reservation.getRoomType().getTypeName());
+            }
+            
         } catch (ReservationNotFoundException ex) {
             System.out.println(ex.getMessage());
         }

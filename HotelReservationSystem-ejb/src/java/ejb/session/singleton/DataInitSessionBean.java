@@ -179,23 +179,8 @@ public class DataInitSessionBean {
         
 //        private final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
 
-        Date startDateA = new Date(121,11,11);
-        Date endDateA = new Date(121, 11, 15);
         
-        Date startDateC = new Date(121,11,11);
-        Date endDateC = new Date(121, 11, 13);
-
-        Date startDateE = new Date(121,10,11);
-        Date endDateE = new Date(121, 10, 14);
-
-        Date startDateG = new Date(121,7,11);
-        Date endDateG = new Date(121, 7, 12);
-
-        Date startDateI = new Date(121,11,20);
-        Date endDateI = new Date(121, 11, 22);
-
-        
-        RoomRate rateA = new RoomRate(RoomRateTypeEnum.PUBLISHED, startDateA, endDateA, "Deluxe Room", 100);
+        RoomRate rateA = new RoomRate(RoomRateTypeEnum.PUBLISHED, null, null, "Deluxe Room", 100);
         rateA.setRoomType(deluxeRoom);
         em.persist(rateA);
         em.flush();
@@ -207,7 +192,7 @@ public class DataInitSessionBean {
         em.flush();
         deluxeRoom.getRoomRates().add(rateB);
         
-        RoomRate rateC = new RoomRate(RoomRateTypeEnum.PUBLISHED, startDateC, endDateC, "Premier Room", 200);
+        RoomRate rateC = new RoomRate(RoomRateTypeEnum.PUBLISHED, null, null, "Premier Room", 200);
         rateC.setRoomType(premierRoom);
         em.persist(rateC);
         em.flush();
@@ -219,7 +204,7 @@ public class DataInitSessionBean {
         em.flush();
         premierRoom.getRoomRates().add(rateD);
         
-        RoomRate rateE = new RoomRate(RoomRateTypeEnum.PUBLISHED, startDateE, endDateE, "Family Room", 300);
+        RoomRate rateE = new RoomRate(RoomRateTypeEnum.PUBLISHED, null, null, "Family Room", 300);
         rateE.setRoomType(familyRoom);
         em.persist(rateE);
         em.flush();
@@ -231,7 +216,7 @@ public class DataInitSessionBean {
         em.flush();
         familyRoom.getRoomRates().add(rateF);
         
-        RoomRate rateG = new RoomRate(RoomRateTypeEnum.PUBLISHED, startDateG, endDateG, "Junior Suite", 400);
+        RoomRate rateG = new RoomRate(RoomRateTypeEnum.PUBLISHED, null, null, "Junior Suite", 400);
         rateG.setRoomType(juniorSuite);
         em.persist(rateG);
         em.flush();
@@ -243,7 +228,7 @@ public class DataInitSessionBean {
         em.flush();
         juniorSuite.getRoomRates().add(rateH);
         
-        RoomRate rateI = new RoomRate(RoomRateTypeEnum.PUBLISHED, startDateI, endDateI, "Grand Suite", 500);
+        RoomRate rateI = new RoomRate(RoomRateTypeEnum.PUBLISHED, null, null, "Grand Suite", 500);
         rateI.setRoomType(grandSuite);
         em.persist(rateI);
         em.flush();
@@ -267,11 +252,25 @@ public class DataInitSessionBean {
         Date endDateZ = new Date(121, 11, 19);
         Date bookingDateZ = new Date(121, 10, 17);
         
-        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        Reservation reservationA = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        em.persist(reservationA);
+        em.flush();
+        
+        Reservation reservationB = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        em.persist(reservationB);
+        em.flush();
+        
+        Reservation reservationC = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        em.persist(reservationC);
+        em.flush();
+        
+//        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        Reservation reservationX = new Reservation (startDateX, endDateX, bookingDateX, ReservationStatusEnum.REJECTED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
         em.persist(reservationX);
         em.flush();
         
-        Reservation reservationY = new Reservation (startDateY, endDateY, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+//        Reservation reservationY = new Reservation (startDateY, endDateY, bookingDateX, ReservationStatusEnum.PENDING, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
+        Reservation reservationY = new Reservation (startDateY, endDateY, bookingDateX, ReservationStatusEnum.REJECTED, 2.0, ReservationTypeEnum.ONLINE, deluxeRoom, 2);
         em.persist(reservationY);
         em.flush();
         

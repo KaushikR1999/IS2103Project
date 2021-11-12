@@ -247,8 +247,21 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         }
         else
         {
-            roomTypeToRemove.setAssignable(false);
-            throw new DeleteRoomTypeException("Product ID " + roomTypeId + " is associated with existing room(s) and cannot be deleted! It will be disabled.");
+            boolean used = false;
+            
+            for (Room room : rooms) {
+                if (!room.getReservations().isEmpty()) {
+                    used = true;
+                    break;
+                }
+            }
+            
+            if (!used) {
+                em.remove(roomTypeToRemove);
+            } else {
+                roomTypeToRemove.setAssignable(false);
+                throw new DeleteRoomTypeException("Room Type ID " + roomTypeId + " is associated with existing room(s) and cannot be deleted! It will be disabled.");
+            }
         }
     }
     

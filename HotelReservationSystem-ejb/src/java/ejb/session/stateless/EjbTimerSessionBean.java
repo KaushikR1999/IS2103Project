@@ -32,10 +32,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
     @Schedule(hour = "2", minute = "0", second = "0", info = "CurrentDayReservationCheckTimer")
     public void CurrentDayReservationCheckTimer () {
         
-        Date bookingDateTime = new java.util.Date();
+        Date startDate = new java.util.Date();
         
         //try {
-            reservationSessionBeanLocal.allocateRoomToCurrentDayReservations(bookingDateTime);
+            reservationSessionBeanLocal.allocateRoomToCurrentDayReservations(startDate);
        /* } catch (NoRoomAvailableException ex) {
             System.out.println(ex.getMessage());
         }  */

@@ -155,7 +155,7 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType.roomTypeId = :inRoomTypeId AND r.assignable = :true AND r.roomStatus = :RoomStatusAvailable");
         query.setParameter("inRoomTypeId", inRoomTypeId);
-        query.setParameter("true", TRUE);
+        query.setParameter("true", true);
         query.setParameter("RoomStatusAvailable", RoomStatusEnum.AVAILABLE);
         List<Room> finalRoomsAvailable = new ArrayList<>();
         
@@ -165,26 +165,25 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         
         List<Reservation> roomReservations = r.getReservations();
         
-        boolean available = TRUE;
+        boolean available = true;
         
             for (Reservation res : roomReservations){
             
                 Date resStartDate = res.getStartDate();
                 Date resEndDate = res.getEndDate();
             
-                if(!(inStartDate.before(resStartDate) && inEndDate.after(resStartDate) ||
+                if( (inStartDate.before(resStartDate) && inEndDate.after(resStartDate) ||
                 inStartDate.before(resEndDate) && inEndDate.after(resEndDate) ||
                 inStartDate.before(resStartDate) && inEndDate.after(resEndDate) ||
-                inStartDate.after(resStartDate) && inEndDate.before(resEndDate))  )
+                inStartDate.after(resStartDate) && inEndDate.before(resEndDate)) )
                 {
 //                    finalRoomsAvailable.add(r);
+//                    break;
+                    available = false;
                     break;
-                } else {
-                    available = FALSE;
-                    continue;
                 }
             }
-            if (available == TRUE) {
+            if (available) {
                 finalRoomsAvailable.add(r);
             }
         }
