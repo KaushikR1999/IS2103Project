@@ -75,8 +75,10 @@ public class ReservationWebService {
             r.getReservations().remove(reservation);
 
         }
+        if(reservation.getGuest() != null) {
         em.detach(reservation.getGuest());
         reservation.getGuest().getReservations().remove(reservation);
+        }
         return reservation;
     }
 

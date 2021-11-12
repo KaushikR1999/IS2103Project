@@ -62,6 +62,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 em.persist(newReservation);
 
                 em.flush();
+                newReservation.getRooms();
+                newReservation.getNumberOfUpgradedRooms();
 
                 return newReservation;
             } else {
@@ -178,6 +180,11 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             List<Room> rooms = new ArrayList<>();
 
             List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
+            
+            for (Room r : retrievedRooms){
+                System.out.println(r.getReservations().size());
+
+            }
 
             boolean upgraded = false;
 
@@ -191,6 +198,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 }
                 int roomsNeeded = numberOfRooms - retrievedRooms.size();
                 currentRoomType = currentRoomType.getNextHighestRoomType();
+                System.out.println(currentRoomType.getNextHighestRoomType());
                 if (currentRoomType == null) {
                     reservation.setStatus(ReservationStatusEnum.REJECTED);
                     break;

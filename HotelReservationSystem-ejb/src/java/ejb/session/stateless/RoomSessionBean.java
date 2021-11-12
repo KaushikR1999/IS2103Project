@@ -172,21 +172,22 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
                 Date resStartDate = res.getStartDate();
                 Date resEndDate = res.getEndDate();
             
-                if( (inStartDate.before(resStartDate) && inEndDate.after(resStartDate) ||
+                if((inStartDate.before(resStartDate) && inEndDate.after(resStartDate) ||
                 inStartDate.before(resEndDate) && inEndDate.after(resEndDate) ||
                 inStartDate.before(resStartDate) && inEndDate.after(resEndDate) ||
-                inStartDate.after(resStartDate) && inEndDate.before(resEndDate)) )
+                inStartDate.after(resStartDate) && inEndDate.before(resEndDate)) || inStartDate.equals(resStartDate) && inEndDate.equals(resEndDate) ); 
                 {
 //                    finalRoomsAvailable.add(r);
 //                    break;
                     available = false;
-                    break;
-                }
+                    break; 
+            }
             }
             if (available) {
                 finalRoomsAvailable.add(r);
             }
         }
+        System.out.println(finalRoomsAvailable.toString());
         return finalRoomsAvailable;
     }
         
