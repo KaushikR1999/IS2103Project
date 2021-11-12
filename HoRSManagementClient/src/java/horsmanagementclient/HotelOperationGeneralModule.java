@@ -640,7 +640,8 @@ public class HotelOperationGeneralModule {
 //            System.out.printf("%20s%20s%20s%20s%20s%20s\n", "Exception Type", "Reservation ID", "Number of Rooms Upgraded", "Total Number of Rooms", "Room Type requested", "Room Type upgraded to");
             
             for (Reservation reservation: upgradedReservations) {
-                System.out.println("Type Exception 1: Reservation ID= " + reservation.getReservationId() + ": " + reservation.getNumberOfUpgradedRooms() + "/" + reservation.getNumberOfRooms() + " upgraded from " + reservation.getRoomType().getTypeName() + " to " + reservation.getRoomType().getNextHighestRoomType().getTypeName());
+                reservation.getRooms().size();
+                System.out.println("Type Exception 1: Reservation ID= " + reservation.getReservationId() + ": " + reservationSessionBeanRemote.getNumberOfUpgradedRooms(reservation) + "/" + reservation.getNumberOfRooms() + " upgraded from " + reservation.getRoomType().getTypeName() + " to " + reservation.getRoomType().getNextHighestRoomType().getTypeName());
             }
             
         } catch (ReservationNotFoundException ex) {
@@ -671,7 +672,7 @@ public class HotelOperationGeneralModule {
         Date bookingDate = new Date();
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
 
-        System.out.print("Enter Booking Date (dd/mm/yyyy)> ");
+        System.out.print("Enter Start Date (dd/mm/yyyy)> ");
         try {
             bookingDate = inputDateFormat.parse(scanner.nextLine().trim());
             reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(bookingDate);
