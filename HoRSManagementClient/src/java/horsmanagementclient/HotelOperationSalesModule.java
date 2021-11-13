@@ -227,18 +227,20 @@ public class HotelOperationSalesModule {
             try {
                 List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes();
 
-                String output = "Select Next Highest Room Type (";
+                String output = "Select Next Highest Room Type";
+                System.out.println(output);
                 int i = 1;
                 for (RoomType otherRoomType : roomTypes) {
-                    output += i + ": " + otherRoomType.getTypeName();
+                    output = i + ": " + otherRoomType.getTypeName();
                     i++;
                     if (i <= roomTypes.size()) {
-                        output += ", ";
+                        System.out.println(output);
                     }
                 }
-                output += ")> ";
-
+                System.out.println(output);
+                output = "> ";
                 System.out.print(output);
+                
                 Integer roomTypeInt = scanner.nextInt();
 
                 if (roomTypeInt >= 1 && roomTypeInt <= roomTypes.size()) {

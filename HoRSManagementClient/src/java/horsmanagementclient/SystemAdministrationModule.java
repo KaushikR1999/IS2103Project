@@ -80,22 +80,18 @@ public class SystemAdministrationModule {
                 if(response == 1)
                 {
                     doCreateNewEmployee();
-//                    System.out.println("not implemented yet");
                 }
                 else if(response == 2)
                 {
                     doViewAllEmployees();
-//                    System.out.println("not implemented yet");
                 }
                 else if(response == 3)
                 {
                     doCreateNewPartner();
-//                    System.out.println("not implemented yet");
                 }
                 else if(response == 4)
                 {
                     doViewAllPartners();
-//                    System.out.println("not implemented yet");
                 }
                 else if(response == 5)
                 {
@@ -178,11 +174,11 @@ public class SystemAdministrationModule {
         System.out.println("*** HoRS Management Client :: System Administration :: View All Employees ***\n");
         
         List<Employee> employees = employeeSessionBeanRemote.retrieveAllEmployees();
-        System.out.printf("%10s%20s\n", "Username", "Employee Role");
+        System.out.printf("%10s%30s\n", "Username", "Employee Role");
 
         for(Employee employee:employees)
         {
-            System.out.printf("%10s%20s\n\n", employee.getUsername(), employee.getEmployeeRole());
+            System.out.printf("%10s%30s\n\n", employee.getUsername(), employee.getEmployeeRole());
         }
         
         System.out.print("Press any key to continue...> ");
@@ -249,11 +245,11 @@ public class SystemAdministrationModule {
         System.out.println("*** HoRS Management Client :: System Administration :: View All Patners ***\n");
         
         List<Partner> partners = partnerSessionBeanRemote.retrieveAllPartners();
-        System.out.printf("%10s%20s\n", "Username", "Organisation");
+        System.out.printf("%10s%30s\n", "Username", "Organisation");
 
         for(Partner partner:partners)
         {
-            System.out.printf("%10s%20s\n\n", partner.getUsername(), partner.getOrganisation());
+            System.out.printf("%10s%30s\n\n", partner.getUsername(), partner.getOrganisation());
         }
         
         System.out.print("Press any key to continue...> ");

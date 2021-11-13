@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Guest;
 import entity.Partner;
 import entity.Reservation;
 import entity.Room;
@@ -169,6 +170,18 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             throw new ReservationNotFoundException("No pending reservations exist for " + startDate);
         }
     }
+    
+    public List<Reservation> retrieveGuestReservations(Guest guest) throws ReservationNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest = :inGuest");
+        query.setParameter("inGuest", guest);
+
+        try {
+            return query.getResultList();
+        } catch (NoResultException ex) {
+            throw new ReservationNotFoundException("No pending reservations exist for " + guest.getUsername());
+        }
+    }   
+    
 
     @Override
     public void allocateRoomToCurrentDayReservations(Date startDate) {
@@ -190,10 +203,6 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 
             List<Room> retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
             
-            for (Room r : retrievedRooms){
-                System.out.println(r.getReservations().size());
-
-            }
 
             boolean upgraded = false;
 
@@ -207,7 +216,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 }
                 int roomsNeeded = numberOfRooms - retrievedRooms.size();
                 currentRoomType = currentRoomType.getNextHighestRoomType();
-                System.out.println(currentRoomType.getNextHighestRoomType());
+//                System.out.println(currentRoomType.getNextHighestRoomType());
                 if (currentRoomType == null) {
                     reservation.setStatus(ReservationStatusEnum.REJECTED);
                     break;
@@ -349,20 +358,11 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         query.setParameter("StatusRejected", ReservationStatusEnum.REJECTED);
 
         try {
-<<<<<<< HEAD
-            List<Reservation> reservationAns = query.getResultList();
-            for (Reservation reservation : reservationAns)
-            {
-                reservation.getRooms().size();
-            }
-            return reservationAns;
-=======
             List<Reservation> rejectedReservations = query.getResultList();
             for (Reservation reservation: rejectedReservations) {
                 reservation.getRooms().size();
             }
             return rejectedReservations;
->>>>>>> origin/master
         } catch (NoResultException ex) {
             throw new ReservationNotFoundException("No rejected reservations exist for " + startDate);
         }
