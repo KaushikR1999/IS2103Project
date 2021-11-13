@@ -7,9 +7,10 @@ package util.enumeration;
 
 /**
  *
- * @author kaushikr
+ * @author yuenz
  */
-public enum StatusEnum {
-    CONFIRMED,
-    ALLOCATED
+public enum RoomStatusEnum {
+    AVAILABLE,
+    NOT_AVAILABLE
+    
 }

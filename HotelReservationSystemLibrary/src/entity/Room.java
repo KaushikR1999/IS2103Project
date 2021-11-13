@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,8 +15,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
+import javax.validation.constraints.Size;
+import util.enumeration.RoomStatusEnum;
 
 /**
  *
@@ -28,45 +32,42 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
     
-    @Column(name = "FLOOR", nullable = false)
-    private int floor;
+    @Column(length = 100, nullable = false, unique = true)
+    @Size (min = 4, max = 4)
+    private String roomNumber;
     
-    @Column(name = "SEQUENCE_NUMBER", nullable = false)
-    private int sNum;
+    @Column(nullable = false)
+    private RoomStatusEnum roomStatus;
+   
+    @Column(nullable = false)
+    private boolean assignable;
     
-    @Column(name = "AVAILABLE", nullable = false)
-    private boolean available;
+    @ManyToOne(optional = false, cascade = {}, fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false)
+    private RoomType roomType;
     
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "ROOM_TYPE_ID", nullable = false)
-    private RoomType roomType; 
+    @ManyToMany(mappedBy = "rooms", cascade = {}, fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
 
-    public int getFloor() {
-        return floor;
-    }
-    
-    public int getRoomNumber() {
-        return floor+sNum;
+    public Room() {
+        this.assignable = true;
+        this.reservations = new ArrayList<> ();
     }
 
-    public void setFloor(int floor) {
-        this.floor = floor;
+    public Room(String roomNumber, RoomStatusEnum roomStatus, RoomType roomType) {
+        this();
+        this.roomNumber = roomNumber;
+        this.roomStatus = roomStatus;
+        this.roomType = roomType;
+        this.assignable = true;
     }
 
-    public int getsNum() {
-        return sNum;
+    public RoomStatusEnum getRoomStatus() {
+        return roomStatus;
     }
 
-    public void setsNum(int sNum) {
-        this.sNum = sNum;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
+    public void setRoomStatus(RoomStatusEnum roomStatus) {
+        this.roomStatus = roomStatus;
     }
 
     public RoomType getRoomType() {
@@ -109,5 +110,48 @@ public class Room implements Serializable {
     public String toString() {
         return "entity.Room[ id=" + roomId + " ]";
     }
+
+    /**
+     * @return the assignable
+     */
+    public boolean isAssignable() {
+        return assignable;
+    }
+
+    /**
+     * @param assignable the assignable to set
+     */
+    public void setAssignable(boolean assignable) {
+        this.assignable = assignable;
+    }
+
+    /**
+     * @return the roomNumber
+     */
+    public String getRoomNumber() {
+        return roomNumber;
+    }
+
+    /**
+     * @param roomNumber the roomNumber to set
+     */
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    /**
+     * @return the reservations
+     */
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    /**
+     * @param reservations the reservations to set
+     */
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
     
 }

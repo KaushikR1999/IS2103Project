@@ -6,13 +6,17 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -24,12 +28,32 @@ public class Guest implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="GUEST_ID")
     private Long guestId;
     
-    @OneToMany(mappedBy="guest")
+    @Column(nullable = false, length = 32, unique = true)
+    @NotNull
+    @Size(min = 1, max = 32)
+    private String username;
+    
+    @Column(nullable = false, length = 32)
+    @NotNull
+    @Size(min = 8, max = 32)
+    private String password;
+    
+    
+    @OneToMany(mappedBy = "guest", cascade = {}, fetch = FetchType.LAZY)
     private List <Reservation> reservations;
 
+    public Guest() {
+        this.reservations = new ArrayList<>();
+    }
+
+    public Guest(String username, String password) {
+        this();
+        this.username = username;
+        this.password = password;
+    }
+    
     public Long getGuestId() {
         return guestId;
     }
@@ -67,6 +91,7 @@ public class Guest implements Serializable {
      * @return the reservations
      */
     public List <Reservation> getReservations() {
+        reservations.size();
         return reservations;
     }
 
@@ -75,6 +100,34 @@ public class Guest implements Serializable {
      */
     public void setReservations(List <Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
     
 }

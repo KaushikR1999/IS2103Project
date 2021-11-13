@@ -8,12 +8,14 @@ package entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import util.enumeration.EmployeeAccessRightEnum;
+import util.enumeration.AccessRightsEnum;
 
 /**
  *
@@ -25,20 +27,32 @@ public class Employee implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="EMPLOYEE_ID")
     private Long employeeId;
     
-    @Column(name = "USERNAME", columnDefinition = "varchar(100)", nullable = false, length = 100, unique = true)
+    @Column(nullable = false, length = 32, unique = true)
     @NotNull
-    @Size(max = 100)
+    @Size(min = 1, max = 32)
     private String username;
     
-    @Column(name = "PASSWORD", columnDefinition = "varchar(100)", nullable = false, length = 100)
-    @NotNull
-    @Size(max = 100)
+    @Column(nullable = false, length = 32)
+    //@NotNull
+    @Size(min = 8, max = 32)
     private String password;
     
-    private EmployeeAccessRightEnum employeeAccessRightEnum;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @NotNull
+    private AccessRightsEnum employeeRole;
+
+    public Employee() {
+    }
+
+    public Employee(String username, String password, AccessRightsEnum employeeRole) {
+        this.username = username;
+        this.password = password;
+        this.employeeRole = employeeRole;
+    }
+    
     
     public Long getEmployeeId() {
         return employeeId;
@@ -102,17 +116,17 @@ public class Employee implements Serializable {
     }
 
     /**
-     * @return the employeeAccessRightEnum
+     * @return the employeeRole
      */
-    public EmployeeAccessRightEnum getEmployeeAccessRightEnum() {
-        return employeeAccessRightEnum;
+    public AccessRightsEnum getEmployeeRole() {
+        return employeeRole;
     }
 
     /**
-     * @param employeeAccessRightEnum the employeeAccessRightEnum to set
+     * @param employeeRole the employeeRole to set
      */
-    public void setEmployeeAccessRightEnum(EmployeeAccessRightEnum employeeAccessRightEnum) {
-        this.employeeAccessRightEnum = employeeAccessRightEnum;
+    public void setEmployeeRole(AccessRightsEnum employeeRole) {
+        this.employeeRole = employeeRole;
     }
     
 

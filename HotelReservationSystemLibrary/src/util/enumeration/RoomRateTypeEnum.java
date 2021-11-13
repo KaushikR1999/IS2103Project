@@ -10,9 +10,10 @@ package util.enumeration;
  * @author Roy Chua
  */
 public enum RoomRateTypeEnum {
-    PUBLISHED,
-    NORMAL,
+    
+    PROMOTION,
     PEAK,
-    PROMOTION
+    NORMAL,
+    PUBLISHED
     
 }

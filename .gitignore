@@ -1,1 +1,15 @@
 /HotelReservationSystemLibrary/build/
+/HotelReservationSystem-ejb/nbproject/private/
+/nbproject/private/
+/HotelReservationSystemLibrary/nbproject/private/
+/HoRSManagementClient/nbproject/private/
+/HoRSReservationClient/nbproject/private/
+/HotelReservationSystemLibrary/dist/
+/HoRSManagementClient/build/
+/HoRSManagementClient/dist/
+/HoRSReservationClient/build/
+/HoRSReservationClient/dist/
+/HotelReservationSystem-ejb/build/
+/HotelReservationSystem-ejb/dist/
+/build/
+/dist/

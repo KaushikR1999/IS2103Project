@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlTransient;
 import util.enumeration.RoomRateTypeEnum;
 
 /**
@@ -31,41 +32,73 @@ public class RoomRate implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ROOM_RATE_ID")
     private Long roomRateId;
     
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "ROOM_TYPE_ID")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {})
+    @JoinColumn(nullable = false)
     private RoomType roomType;
     
-    @Column(name = "ROOM_RATE_TYPE", nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     @NotNull (message = "Room rate type cannot be null")
     private RoomRateTypeEnum roomRateType;
     
-    @Column(name = "RATE_DATE")
+    @Column
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date rateDate;
+    private Date startDate;
     
-    @Column(name = "RATE")
-    private double rate;
+    @Column
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date endDate;
+    
+    @Column(nullable = false)
+    private String name;
+    
+    @Column (nullable = false)
+    private double ratePerNight;
+    
+    @Column(nullable = false)
+    private boolean assignable;
 
-    public double getRate() {
-        return rate;
+    public RoomRate() {
+        this.assignable = true;
     }
 
-    public void setRate(double rate) {
-        this.rate = rate;
+    public RoomRate(RoomRateTypeEnum roomRateType, Date startDate, Date endDate, String name, double ratePerNight) {
+        this();
+        this.roomRateType = roomRateType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.name = name;
+        this.ratePerNight = ratePerNight;
+    }
+    
+
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public Date getRateDate() {
-        return rateDate;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public void setRateDate(Date rateDate) {
-        this.rateDate = rateDate;
+    public Date getEndDate() {
+        return endDate;
     }
 
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public double getRatePerNight() {
+        return ratePerNight;
+    }
+
+    public void setRatePerNight(double ratePerNight) {
+        this.ratePerNight = ratePerNight;
+    }
+
+    @XmlTransient
     public RoomType getRoomType() {
         return roomType;
     }
@@ -113,6 +146,34 @@ public class RoomRate implements Serializable {
     @Override
     public String toString() {
         return "entity.RoomRates[ id=" + roomRateId + " ]";
+    }
+
+    /**
+     * @return the assignable
+     */
+    public boolean getAssignable() {
+        return assignable;
+    }
+
+    /**
+     * @param assignable the assignable to set
+     */
+    public void setAssignable(boolean assignable) {
+        this.assignable = assignable;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
     
 }

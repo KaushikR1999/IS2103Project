@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +14,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -27,23 +31,107 @@ public class RoomType implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomTypeId;
     
-    @OneToMany (fetch = FetchType.LAZY, mappedBy = "roomType", orphanRemoval = true)
-    private List<RoomRate> roomRates;
-    
-    @OneToMany (fetch = FetchType.LAZY, mappedBy = "roomType", orphanRemoval = true)
-    private List<Room> rooms;
-    
-    @Column(name = "TYPE_NAME")
+    @Column(nullable = false, unique = true)
     private String typeName;
+    
+    @Column (nullable = false)
+    private String description;
+    
+    @Column (nullable = false)
+    private double size;
+    
+    @Column (nullable = false)
+    private int bed;
+    
+    @Column (nullable = false)
+    private int capacity;
+    
+    @Column (nullable = false)
+    private List<String> amenities;
+    
+    @Column(nullable = false)
+    private boolean assignable;
+    
+    @OneToOne (fetch = FetchType.EAGER, cascade = {})
+    private RoomType nextHighestRoomType;
+    
+    @OneToMany (mappedBy = "roomType", fetch = FetchType.LAZY, cascade = {})
+    private List<RoomRate> roomRates;
 
-    public List<Room> getRooms() {
-        return rooms;
+    public RoomType() {
+        roomRates = new ArrayList<>();
+        amenities = new ArrayList<>();
+        assignable = true;
     }
 
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
+    public RoomType(String typeName, String description, double size, int bed, int capacity) {
+        this();
+        this.typeName = typeName;
+        this.description = description;
+        this.size = size;
+        this.bed = bed;
+        this.capacity = capacity;
+        this.assignable = assignable;
     }
 
+    public RoomType getNextHighestRoomType() {
+        return nextHighestRoomType;
+    }
+
+    public void setNextHighestRoomType(RoomType nextHighestRoomType) {
+        this.nextHighestRoomType = nextHighestRoomType;
+    } 
+
+    public boolean isAssignable() {
+        return assignable;
+    }
+
+    public void setAssignable(boolean assignable) {
+        this.assignable = assignable;
+    }
+
+    
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getSize() {
+        return size;
+    }
+
+    public void setSize(double size) {
+        this.size = size;
+    }
+
+    public int getBed() {
+        return bed;
+    }
+
+    public void setBed(int bed) {
+        this.bed = bed;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public List<String> getAmenities() {
+        return amenities;
+    }
+
+    public void setAmenities(List<String> amenities) {
+        this.amenities = amenities;
+    }
+    
+    @XmlTransient
     public List<RoomRate> getRoomRates() {
         return roomRates;
     }

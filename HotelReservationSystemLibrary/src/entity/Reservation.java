@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -17,11 +18,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import util.enumeration.StatusEnum;
+import util.enumeration.ReservationStatusEnum;
 import util.enumeration.ReservationTypeEnum;
 
 /**
@@ -34,45 +36,73 @@ public class Reservation implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="RESERVATION_ID")
     private Long reservationId;
     
-    @Column(name = "START_DATE")
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     @NotNull
     private Date startDate;
     
-    @Column(name = "END_DATE")
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     @NotNull
     private Date endDate;
     
-    @Column(name = "BOOKING_DATE")
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     @NotNull
-    private Date bookingDate;
+    private Date bookingDateTime;
     
-    @Column(name = "BOOKING_TIME")
-    @Temporal(TemporalType.TIME)
-    @NotNull
-    private Date bookingTime;
-    
-    @Column(name = "STATUS", columnDefinition = "varchar(20) default 'CONFIRMED'", nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
-    private StatusEnum statusEnum;
+    private ReservationStatusEnum status;
     
-    @Column(name = "RESERVATION_FEE")
+    @Column(nullable = false)
     @NotNull
-    private Double reservationFee;
+    private double totalReservationFee;
     
-    @Column(name = "RESERVATION_TYPE", columnDefinition = "varchar(20) default 'ONLINE'", nullable = false)
+    @Column(nullable = false)
+    @NotNull
+    private int numberOfRooms;
+    
+    @Column(nullable = false)
+    private boolean checkIn;
+    
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
-    private ReservationTypeEnum reservationTypeEnum;
+    private ReservationTypeEnum reservationType;
     
-    @OneToMany(mappedBy="reservation")
-    private List <Room> rooms;
+    @ManyToMany(cascade = {}, fetch = FetchType.LAZY)
+    private List<Room> rooms;
+    
+    @ManyToOne(optional = true, cascade = {}, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true)
+    private Guest guest;
+    
+    @ManyToOne(cascade = {}, fetch = FetchType.EAGER)
+    @JoinColumn
+    private RoomType roomType;
+
+    public Reservation() {
+        this.rooms = new ArrayList<> ();
+        this.checkIn = false;
+    }
+
+    public Reservation(Date startDate, Date endDate, Date bookingDateTime, ReservationStatusEnum status, Double reservationFee, ReservationTypeEnum reservationType, RoomType roomType, int numberOfRooms) {
+        this();
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.bookingDateTime = bookingDateTime;
+        this.status = status;
+        this.totalReservationFee = reservationFee;
+        this.reservationType = reservationType;
+        this.roomType = roomType;
+        this.numberOfRooms = numberOfRooms;
+    }
+    
+    
 
     public Long getReservationId() {
         return reservationId;
@@ -136,73 +166,129 @@ public class Reservation implements Serializable {
     }
 
     /**
-     * @return the bookingDate
+     * @return the bookingDateTime
      */
-    public Date getBookingDate() {
-        return bookingDate;
+    public Date getBookingDateTime() {
+        return bookingDateTime;
     }
 
     /**
-     * @param bookingDate the bookingDate to set
+     * @param bookingDateTime the bookingDateTime to set
      */
-    public void setBookingDate(Date bookingDate) {
-        this.bookingDate = bookingDate;
+    public void setBookingDateTime(Date bookingDateTime) {
+        this.bookingDateTime = bookingDateTime;
     }
 
     /**
-     * @return the bookingTime
+     * @return the status
      */
-    public Date getBookingTime() {
-        return bookingTime;
+    public ReservationStatusEnum getStatus() {
+        return status;
     }
 
     /**
-     * @param bookingTime the bookingTime to set
+     * @param status the status to set
      */
-    public void setBookingTime(Date bookingTime) {
-        this.bookingTime = bookingTime;
+    public void setStatus(ReservationStatusEnum status) {
+        this.status = status;
     }
 
     /**
-     * @return the statusEnum
+     * @return the totalReservationFee
      */
-    public StatusEnum getStatusEnum() {
-        return statusEnum;
+    public double getTotalReservationFee() {
+        return totalReservationFee;
     }
 
     /**
-     * @param statusEnum the statusEnum to set
+     * @param totalReservationFee the totalReservationFee to set
      */
-    public void setStatusEnum(StatusEnum statusEnum) {
-        this.statusEnum = statusEnum;
+    public void setTotalReservationFee(double totalReservationFee) {
+        this.totalReservationFee = totalReservationFee;
     }
 
     /**
-     * @return the reservationFee
+     * @return the reservationType
      */
-    public Double getReservationFee() {
-        return reservationFee;
+    public ReservationTypeEnum getReservationType() {
+        return reservationType;
     }
 
     /**
-     * @param reservationFee the reservationFee to set
+     * @param reservationType the reservationType to set
      */
-    public void setReservationFee(Double reservationFee) {
-        this.reservationFee = reservationFee;
+    public void setReservationType(ReservationTypeEnum reservationType) {
+        this.reservationType = reservationType;
     }
 
     /**
-     * @return the reservationTypeEnum
+     * @return the guest
      */
-    public ReservationTypeEnum getReservationTypeEnum() {
-        return reservationTypeEnum;
+    public Guest getGuest() {
+        return guest;
     }
 
     /**
-     * @param reservationTypeEnum the reservationTypeEnum to set
+     * @param guest the guest to set
      */
-    public void setReservationTypeEnum(ReservationTypeEnum reservationTypeEnum) {
-        this.reservationTypeEnum = reservationTypeEnum;
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
+
+    /**
+     * @return the rooms
+     */
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    /**
+     * @param rooms the rooms to set
+     */
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
+
+    /**
+     * @return the roomType
+     */
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    /**
+     * @param roomType the roomType to set
+     */
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
+    /**
+     * @return the numberOfRooms
+     */
+    public int getNumberOfRooms() {
+        return numberOfRooms;
+    }
+
+    /**
+     * @param numberOfRooms the numberOfRooms to set
+     */
+    public void setNumberOfRooms(int numberOfRooms) {
+        this.numberOfRooms = numberOfRooms;
+    }
+
+    /**
+     * @return the checkIn
+     */
+    public boolean isCheckIn() {
+        return checkIn;
+    }
+
+    /**
+     * @param checkIn the checkIn to set
+     */
+    public void setCheckIn(boolean checkIn) {
+        this.checkIn = checkIn;
     }
     
 }
