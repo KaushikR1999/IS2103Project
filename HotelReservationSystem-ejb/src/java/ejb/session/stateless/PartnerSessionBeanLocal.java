@@ -28,5 +28,7 @@ public interface PartnerSessionBeanLocal {
     public Partner partnerLogin(String username, String password) throws InvalidLoginCredentialException;
 
     public Partner retrievePartnerByUsername(String username) throws PartnerNotFoundException;
+
+    public Partner retrievePartnerById(Long partnerId) throws PartnerNotFoundException;
     
 }

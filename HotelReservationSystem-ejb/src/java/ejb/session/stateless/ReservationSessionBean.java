@@ -29,6 +29,7 @@ import util.exception.CreateNewReservationException;
 import util.exception.InputDataValidationException;
 import util.exception.NoRoomAvailableException;
 import util.exception.NoRoomTypeAvailableException;
+import util.exception.PartnerNotFoundException;
 import util.exception.ReservationNotFoundException;
 
 /**
@@ -38,9 +39,13 @@ import util.exception.ReservationNotFoundException;
 @Stateless
 public class ReservationSessionBean implements ReservationSessionBeanRemote, ReservationSessionBeanLocal {
 
+    @EJB
+    private PartnerSessionBeanLocal partnerSessionBeanLocal;
+
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
 
+    
     @EJB
     private RoomSessionBeanLocal roomSessionBeanLocal;
 
@@ -61,9 +66,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             if (newReservation != null) {
 
                 em.persist(newReservation);
-
                 em.flush();
-                newReservation.getRooms();
 
                 return newReservation;
             } else {
@@ -76,10 +79,11 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     @Override
-    public void addPartnerToReservation(Reservation reservation, Partner partner) {
+    public void addPartnerToReservation(Reservation reservation, Long partnerId) throws PartnerNotFoundException {
+        Partner partner = partnerSessionBeanLocal.retrievePartnerById(partnerId);
         partner.getPartnerReservations().add(reservation);
         em.merge(partner);
-        em.flush();
+        //em.flush();
     }
 
     @Override
@@ -343,10 +347,14 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
 
     @Override
-    public List<Reservation> retrieveReservationsByPartner(Partner partner) throws ReservationNotFoundException {
-        List<Reservation> ansReservation = partner.getPartnerReservations();
+    public List<Reservation> retrieveReservationsByPartner(Long partnerId, boolean loadReservation) throws ReservationNotFoundException, PartnerNotFoundException {
+        Partner partner = partnerSessionBeanLocal.retrievePartnerById(partnerId);
+        List<Reservation> ansReservation = partnerSessionBeanLocal.retrievePartnerById(partnerId).getPartnerReservations();
         if(ansReservation.isEmpty()){
             throw new ReservationNotFoundException("No Reservations available!");
+        }
+        if(loadReservation){
+            partner.getPartnerReservations().size();
         }
         return ansReservation;
     }

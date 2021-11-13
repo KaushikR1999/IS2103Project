@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.exception.CreateNewReservationException;
 import util.exception.InputDataValidationException;
+import util.exception.PartnerNotFoundException;
 import util.exception.ReservationNotFoundException;
 
 /**
@@ -67,8 +68,8 @@ public class ReservationWebService {
         reservation.setRoomType(null);(*/
 
         if(reservation.getGuest() != null) {
-        reservation.setGuest(null);
         em.detach(reservation.getGuest());
+        reservation.setGuest(null);
         }
         return reservation;
     }
@@ -105,8 +106,8 @@ public class ReservationWebService {
         //}
 
         if(reservation.getGuest() != null) {
-        reservation.setGuest(null);
         em.detach(reservation.getGuest());
+        reservation.setGuest(null);
         }
         return reservation;
     }
@@ -119,29 +120,29 @@ public class ReservationWebService {
     }
     
     @WebMethod(operationName = "addPartnerToReservation")
-    public void addPartnerToReservation(@WebParam(name = "reservation") Reservation reservation, @WebParam(name = "partner") Partner partner)
+    public void addPartnerToReservation(@WebParam(name = "reservation") Reservation reservation, @WebParam(name = "partner") Long partnerId) throws PartnerNotFoundException
     {     
-        reservationSessionBeanLocal.addPartnerToReservation(reservation, partner);
+        reservationSessionBeanLocal.addPartnerToReservation(reservation, partnerId);
     }
     
     @WebMethod(operationName = "retrieveReservationsByPartner")
-    public List<Reservation> retrieveReservationsByPartner(@WebParam(name = "partner") Partner partner) throws ReservationNotFoundException
+    public List<Reservation> retrieveReservationsByPartner(@WebParam(name = "partnerId") Long partnerId, @WebParam(name = "loadReservation") boolean loadReservation) throws ReservationNotFoundException, PartnerNotFoundException
     {     
-        List<Reservation> list = reservationSessionBeanLocal.retrieveReservationsByPartner(partner);
+        List<Reservation> list = reservationSessionBeanLocal.retrieveReservationsByPartner(partnerId, loadReservation);
         for(Reservation r : list){
             em.detach(r);
             for(Room ro : r.getRooms()){
-            em.detach(ro);
-            ro.getReservations().clear();
+                em.detach(ro);
+                ro.getReservations().clear();
             //em.detach(r.getRoomType());
             //r.getRoomType().getRoomRates().clear();
-            }
+                }
             r.getRooms().clear();
             
             if(r.getGuest() != null) {
-        r.setGuest(null);
-        em.detach(r.getGuest());
-        }
+                em.detach(r.getGuest());
+                r.setGuest(null);
+                }
         }
         return list;
     }

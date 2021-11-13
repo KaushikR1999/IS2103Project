@@ -128,6 +128,22 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         }
     }
     
+    @Override
+    public Partner retrievePartnerById(Long partnerId) throws PartnerNotFoundException
+    {
+        Query query = em.createQuery("SELECT p FROM Partner p WHERE p.partnerId = :inPartnerId");
+        query.setParameter("inPartnerId", partnerId);
+        
+        try
+        {
+            return (Partner)query.getSingleResult();
+        }
+        catch(NoResultException | NonUniqueResultException ex)
+        {
+            throw new PartnerNotFoundException("Partner Username " + partnerId + " does not exist!");
+        }
+    }
+    
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Partner>>constraintViolations)
     {
         String msg = "Input data validation error!:";

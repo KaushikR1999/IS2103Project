@@ -25,6 +25,8 @@ public interface PartnerSessionBeanRemote {
     public Long createNewPartner(Partner newPartner) throws PartnerUsernameOrOrganisationExistException, UnknownPersistenceException, InputDataValidationException;
     public Partner partnerLogin(String username, String password) throws InvalidLoginCredentialException;
     public Partner retrievePartnerByUsername(String username) throws PartnerNotFoundException;
+    public Partner retrievePartnerById(Long partnerId) throws PartnerNotFoundException;
+
 
 
 }

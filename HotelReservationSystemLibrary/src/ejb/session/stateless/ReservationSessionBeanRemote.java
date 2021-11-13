@@ -14,6 +14,7 @@ import util.exception.CreateNewReservationException;
 import util.exception.InputDataValidationException;
 import util.exception.NoRoomAvailableException;
 import util.exception.NoRoomTypeAvailableException;
+import util.exception.PartnerNotFoundException;
 import util.exception.ReservationNotFoundException;
 
 /**
@@ -47,9 +48,8 @@ public interface ReservationSessionBeanRemote {
     
     public int getNumberOfUpgradedRooms(Reservation reservation);
     
-    public void addPartnerToReservation(Reservation reservation, Partner partner);
+    public List<Reservation> retrieveReservationsByPartner(Long partnerId, boolean loadReservation) throws ReservationNotFoundException, PartnerNotFoundException;
     
-    public List<Reservation> retrieveReservationsByPartner(Partner partner) throws ReservationNotFoundException;
-
+    public void addPartnerToReservation(Reservation reservation, Long partnerId) throws PartnerNotFoundException;
 
 }
