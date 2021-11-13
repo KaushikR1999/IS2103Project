@@ -170,16 +170,17 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.assignable = true");
 //        query.setParameter("true", TRUE);
+        try {
         List<RoomType> availableRoomType = query.getResultList();
-        
-        if(availableRoomType.isEmpty())
-        {
+        for (RoomType rt : availableRoomType){
+            rt.getRoomRates().size();
+        }
+        return availableRoomType;
+        } catch (NoResultException ex) {
+       
             throw new NoRoomTypeAvailableException("There are no available Room types!");
         }
-        else
-        {
-            return availableRoomType;
-        }               
+                 
     }
     
       @Override
