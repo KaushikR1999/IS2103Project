@@ -48,5 +48,7 @@ public interface ReservationSessionBeanLocal {
     public int getNumberOfUpgradedRooms(Reservation reservation);
 
     public void addPartnerToReservation(Reservation reservation, Partner partner);
+
+    public List<Reservation> retrieveReservationsByPartner(Partner partner) throws ReservationNotFoundException;
     
 }

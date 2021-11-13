@@ -11,6 +11,7 @@ import entity.Partner;
 import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
@@ -57,13 +58,13 @@ public class ReservationWebService {
             }
         reservation.getRooms().clear();
         
-       // em.detach(reservation.getRoomType());
-       // for(RoomRate rr : reservation.getRoomType().getRoomRates()) {
-       //     em.detach(rr);
-        //    rr.setRoomType(null);
-        //}
-        //reservation.getRoomType().getRoomRates().clear();
-        //reservation.setRoomType(null);
+        /*em.detach(reservation.getRoomType());
+        for(RoomRate rr : reservation.getRoomType().getRoomRates()) {
+            em.detach(rr);
+           rr.setRoomType(null);
+        }
+        reservation.getRoomType().getRoomRates().clear();
+        reservation.setRoomType(null);(*/
 
         if(reservation.getGuest() != null) {
         reservation.setGuest(null);
@@ -93,15 +94,14 @@ public class ReservationWebService {
             }
             reservation.getRooms().clear();
             
-        //if(reservation.getRoomType().equals(null)) {
-        //} else {
-        // em.detach(reservation.getRoomType());
-       // for(RoomRate rr : reservation.getRoomType().getRoomRates()) {
-       //     em.detach(rr);
-       //     rr.setRoomType(null);
-       // }
-       // reservation.getRoomType().getRoomRates().clear();
-       // reservation.setRoomType(null);   
+
+         //em.detach(reservation.getRoomType());
+       //for(RoomRate rr : reservation.getRoomType().getRoomRates()) {
+           //em.detach(rr);
+            //rr.setRoomType(null);
+        //}
+        //reservation.getRoomType().getRoomRates().clear();
+        //reservation.setRoomType(null);   
         //}
 
         if(reservation.getGuest() != null) {
@@ -122,6 +122,28 @@ public class ReservationWebService {
     public void addPartnerToReservation(@WebParam(name = "reservation") Reservation reservation, @WebParam(name = "partner") Partner partner)
     {     
         reservationSessionBeanLocal.addPartnerToReservation(reservation, partner);
+    }
+    
+    @WebMethod(operationName = "retrieveReservationsByPartner")
+    public List<Reservation> retrieveReservationsByPartner(@WebParam(name = "partner") Partner partner) throws ReservationNotFoundException
+    {     
+        List<Reservation> list = reservationSessionBeanLocal.retrieveReservationsByPartner(partner);
+        for(Reservation r : list){
+            em.detach(r);
+            for(Room ro : r.getRooms()){
+            em.detach(ro);
+            ro.getReservations().clear();
+            //em.detach(r.getRoomType());
+            //r.getRoomType().getRoomRates().clear();
+            }
+            r.getRooms().clear();
+            
+            if(r.getGuest() != null) {
+        r.setGuest(null);
+        em.detach(r.getGuest());
+        }
+        }
+        return list;
     }
 
     public void persist(Object object) {
