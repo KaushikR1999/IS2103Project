@@ -13,3 +13,6 @@
 /HotelReservationSystem-ejb/dist/
 /build/
 /dist/
+/HolidayReservationSystem/build/
+/HolidayReservationSystem/dist/
+/HolidayReservationSystem/nbproject/private/

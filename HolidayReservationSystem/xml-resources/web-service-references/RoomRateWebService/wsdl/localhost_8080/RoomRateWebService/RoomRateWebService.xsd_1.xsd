@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is Metro/2.4.3 (RELEASE-2.4.3-ad3323c; 2019-01-21T17:46:06+0000) JAXWS-RI/2.3.2 JAXWS-API/2.3.2 JAXB-RI/2.3.2 JAXB-API/2.3.2 git-revision#unknown. --><xs:schema xmlns:tns="http://ws.session.ejb/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://ws.session.ejb/">
+
+<xs:element name="NoRateAvailableException" type="tns:NoRateAvailableException"/>
+
+<xs:element name="calculateRoomRateOnlineReservations" type="tns:calculateRoomRateOnlineReservations"/>
+
+<xs:element name="calculateRoomRateOnlineReservationsResponse" type="tns:calculateRoomRateOnlineReservationsResponse"/>
+
+<xs:complexType name="calculateRoomRateOnlineReservations">
+<xs:sequence>
+<xs:element name="startDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="endDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="inRoomTypeId" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="calculateRoomRateOnlineReservationsResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="NoRateAvailableException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
