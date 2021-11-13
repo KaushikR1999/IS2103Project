@@ -127,26 +127,31 @@ public class HotelOperationSalesModule {
         System.out.println("*** HoRS Management Client :: Hotel Operation (Sales) :: View Room Rate Details ***\n");
         System.out.print("Enter Room Rate ID> ");
         Long roomRateId = scanner.nextLong();
+        
+        while (true) {
+            try {
+                RoomRate roomRate = roomRateSessionBeanRemote.retrieveRoomRateByRoomRateId(roomRateId);
+                System.out.printf("%8s%13s%20s%20s%20s%20s%20s\n", "Room Rate ID", "Name", "Room Type", "Rate Type", "Rate Per Night", "Start Date", "End Date");
+                System.out.printf("%8s%15s%20s%20s%20s%20s%20s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType().getTypeName(), roomRate.getRoomRateType(), roomRate.getRatePerNight(), formatDate.format(roomRate.getStartDate()), formatDate.format(roomRate.getEndDate()));
+                System.out.println("------------------------");
+                System.out.println("1: Update Room Rate");
+                System.out.println("2: Delete Room Rate");
+                System.out.println("3: Back\n");
+                System.out.print("> ");
+                response = scanner.nextInt();
 
-        try {
-            RoomRate roomRate = roomRateSessionBeanRemote.retrieveRoomRateByRoomRateId(roomRateId);
-            System.out.printf("%8s%13s%20s%20s%20s%20s%20s\n", "Room Rate ID", "Name", "Room Type", "Rate Type", "Rate Per Night", "Start Date", "End Date");
-            System.out.printf("%8s%15s%20s%20s%20s%20s%20s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType().getTypeName(), roomRate.getRoomRateType(), roomRate.getRatePerNight(), formatDate.format(roomRate.getStartDate()), formatDate.format(roomRate.getEndDate()));
-            System.out.println("------------------------");
-            System.out.println("1: Update Room Rate");
-            System.out.println("2: Delete Room Rate");
-            System.out.println("3: Back\n");
-            System.out.print("> ");
-            response = scanner.nextInt();
-
-            if (response == 1) {
-                doUpdateRoomRate(roomRate);
-            } else if (response == 2) {
-                doDeleteRoomRate(roomRate);
+                if (response == 1) {
+                    doUpdateRoomRate(roomRate);
+                } else if (response == 2) {
+                    doDeleteRoomRate(roomRate);
+                } else if (response == 3) {
+                    break;
+                }
+            } catch (RoomRateNotFoundException ex) {
+                System.out.println("An error has occurred while retrieving room rate: " + ex.getMessage() + "\n");
             }
-        } catch (RoomRateNotFoundException ex) {
-            System.out.println("An error has occurred while retrieving room rate: " + ex.getMessage() + "\n");
         }
+
     }
 
     private void doCreateNewRoomRate() {
@@ -227,18 +232,20 @@ public class HotelOperationSalesModule {
             try {
                 List<RoomType> roomTypes = roomTypeSessionBeanRemote.retrieveAllAvailableRoomTypes();
 
-                String output = "Select Next Highest Room Type (";
+                String output = "Select Next Highest Room Type";
+                System.out.println(output);
                 int i = 1;
                 for (RoomType otherRoomType : roomTypes) {
-                    output += i + ": " + otherRoomType.getTypeName();
+                    output = i + ": " + otherRoomType.getTypeName();
                     i++;
                     if (i <= roomTypes.size()) {
-                        output += ", ";
+                        System.out.println(output);
                     }
                 }
-                output += ")> ";
-
+                System.out.println(output);
+                output = "> ";
                 System.out.print(output);
+                
                 Integer roomTypeInt = scanner.nextInt();
 
                 if (roomTypeInt >= 1 && roomTypeInt <= roomTypes.size()) {

@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Guest;
 import entity.Partner;
 import entity.Reservation;
 import java.util.Date;
@@ -52,4 +53,5 @@ public interface ReservationSessionBeanRemote {
     
     public void addPartnerToReservation(Reservation reservation, Long partnerId) throws PartnerNotFoundException;
 
+    public List<Reservation> retrieveGuestReservations(Guest guest) throws ReservationNotFoundException;
 }

@@ -91,6 +91,7 @@ public class Guest implements Serializable {
      * @return the reservations
      */
     public List <Reservation> getReservations() {
+        reservations.size();
         return reservations;
     }
 
