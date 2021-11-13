@@ -224,7 +224,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 //                System.out.println(currentRoomType.getNextHighestRoomType());
                 if (currentRoomType == null) {
                     reservation.setStatus(ReservationStatusEnum.REJECTED);
-                    break;
+                    continue;
                 } else {
                     retrievedRooms = roomSessionBeanLocal.retrieveListOfRoomsAvailableForBookingByRoomType(reservation.getStartDate(), reservation.getEndDate(), currentRoomType.getRoomTypeId());
                     if (retrievedRooms.size() >= roomsNeeded) {
@@ -233,7 +233,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                         }
                     } else {
                         reservation.setStatus(ReservationStatusEnum.REJECTED);
-                        break;
+                        continue;
                     }
                 }
             }

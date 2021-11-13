@@ -82,10 +82,15 @@ public class MainApp {
             System.out.println("3: Search Hotel Room");
             System.out.println("4: View My Reservation Details");
             System.out.println("5: View All My Reservations");
-            System.out.println("6: Exit\n");
+            if (currentGuest != null) {
+                System.out.println("6: Exit");
+                System.out.println("7: Logout\n");
+            } else {
+                System.out.println("6: Exit\n");
+            }
             response = 0;
 
-            while (response < 1 || response > 6) {
+            while (response < 1 || response > 7) {
                 System.out.print("> ");
 
                 response = scanner.nextInt();
@@ -109,6 +114,8 @@ public class MainApp {
                     doViewAllMyReservations();
                 } else if (response == 6) {
                     break;
+                } else if (response == 7) {
+                    currentGuest = null;
                 } else {
                     System.out.println("Invalid option, please try again!\n");
                 }
@@ -326,7 +333,7 @@ public class MainApp {
             try {
 
                 r = reservationSessionBeanRemote.retrieveReservationByReservationId(reservationId);
-                System.out.printf("%19s%18s%17s%20s%20s%20s%20s%31s\n", "Reservation ID", "Booking Date Time", "Start Date", "End Date", "Room Type", "Price", "Booking Status", "Rooms Allocared");
+                System.out.printf("%19s%18s%17s%20s%20s%20s%20s%31s\n", "Reservation ID", "Booking Date Time", "Start Date", "End Date", "Room Type", "Price", "Booking Status", "Rooms Allocated");
                 System.out.printf("%19s%18s%17s%20s%20s%20s%20s%31s\n", r.getReservationId(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(r.getBookingDateTime()), new SimpleDateFormat("yyyy-MM-dd").format(r.getStartDate()), new SimpleDateFormat("yyyy-MM-dd").format(r.getEndDate()), r.getRoomType().getTypeName(), r.getTotalReservationFee(), r.getStatus(), reservationSessionBeanRemote.retrieveRoomsAllocatedInString(r.getReservationId()));
 
             } catch (ReservationNotFoundException ex) {

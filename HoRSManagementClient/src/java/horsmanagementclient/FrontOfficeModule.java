@@ -199,7 +199,7 @@ public class FrontOfficeModule {
                     try {
                         newReservation = reservationSessionBeanRemote.createNewReservation(newReservation);
 
-                        System.out.println("Reservation is a success!: " + newReservation.getReservationId() + "\n");
+                        System.out.println("Reservation is a success! Your Reservation Id: " + newReservation.getReservationId() + " Please remember it!\n");
                     } catch (CreateNewReservationException ex) {
                         System.out.println("An error has occurred while creating the new reservation!: " + ex.getMessage() + "\n");
                     } catch (ReservationNotFoundException ex) {
@@ -271,7 +271,7 @@ public class FrontOfficeModule {
                 }
                 
                 reservation.setCheckIn(true);
-                
+                System.out.println("===============================================================");
                 System.out.println("Successfully checked in!");
                 
                 List <Room> rooms = reservation.getRooms();
@@ -283,6 +283,7 @@ public class FrontOfficeModule {
                     }
                 }
                 System.out.println();
+                System.out.println("===============================================================");
             }
 
         } catch (ReservationNotFoundException ex) {
