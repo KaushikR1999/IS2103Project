@@ -265,8 +265,12 @@ public class HotelOperationGeneralModule {
 
                     if (response == 1) {
                         doUpdateRoomType(roomType);
+                        break;
                     } else if (response == 2) {
                         doDeleteRoomType(roomType);
+                        break;
+                    } else if (response == 3) {
+                        break;
                     }
                 } else {
                     System.out.println("Invalid option, please try again!\n");
@@ -421,8 +425,7 @@ public class HotelOperationGeneralModule {
         System.out.printf("%10s%20s%20s%20s%13s%20s%20s\n", "Name", "Description", "Room Size", "Number Of Beds", "Room Capacity", "Amenities", "Next Highest Room Type");
 
         for (RoomType roomType : roomTypes) {
-            String nextHighestRoomType;
-            if (roomType.getNextHighestRoomType().getTypeName() != null) {
+            if (roomType.getNextHighestRoomType() != null) {
                 System.out.printf("%10s%20s%20f%20d%20d%20s%20s\n", roomType.getTypeName(), roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities().toString(), roomType.getNextHighestRoomType().getTypeName());
             } else {
                 System.out.printf("%10s%20s%20f%20d%20d%20s\n", roomType.getTypeName(), roomType.getDescription(), roomType.getSize(), roomType.getBed(), roomType.getCapacity(), roomType.getAmenities().toString());

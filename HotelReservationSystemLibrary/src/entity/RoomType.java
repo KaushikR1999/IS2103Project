@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -129,7 +130,8 @@ public class RoomType implements Serializable {
     public void setAmenities(List<String> amenities) {
         this.amenities = amenities;
     }
-
+    
+    @XmlTransient
     public List<RoomRate> getRoomRates() {
         return roomRates;
     }

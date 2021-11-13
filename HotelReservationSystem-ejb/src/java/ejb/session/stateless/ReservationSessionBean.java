@@ -171,6 +171,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
     }
     
+    @Override
     public List<Reservation> retrieveGuestReservations(Guest guest) throws ReservationNotFoundException {
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest = :inGuest");
         query.setParameter("inGuest", guest);
@@ -332,7 +333,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
         return roomsAssignedArray.toString();
     }
-
+    
     @Override
     public List<Reservation> retrieveUpgradedReservations(Date startDate) throws ReservationNotFoundException {
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.startDate = :inStartDate AND r.status = :StatusUpgraded");
@@ -352,12 +353,22 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
 
     @Override
+    public List<Reservation> retrieveReservationsByPartner(Partner partner) throws ReservationNotFoundException {
+        List<Reservation> ansReservation = partner.getPartnerReservations();
+        if(ansReservation.isEmpty()){
+            throw new ReservationNotFoundException("No Reservations available!");
+        }
+        return ansReservation;
+    }
+
+    @Override
     public List<Reservation> retrieveRejectedReservations(Date startDate) throws ReservationNotFoundException {
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.startDate = :inStartDate AND r.status = :StatusRejected");
         query.setParameter("inStartDate", startDate);
         query.setParameter("StatusRejected", ReservationStatusEnum.REJECTED);
 
         try {
+
             List<Reservation> rejectedReservations = query.getResultList();
             for (Reservation reservation: rejectedReservations) {
                 reservation.getRooms().size();

@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlTransient;
 import util.enumeration.RoomRateTypeEnum;
 
 /**
@@ -97,6 +98,7 @@ public class RoomRate implements Serializable {
         this.ratePerNight = ratePerNight;
     }
 
+    @XmlTransient
     public RoomType getRoomType() {
         return roomType;
     }

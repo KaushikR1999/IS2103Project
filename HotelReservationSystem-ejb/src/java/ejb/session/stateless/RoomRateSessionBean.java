@@ -101,8 +101,6 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
         } else {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
-        
-
     }
     
     @Override
