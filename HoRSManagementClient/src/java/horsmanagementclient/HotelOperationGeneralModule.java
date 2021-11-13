@@ -621,7 +621,7 @@ public class HotelOperationGeneralModule {
 
             System.out.println("*** HoRS Management Client :: Hotel Operation (General) :: View Room Details :: Delete Room ***\n");
             System.out.printf("Confirm Delete Room %s (Room ID: %s) (Enter 'Y' to Delete)> ", room.getRoomNumber(), room.getRoomId());
-            scanner.nextLine();
+//            scanner.nextLine();
             input = scanner.nextLine().trim();
 
             if (input.equals("Y")) {
